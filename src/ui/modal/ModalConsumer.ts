@@ -1,5 +1,5 @@
-import * as React from "react";
-import { IModalConsumerProps } from "./types";
+import * as React from 'react';
+import { IModalConsumerProps } from './types';
 
 export const ModalConsumer = ({
   children,
@@ -9,7 +9,7 @@ export const ModalConsumer = ({
 
   const checkManager = (): void => {
     if (!manager) {
-      throw new Error("No portal manager defined");
+      throw new Error('No portal manager defined');
     }
   };
 

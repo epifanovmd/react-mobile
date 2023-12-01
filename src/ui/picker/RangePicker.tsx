@@ -6,14 +6,14 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { Col, Row } from "../flexView";
-import { Button, ButtonProps } from "../button";
-import { Picker, PickerProps, PickerRef } from "./Picker";
-import { SafeAreaBottom } from "../safeArea";
-import { Touchable, TouchableProps } from "../touchable";
-import { Modal, useModal, ModalProps } from "../modal";
-import { StyleSheet, ViewProps, ViewStyle } from "react-native";
+} from 'react';
+import { Col, Row } from '../flexView';
+import { Button, ButtonProps } from '../button';
+import { Picker, PickerProps, PickerRef } from './Picker';
+import { SafeAreaBottom } from '../safeArea';
+import { Touchable, TouchableProps } from '../touchable';
+import { Modal, useModal, ModalProps } from '../modal';
+import { StyleSheet, ViewProps, ViewStyle } from 'react-native';
 
 export interface RangePickerProps<T extends Object & { index: number }>
   extends TouchableProps {
@@ -24,7 +24,7 @@ export interface RangePickerProps<T extends Object & { index: number }>
 
   pickerProps?: Omit<
     PickerProps<string>,
-    "index" | "items" | "renderItem" | "onIndexChange" | "lineStyle"
+    'index' | 'items' | 'renderItem' | 'onIndexChange' | 'lineStyle'
   >;
 
   leftPickerLineStyle?: ViewStyle;
@@ -197,16 +197,16 @@ export const RangePicker: RangePicker = memo(
 
             <Row
               pt={16}
-              justifyContent={"space-between"}
+              justifyContent={'space-between'}
               {...actionsContainerProps}
             >
               <Button
-                title={"Сбросить"}
+                title={'Сбросить'}
                 {...resetButtonProps}
                 onPress={reset}
               />
               <Button
-                title={"Применить"}
+                title={'Применить'}
                 {...acceptButtonProps}
                 onPress={handleApply}
               />

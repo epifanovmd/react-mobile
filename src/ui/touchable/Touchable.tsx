@@ -1,14 +1,14 @@
-import React, { FC, memo, useCallback, useMemo } from "react";
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import {
   TouchableOpacity,
   TouchableOpacityProps,
   GestureResponderEvent,
-} from "react-native";
-import { FlexProps, useFlexProps } from "../flexView";
+} from 'react-native';
+import { FlexProps, useFlexProps } from '../flexView';
 
 export interface TouchableProps<T extends any = undefined>
   extends FlexProps,
-    Omit<TouchableOpacityProps, "style" | "onPress"> {
+    Omit<TouchableOpacityProps, 'style' | 'onPress'> {
   onPress?: (value: T, event: GestureResponderEvent) => void;
   ctx?: T;
 }

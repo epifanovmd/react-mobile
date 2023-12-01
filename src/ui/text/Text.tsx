@@ -1,11 +1,11 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo } from 'react';
 import {
   Animated,
   Text as RNText,
   TextProps as RNTextProps,
   TextStyle,
-} from "react-native";
-import { FlexProps, useFlexProps } from "../flexView";
+} from 'react-native';
+import { FlexProps, useFlexProps } from '../flexView';
 
 export interface TextProps extends FlexProps<TextStyle>, RNTextProps {
   text?: string;

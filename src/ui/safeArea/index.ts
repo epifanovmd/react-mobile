@@ -1,2 +1,2 @@
-export * from "./SafeArea";
-export * from "./SafeAreaBottom";
+export * from './SafeArea';
+export * from './SafeAreaBottom';

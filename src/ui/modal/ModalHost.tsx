@@ -1,16 +1,16 @@
-import * as React from "react";
-import { View } from "react-native";
+import * as React from 'react';
+import { View } from 'react-native';
 
-import { useKey } from "./hooks/useKey";
-import { ModalManager } from "./ModalManager";
-import { IModalHostProps, IModalManagerHandles, IModalProvider } from "./types";
+import { useKey } from './hooks/useKey';
+import { ModalManager } from './ModalManager';
+import { IModalHostProps, IModalManagerHandles, IModalProvider } from './types';
 
 export const ModalContext = React.createContext<IModalProvider | null>(null);
 
 export const ModalHost = ({ children, style }: IModalHostProps) => {
   const managerRef = React.useRef<IModalManagerHandles>(null);
   const queue: {
-    type: "mount" | "update" | "unmount";
+    type: 'mount' | 'update' | 'unmount';
     key: string;
     children?: React.ReactNode;
   }[] = [];
@@ -22,13 +22,13 @@ export const ModalHost = ({ children, style }: IModalHostProps) => {
 
       if (action) {
         switch (action.type) {
-          case "mount":
+          case 'mount':
             managerRef.current?.mount(action.key, action.children);
             break;
-          case "update":
+          case 'update':
             managerRef.current?.update(action.key, action.children);
             break;
-          case "unmount":
+          case 'unmount':
             managerRef.current?.unmount(action.key);
             break;
         }
@@ -43,7 +43,7 @@ export const ModalHost = ({ children, style }: IModalHostProps) => {
     if (managerRef.current) {
       managerRef.current.mount(key, _children);
     } else {
-      queue.push({ type: "mount", key, children: _children });
+      queue.push({ type: 'mount', key, children: _children });
     }
 
     return key;
@@ -53,9 +53,9 @@ export const ModalHost = ({ children, style }: IModalHostProps) => {
     if (managerRef.current) {
       managerRef.current.update(key, _children);
     } else {
-      const op = { type: "mount" as "mount", key, _children };
+      const op = { type: 'mount' as 'mount', key, _children };
       const index = queue.findIndex(
-        o => o.type === "mount" || (o.type === "update" && o.key === key),
+        o => o.type === 'mount' || (o.type === 'update' && o.key === key),
       );
 
       if (index > -1) {
@@ -71,7 +71,7 @@ export const ModalHost = ({ children, style }: IModalHostProps) => {
       managerRef.current.unmount(key);
       removeKey(key);
     } else {
-      queue.push({ type: "unmount", key });
+      queue.push({ type: 'unmount', key });
     }
   };
 

@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 import {
   LayoutChangeEvent,
   NativeScrollEvent,
@@ -18,8 +18,8 @@ import {
   View,
   ViewProps,
   ViewStyle,
-} from "react-native";
-import RNReactNativeHapticFeedback from "react-native-haptic-feedback";
+} from 'react-native';
+import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 const DEBOUNCE_CHANGE = 50; // ms
 
@@ -37,16 +37,16 @@ export interface PickerProps<T> extends ViewProps {
   lineStyle?: ViewStyle;
   scrollViewProps?: Omit<
     ScrollViewProps,
-    | "decelerationRate"
-    | "onLayout"
-    | "onScroll"
-    | "scrollEventThrottle"
-    | "onScrollBeginDrag"
-    | "onScrollEndDrag"
-    | "snapToInterval"
-    | "nestedScrollEnabled"
-    | "snapToAlignment"
-    | "snapToOffsets"
+    | 'decelerationRate'
+    | 'onLayout'
+    | 'onScroll'
+    | 'scrollEventThrottle'
+    | 'onScrollBeginDrag'
+    | 'onScrollEndDrag'
+    | 'snapToInterval'
+    | 'nestedScrollEnabled'
+    | 'snapToAlignment'
+    | 'snapToOffsets'
   >;
 }
 
@@ -112,7 +112,7 @@ export const Picker: Picker = memo(
       }, [index, selectTo]);
 
       const triggerHapticFeedback = useCallback(() => {
-        RNReactNativeHapticFeedback.trigger("effectClick", {
+        RNReactNativeHapticFeedback.trigger('effectClick', {
           enableVibrateFallback: true,
           ignoreAndroidSystemSettings: true,
         });
@@ -134,8 +134,8 @@ export const Picker: Picker = memo(
 
       const itemContainerStyle: ViewStyle = useMemo(
         () => ({
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
           height: selectHeight ? selectHeight : undefined,
         }),
         [selectHeight],
@@ -177,7 +177,7 @@ export const Picker: Picker = memo(
       );
 
       const getScrollIndex = useCallback(
-        (scrollY: NativeScrollPoint["y"]) => {
+        (scrollY: NativeScrollPoint['y']) => {
           const y = Math.round(scrollY);
 
           return Math.round(y / selectHeight);
@@ -255,7 +255,7 @@ export const Picker: Picker = memo(
 
       const primaryPosition: ViewStyle = useMemo(
         () => ({
-          width: "100%",
+          width: '100%',
           height: containerHeight,
         }),
         [containerHeight],
@@ -263,7 +263,7 @@ export const Picker: Picker = memo(
 
       const secondaryPosition: ViewStyle = useMemo(
         () => ({
-          backgroundColor: "gray",
+          backgroundColor: 'gray',
           ...lineStyle,
           height: selectHeight,
           marginTop: -(containerHeight / 2 + selectHeight / 2),
@@ -297,7 +297,7 @@ export const Picker: Picker = memo(
               bounces={false}
               showsVerticalScrollIndicator={false}
               {...scrollViewProps}
-              decelerationRate={"fast"}
+              decelerationRate={'fast'}
               onLayout={onLayoutScrollView}
               onScroll={onScroll}
               scrollEventThrottle={1}
@@ -305,7 +305,7 @@ export const Picker: Picker = memo(
               onScrollEndDrag={onScrollEndDrag}
               snapToInterval={selectHeight}
               nestedScrollEnabled={false}
-              snapToAlignment={"center"}
+              snapToAlignment={'center'}
               snapToOffsets={snapToOffsets}
             >
               <View style={{ height: auxContainerHeight }} />

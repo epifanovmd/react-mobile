@@ -6,7 +6,7 @@ import {
   StyleProp,
   TextStyle,
   ViewStyle,
-} from "react-native";
+} from 'react-native';
 
 type AnimatedProps<T> = Animated.AnimatedProps<T>;
 type WithAnimatedValue<T> = Animated.WithAnimatedValue<T>;
@@ -35,21 +35,21 @@ export type NumericSpacesType =
   | number;
 
 export type JustifyContentType =
-  | "flex-start"
-  | "flex-end"
-  | "center"
-  | "space-between"
-  | "space-around"
-  | "space-evenly";
-export type AlignSelfType = "auto" | FlexAlignType;
-export type FlexWrapType = "wrap" | "nowrap" | "wrap-reverse";
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
+export type AlignSelfType = 'auto' | FlexAlignType;
+export type FlexWrapType = 'wrap' | 'nowrap' | 'wrap-reverse';
 export type AlignContentType =
-  | "flex-start"
-  | "flex-end"
-  | "center"
-  | "stretch"
-  | "space-between"
-  | "space-around";
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'stretch'
+  | 'space-between'
+  | 'space-around';
 
 type PaddingProps = {
   paddingLeft?: number | string;
@@ -135,7 +135,7 @@ type FlexLayoutProps = {
   // Более короткая запись <Col flexGrow/>, вместо <Col flexGrow={1}/>
   flexGrow?: number | true;
   flexBasis?: number | string;
-  flexWrap?: "wrap" | "nowrap" | "wrap-reverse";
+  flexWrap?: 'wrap' | 'nowrap' | 'wrap-reverse';
   // Более короткая запись <Col flexShrink/>, вместо <Col flexShrink={1}/>
   flexShrink?: number | true;
 };
@@ -172,7 +172,7 @@ type BorderProps = {
   rightRadius?: WithAnimatedValue<number>;
   // circle - диаметр круга
   circle?: number;
-  overflow?: "visible" | "hidden" | "scroll";
+  overflow?: 'visible' | 'hidden' | 'scroll';
   borderColor?: WithAnimatedValue<string>;
   borderWidth?: WithAnimatedValue<number>;
   borderBottomWidth?: WithAnimatedValue<number>;
@@ -206,30 +206,30 @@ type TextProps = {
   color?: ColorValue | Animated.Animated;
   fontFamily?: string;
   fontSize?: number | Animated.Animated;
-  fontStyle?: "normal" | "italic";
+  fontStyle?: 'normal' | 'italic';
   fontWeight?:
-    | "normal"
-    | "bold"
-    | "100"
-    | "200"
-    | "300"
-    | "400"
-    | "500"
-    | "600"
-    | "700"
-    | "800"
-    | "900";
+    | 'normal'
+    | 'bold'
+    | '100'
+    | '200'
+    | '300'
+    | '400'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900';
   letterSpacing?: number | Animated.Animated;
   lineHeight?: number | Animated.Animated;
-  textAlign?: "auto" | "left" | "right" | "center" | "justify";
+  textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify';
   textDecorationLine?:
-    | "none"
-    | "underline"
-    | "line-through"
-    | "underline line-through";
-  textDecorationStyle?: "solid" | "double" | "dotted" | "dashed";
+    | 'none'
+    | 'underline'
+    | 'line-through'
+    | 'underline line-through';
+  textDecorationStyle?: 'solid' | 'double' | 'dotted' | 'dashed';
   textDecorationColor?: ColorValue | Animated.Animated;
-  textTransform?: "none" | "capitalize" | "uppercase" | "lowercase";
+  textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
 };
 
 type CommonFlexProps = AnimatedProps<PaddingGridProps> &

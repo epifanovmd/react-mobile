@@ -1,6 +1,6 @@
-import * as React from "react";
-import { TClose, TOpen } from "../types";
-import { Modal } from "../Modal";
+import * as React from 'react';
+import { TClose, TOpen } from '../types';
+import { Modal } from '../Modal';
 
 export const useModal = () => {
   const ref = React.useRef<Modal>(null);

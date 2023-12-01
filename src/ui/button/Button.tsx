@@ -1,17 +1,17 @@
-import React, { FC, memo, useEffect, useMemo, useRef } from "react";
+import React, { FC, memo, useEffect, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   Animated,
   ColorValue,
   TextStyle,
   TouchableOpacityProps,
-} from "react-native";
-import { Text } from "../text";
-import { Col, FlexProps, Row, useFlexProps } from "../flexView";
-import { Touchable } from "../touchable";
-import { isString } from "lodash";
+} from 'react-native';
+import { Text } from '../text';
+import { Col, FlexProps, Row, useFlexProps } from '../flexView';
+import { Touchable } from '../touchable';
+import { isString } from 'lodash';
 
-type ButtonType = "small" | "middle" | "large";
+type ButtonType = 'small' | 'middle' | 'large';
 
 const sizes: {
   [key in ButtonType]: TextStyle;
@@ -49,13 +49,13 @@ export const Button: FC<ButtonProps> = memo(
     const { style, ownProps } = useFlexProps(rest, {
       radius: 4,
       row: true,
-      bg: rest.disabled || loading ? "rgb(73, 100, 169)" : "#1c3e94",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
+      bg: rest.disabled || loading ? 'rgb(73, 100, 169)' : '#1c3e94',
+      justifyContent: 'center',
+      alignItems: 'center',
+      overflow: 'hidden',
     });
 
-    const buttonSizeStyle = useMemo(() => sizes[size || "middle"], [size]);
+    const buttonSizeStyle = useMemo(() => sizes[size || 'middle'], [size]);
 
     const animated = useRef(new Animated.Value(0)).current;
 
@@ -76,7 +76,7 @@ export const Button: FC<ButtonProps> = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading]);
 
-    const buttonColor = useMemo(() => (color ? color : "#fff"), [color]);
+    const buttonColor = useMemo(() => (color ? color : '#fff'), [color]);
 
     const textStyle = useRef({
       transform: [
@@ -125,7 +125,7 @@ export const Button: FC<ButtonProps> = memo(
         disabled={ownProps.disabled || loading}
       >
         <Animated.View style={textStyle}>
-          <Row alignItems={"center"}>
+          <Row alignItems={'center'}>
             {icon ? (
               <Col marginRight={buttonSizeStyle.paddingVertical as number}>
                 {icon}
@@ -133,11 +133,11 @@ export const Button: FC<ButtonProps> = memo(
             ) : null}
             {isString(title) ? (
               <Text
-                lineBreakMode={"tail"}
+                lineBreakMode={'tail'}
                 fontSize={buttonSizeStyle.fontSize}
-                fontWeight={"bold"}
+                fontWeight={'bold'}
                 color={buttonColor}
-                textTransform={"uppercase"}
+                textTransform={'uppercase'}
               >
                 {title}
               </Text>
@@ -149,7 +149,7 @@ export const Button: FC<ButtonProps> = memo(
 
         <Col width={0}>
           <Animated.View style={loadingStyle}>
-            <ActivityIndicator size="small" color={buttonColor || "#1c3e94"} />
+            <ActivityIndicator size="small" color={buttonColor || '#1c3e94'} />
           </Animated.View>
         </Col>
       </Touchable>

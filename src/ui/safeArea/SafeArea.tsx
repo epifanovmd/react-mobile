@@ -1,7 +1,7 @@
-import React, { FC, memo, PropsWithChildren, useMemo } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { FlexProps, useFlexProps } from "../flexView";
-import { View } from "react-native";
+import React, { FC, memo, PropsWithChildren, useMemo } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FlexProps, useFlexProps } from '../flexView';
+import { View } from 'react-native';
 
 export interface SafeAreaProps extends FlexProps {}
 

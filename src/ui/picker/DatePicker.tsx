@@ -7,17 +7,17 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { Col, Row } from "../flexView";
-import { Text } from "../text";
-import { Button, ButtonProps } from "../button";
-import { Picker, PickerProps } from "./Picker";
-import { SafeAreaBottom } from "../safeArea";
-import { Touchable, TouchableProps } from "../touchable";
-import { Modal, useModal } from "../modal";
-import moment from "moment";
-import { StyleSheet, ViewProps, ViewStyle } from "react-native";
-import { ModalProps } from "../modal/types";
+} from 'react';
+import { Col, Row } from '../flexView';
+import { Text } from '../text';
+import { Button, ButtonProps } from '../button';
+import { Picker, PickerProps } from './Picker';
+import { SafeAreaBottom } from '../safeArea';
+import { Touchable, TouchableProps } from '../touchable';
+import { Modal, useModal } from '../modal';
+import moment from 'moment';
+import { StyleSheet, ViewProps, ViewStyle } from 'react-native';
+import { ModalProps } from '../modal/types';
 
 const years = Array.from({ length: 201 }, (_, i) =>
   (i + new Date().getFullYear() - 100).toString(),
@@ -60,7 +60,7 @@ export interface DatePickerProps extends TouchableProps {
 
   pickerProps?: Omit<
     PickerProps<string>,
-    "index" | "items" | "renderItem" | "onIndexChange" | "lineStyle"
+    'index' | 'items' | 'renderItem' | 'onIndexChange' | 'lineStyle'
   >;
 
   leftPickerLineStyle?: ViewStyle;
@@ -103,7 +103,7 @@ export const DatePicker: FC<PropsWithChildren<DatePickerProps>> = memo(
     const now = useMemo(() => (date ? moment(date) : moment()), [date]);
 
     const [_day, _month, _year] = useMemo(
-      () => [now.get("dates"), now.get("month"), now.get("year")],
+      () => [now.get('dates'), now.get('month'), now.get('year')],
       [now],
     );
 
@@ -209,12 +209,12 @@ export const DatePicker: FC<PropsWithChildren<DatePickerProps>> = memo(
         ) : (
           <Col
             flex={1}
-            width={"100%"}
-            alignItems={"center"}
-            justifyContent={"center"}
+            width={'100%'}
+            alignItems={'center'}
+            justifyContent={'center'}
           >
             <Text
-              color={active ? "white" : "black"}
+              color={active ? 'white' : 'black'}
               numberOfLines={1}
               fontSize={active ? 18 : 12}
             >
@@ -294,16 +294,16 @@ export const DatePicker: FC<PropsWithChildren<DatePickerProps>> = memo(
 
             <Row
               pt={16}
-              justifyContent={"space-between"}
+              justifyContent={'space-between'}
               {...actionsContainerProps}
             >
               <Button
-                title={"Сбросить"}
+                title={'Сбросить'}
                 {...resetButtonProps}
                 onPress={reset}
               />
               <Button
-                title={"Применить"}
+                title={'Применить'}
                 {...acceptButtonProps}
                 onPress={handleApply}
               />

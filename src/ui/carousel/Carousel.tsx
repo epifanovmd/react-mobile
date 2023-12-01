@@ -6,21 +6,21 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import { ListRenderItemInfo } from "react-native";
-import { Col, FlexProps, Row } from "../flexView";
-import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
-import { FlatListProps } from "react-native/Libraries/Lists/FlatList";
-import { Touchable } from "../touchable";
-import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
+} from 'react';
+import { ListRenderItemInfo } from 'react-native';
+import { Col, FlexProps, Row } from '../flexView';
+import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
+import { FlatListProps } from 'react-native/Libraries/Lists/FlatList';
+import { Touchable } from '../touchable';
+import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export interface CarouselProps<T = any>
   extends Omit<
     FlatListProps<T>,
-    | "ListEmptyComponent"
-    | "ListFooterComponent"
-    | "ListHeaderComponent"
-    | "renderItem"
+    | 'ListEmptyComponent'
+    | 'ListFooterComponent'
+    | 'ListHeaderComponent'
+    | 'renderItem'
   > {
   renderItem?: (info: ListRenderItemInfo<T>) => React.ReactElement | null;
   width?: number;
@@ -43,7 +43,7 @@ const mergeRefs =
   ): React.RefCallback<T> =>
   value => {
     refs.forEach(ref => {
-      if (typeof ref === "function") {
+      if (typeof ref === 'function') {
         ref(value);
       } else if (ref != null) {
         (ref as React.MutableRefObject<T | null>).current = value;
@@ -82,9 +82,9 @@ export const Carousel: CarouselFC = memo(
           <Col
             mh={separateWidth}
             width={itemLength - separateWidth * 2}
-            height={"auto"}
+            height={'auto'}
           >
-            <Touchable flexShrink={1} overflow={"hidden"} onPress={onPress}>
+            <Touchable flexShrink={1} overflow={'hidden'} onPress={onPress}>
               {renderItem?.(item)}
             </Touchable>
           </Col>

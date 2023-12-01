@@ -1,11 +1,11 @@
-import { useEffect, useRef } from "react";
-import { useIsFocused } from "@react-navigation/native";
-import { isFunction, SupportInitialize } from "@force-dev/utils";
+import { useEffect, useRef } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { isFunction, SupportInitialize } from '@force-dev/utils';
 
 export const useInitializeVM = <P, T>(
   vm: T & SupportInitialize<P> & { dispose?: () => void },
   props: P,
-): Omit<T, "initialize" | "onFocusScreen"> => {
+): Omit<T, 'initialize' | 'onFocusScreen'> => {
   const isInitialized = useRef(false);
   const { initialize, onFocusScreen } = vm;
   const isFocused = useIsFocused();

@@ -1,15 +1,15 @@
-import React, { FC, memo, useMemo } from "react";
-import { Button, ButtonProps } from "./Button";
+import React, { FC, memo, useMemo } from 'react';
+import { Button, ButtonProps } from './Button';
 
 interface TextButtonProps extends ButtonProps {}
 
 export const TextButton: FC<TextButtonProps> = memo(({ color, ...rest }) => {
   const defaultProps = useMemo(
     () => ({
-      borderColor: "transparent",
+      borderColor: 'transparent',
       borderWidth: 0,
-      bg: "transparent",
-      color: color ? color : "#1c3e94",
+      bg: 'transparent',
+      color: color ? color : '#1c3e94',
     }),
     [color],
   );

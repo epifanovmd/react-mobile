@@ -1,6 +1,6 @@
-import { FlexProps } from "./types";
-import { TextStyle, ViewStyle } from "react-native";
-import { flexPropsMap } from "./flexPropsMap";
+import { FlexProps } from './types';
+import { TextStyle, ViewStyle } from 'react-native';
+import { flexPropsMap } from './flexPropsMap';
 
 export const flexPropsConverter = <
   TProps extends FlexProps,
@@ -8,7 +8,7 @@ export const flexPropsConverter = <
   TStyleSource extends TextStyle & ViewStyle = TextStyle & ViewStyle,
 >(
   props: TProps,
-  flexProps: Omit<FlexProps, "style">,
+  flexProps: Omit<FlexProps, 'style'>,
   outOwnProps: TOwnProps,
   outStyleSource: TStyleSource,
 ) => {
@@ -21,7 +21,7 @@ export const flexPropsConverter = <
       flexPropsMap[
         key as keyof Omit<
           FlexProps,
-          "style" | "rotate" | "translateX" | "translateY" | "scale"
+          'style' | 'rotate' | 'translateX' | 'translateY' | 'scale'
         >
       ];
 
@@ -32,7 +32,7 @@ export const flexPropsConverter = <
 
         for (const styleKey in styleParams) {
           if (styleParams.hasOwnProperty(styleKey)) {
-            if (styleKey === "transform") {
+            if (styleKey === 'transform') {
               os[styleKey] = [
                 ...(os[styleKey] || []),
                 ...styleParams[styleKey],
@@ -42,10 +42,10 @@ export const flexPropsConverter = <
             }
           }
         }
-        if (key !== "style") {
+        if (key !== 'style') {
           fp[key] = props[key];
         }
-      } else if (key !== "style") {
+      } else if (key !== 'style') {
         op[key] = props[key];
       }
     }

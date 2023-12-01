@@ -1,8 +1,8 @@
-import React, { FC, memo, PropsWithChildren, useMemo } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useFlexProps } from "../flexView";
-import { View } from "react-native";
-import { SafeAreaProps } from "./SafeArea";
+import React, { FC, memo, PropsWithChildren, useMemo } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFlexProps } from '../flexView';
+import { View } from 'react-native';
+import { SafeAreaProps } from './SafeArea';
 
 export const SafeAreaBottom: FC<PropsWithChildren<SafeAreaProps>> = memo(
   ({ children, ...rest }) => {

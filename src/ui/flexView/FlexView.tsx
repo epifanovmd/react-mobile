@@ -1,8 +1,8 @@
-import * as React from "react";
-import { FC, PropsWithChildren } from "react";
-import { Animated, View, ViewProps } from "react-native";
-import { useFlexProps } from "./useFlexProps";
-import { FlexProps } from "./types";
+import * as React from 'react';
+import { FC, PropsWithChildren } from 'react';
+import { Animated, View, ViewProps } from 'react-native';
+import { useFlexProps } from './useFlexProps';
+import { FlexProps } from './types';
 
 type Props = FlexProps & ViewProps;
 

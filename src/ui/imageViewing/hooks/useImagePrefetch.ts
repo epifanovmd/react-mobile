@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Image, ImageURISource } from "react-native";
+import { useEffect } from 'react';
+import { Image, ImageURISource } from 'react-native';
 
 const useImagePrefetch = (images: ImageURISource[]) => {
   useEffect(() => {

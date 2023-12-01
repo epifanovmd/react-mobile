@@ -1,5 +1,5 @@
-import * as React from "react";
-import { genId } from "@force-dev/utils";
+import * as React from 'react';
+import { genId } from '@force-dev/utils';
 
 interface IUseKey {
   generateKey(): string;
@@ -16,7 +16,7 @@ export const useKey = (): IUseKey => {
 
   const generateKey = (): string => {
     let foundUniqueKey = false;
-    let newKey = "";
+    let newKey = '';
     let tries = 0;
 
     while (!foundUniqueKey && tries < 3) {

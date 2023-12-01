@@ -1,6 +1,6 @@
-import * as React from "react";
-import { StyleSheet, View } from "react-native";
-import { IModalManagerHandles } from "./types";
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { IModalManagerHandles } from './types';
 
 export const ModalManager = React.forwardRef((_, ref): any => {
   const [portals, setPortals] = React.useState<

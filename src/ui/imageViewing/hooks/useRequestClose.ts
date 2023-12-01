@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export const useRequestClose = (onRequestClose: () => void) => {
   const [opacity, setOpacity] = useState(1);

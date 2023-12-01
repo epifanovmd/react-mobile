@@ -6,14 +6,14 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from "react";
-import { Col, Row } from "../flexView";
-import { Button, ButtonProps } from "../button";
-import { Picker, PickerProps } from "./Picker";
-import { SafeAreaBottom } from "../safeArea";
-import { Touchable, TouchableProps } from "../touchable";
-import { Modal, useModal, ModalProps } from "../modal";
-import { StyleSheet, ViewProps, ViewStyle } from "react-native";
+} from 'react';
+import { Col, Row } from '../flexView';
+import { Button, ButtonProps } from '../button';
+import { Picker, PickerProps } from './Picker';
+import { SafeAreaBottom } from '../safeArea';
+import { Touchable, TouchableProps } from '../touchable';
+import { Modal, useModal, ModalProps } from '../modal';
+import { StyleSheet, ViewProps, ViewStyle } from 'react-native';
 
 export interface TimePickerProps extends TouchableProps {
   time?: string;
@@ -26,7 +26,7 @@ export interface TimePickerProps extends TouchableProps {
 
   pickerProps?: Omit<
     PickerProps<string>,
-    "index" | "items" | "renderItem" | "onIndexChange" | "lineStyle"
+    'index' | 'items' | 'renderItem' | 'onIndexChange' | 'lineStyle'
   >;
 
   leftPickerLineStyle?: ViewStyle;
@@ -86,9 +86,9 @@ export const TimePicker: FC<PropsWithChildren<TimePickerProps>> = memo(
     const { ref: modalRef } = useModal();
 
     const [hour, minute] = useMemo(() => {
-      const _time = new Date().toTimeString().split(":");
+      const _time = new Date().toTimeString().split(':');
 
-      return time ? time.split(":") : [_time[0], _time[1]];
+      return time ? time.split(':') : [_time[0], _time[1]];
     }, [time]);
 
     const [currentFirstIndex, setCurrentFirstIndex] = useState<number>(
@@ -100,8 +100,8 @@ export const TimePicker: FC<PropsWithChildren<TimePickerProps>> = memo(
     );
 
     const reset = useCallback(() => {
-      const _time = new Date().toTimeString().split(":");
-      const [_hour, _minute] = time ? time.split(":") : [_time[0], _time[1]];
+      const _time = new Date().toTimeString().split(':');
+      const [_hour, _minute] = time ? time.split(':') : [_time[0], _time[1]];
 
       setCurrentFirstIndex(getHourIndex(_hour));
       setCurrentSecondIndex(getMinuteIndex(_minute));
@@ -183,16 +183,16 @@ export const TimePicker: FC<PropsWithChildren<TimePickerProps>> = memo(
 
             <Row
               pt={16}
-              justifyContent={"space-between"}
+              justifyContent={'space-between'}
               {...actionsContainerProps}
             >
               <Button
-                title={"Сбросить"}
+                title={'Сбросить'}
                 {...resetButtonProps}
                 onPress={reset}
               />
               <Button
-                title={"Применить"}
+                title={'Применить'}
                 {...acceptButtonProps}
                 onPress={handleApply}
               />
