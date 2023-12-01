@@ -46,7 +46,7 @@ export const createSlot = <P extends {}>(name: string): SlotType<P> => {
 
   Slot.Renderer = ({ childs, children }) => {
     const slotted = React.Children.toArray(childs).find(child => {
-      const valid = React.isValidElement(child);
+      const valid = React.isValidElement(child) && child.type;
 
       if (valid) {
         const displayName = (child.type as FC)?.displayName;
@@ -91,7 +91,7 @@ export function getSlotsProps<
   for (const child of React.Children.toArray(children)) {
     let isCompound = false;
 
-    if (React.isValidElement(child)) {
+    if (React.isValidElement(child) && child.type) {
       const displayName = (child.type as FC).displayName;
       if (displayName) {
         if (tmp[displayName]) {
