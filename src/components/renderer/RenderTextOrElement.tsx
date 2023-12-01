@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren } from 'react';
-import { Col, TextProps } from '../ui';
+import { Text, TextProps } from '../ui';
 import { isString } from '@force-dev/utils';
 
 export interface RenderTextOrElementProps
@@ -13,5 +13,5 @@ export const RenderTextOrElement: FC<
 > = ({ text, children, ...rest }) => {
   const value = text || children || null;
 
-  return isString(value) ? <Col {...rest}>{value}</Col> : value;
+  return isString(value) ? <Text {...rest}>{value}</Text> : value;
 };
