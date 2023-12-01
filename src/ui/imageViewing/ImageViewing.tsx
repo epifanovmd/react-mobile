@@ -9,6 +9,7 @@ import {
   Animated,
   Dimensions,
   ImageURISource,
+  ListRenderItemInfo,
   Modal,
   ModalProps,
   StyleSheet,
@@ -21,7 +22,6 @@ import { useImageIndexChange } from './hooks/useImageIndexChange';
 import { useAnimatedComponents } from './hooks/useAnimatedComponents';
 import { ImageDefaultHeader } from './components/ImageDefaultHeader';
 import ImageItem from './components/ImageItem/ImageItem.android';
-import { ListRenderItemInfo } from '@react-native/virtualized-lists/Lists/VirtualizedList';
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
 const DEFAULT_BG_COLOR = '#000';
