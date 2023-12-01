@@ -88,9 +88,9 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
               message,
               open: true,
               onHide: () => hide(id),
+              swipeEnabled,
               ...props,
               ...toastOptions,
-              swipeEnabled,
             },
             ...items.filter(toast => toast.open),
           ]);
