@@ -4,10 +4,11 @@ import { View } from 'react-native';
 import { useKey } from './hooks/useKey';
 import { ModalManager } from './ModalManager';
 import { IModalHostProps, IModalManagerHandles, IModalProvider } from './types';
+import { memo } from 'react';
 
 export const ModalContext = React.createContext<IModalProvider | null>(null);
 
-export const ModalHost = ({ children, style }: IModalHostProps) => {
+export const ModalHost = memo(({ children, style }: IModalHostProps) => {
   const managerRef = React.useRef<IModalManagerHandles>(null);
   const queue: {
     type: 'mount' | 'update' | 'unmount';
@@ -88,4 +89,4 @@ export const ModalHost = ({ children, style }: IModalHostProps) => {
       <ModalManager ref={managerRef} />
     </ModalContext.Provider>
   );
-};
+});

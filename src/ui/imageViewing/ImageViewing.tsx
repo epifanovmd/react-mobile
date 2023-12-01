@@ -21,6 +21,7 @@ import { useImageIndexChange } from './hooks/useImageIndexChange';
 import { useAnimatedComponents } from './hooks/useAnimatedComponents';
 import { ImageDefaultHeader } from './components/ImageDefaultHeader';
 import ImageItem from './components/ImageItem/ImageItem.android';
+import { ListRenderItemInfo } from '@react-native/virtualized-lists/Lists/VirtualizedList';
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
 const DEFAULT_BG_COLOR = '#000';
@@ -41,7 +42,7 @@ export interface ImageViewingProps {
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
   delayLongPress?: number;
-  HeaderComponent?: ComponentType<{ imageIndex: number }>;
+  HeaderComponent?: ComponentType<{ imageIndex: number; onClose?: () => void }>;
   FooterComponent?: ComponentType<{ imageIndex: number }>;
 }
 
@@ -91,6 +92,44 @@ export const ImageViewing: FC<ImageViewingProps> = ({
     [keyExtractor],
   );
 
+  const getItemLayout = useCallback(
+    (_: any, index: number) => ({
+      length: SCREEN_WIDTH,
+      offset: SCREEN_WIDTH * index,
+      index,
+    }),
+    [],
+  );
+
+  const getItem = useCallback(
+    (_: ImageURISource, index: number) => images[index],
+    [images],
+  );
+
+  const getItemCount = useCallback(() => images.length, [images]);
+
+  const renderItem = useCallback(
+    ({ item: imageSrc }: ListRenderItemInfo<ImageURISource>) => (
+      <ImageItem
+        onZoom={onZoom}
+        imageSrc={imageSrc}
+        onRequestClose={onRequestCloseEnhanced}
+        onLongPress={onLongPress}
+        delayLongPress={delayLongPress}
+        swipeToCloseEnabled={swipeToCloseEnabled}
+        doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+      />
+    ),
+    [
+      delayLongPress,
+      doubleTapToZoomEnabled,
+      onLongPress,
+      onRequestCloseEnhanced,
+      onZoom,
+      swipeToCloseEnabled,
+    ],
+  );
+
   if (!visible) {
     return null;
   }
@@ -109,6 +148,7 @@ export const ImageViewing: FC<ImageViewingProps> = ({
           {typeof HeaderComponent !== 'undefined' ? (
             React.createElement(HeaderComponent, {
               imageIndex: currentImageIndex,
+              onClose: onRequestCloseEnhanced,
             })
           ) : (
             <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
@@ -125,24 +165,10 @@ export const ImageViewing: FC<ImageViewingProps> = ({
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           initialScrollIndex={imageIndex}
-          getItem={(_, index: number) => images[index]}
-          getItemCount={() => images.length}
-          getItemLayout={(_, index: number) => ({
-            length: SCREEN_WIDTH,
-            offset: SCREEN_WIDTH * index,
-            index,
-          })}
-          renderItem={({ item: imageSrc }) => (
-            <ImageItem
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={onRequestCloseEnhanced}
-              onLongPress={onLongPress}
-              delayLongPress={delayLongPress}
-              swipeToCloseEnabled={swipeToCloseEnabled}
-              doubleTapToZoomEnabled={doubleTapToZoomEnabled}
-            />
-          )}
+          getItem={getItem}
+          getItemCount={getItemCount}
+          getItemLayout={getItemLayout}
+          renderItem={renderItem}
           onMomentumScrollEnd={onScroll}
           keyExtractor={_keyExtractor}
         />

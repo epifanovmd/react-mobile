@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
   Animated,
-  ViewStyle,
   EasingFunction,
-  StyleProp,
   LayoutChangeEvent,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 
 export type TOpen = 'default' | 'top';
@@ -250,24 +250,6 @@ export interface ModalProps {
   onLayout?(event: LayoutChangeEvent): void;
 }
 
-export interface IHandles {
-  /**
-   * Method to open Modalize.
-   *
-   * If you are using `snapPoint` prop, you can supply a `dest` argument to the `open` method, to open it
-   * to the top directly `open('top')`. You don't have to provide anything if you want the default behavior.
-   */
-  open(dest?: TOpen): void;
-
-  /**
-   * The method to close Modalize. You don't need to call it to dismiss the modal, since you can swipe down to dismiss.
-   *
-   * If you are using `alwaysOpen` prop, you can supply a `dest` argument to the `close` method to reset it
-   * to the initial position `close('alwaysOpen')`, and avoiding to close it completely.
-   */
-  close(dest?: TClose): void;
-}
-
 export interface IModalConsumerProps {
   children: React.ReactNode;
   manager: IModalProvider | null;
@@ -280,12 +262,16 @@ export interface IModalHostProps {
 
 export interface IModalProvider {
   mount(children: React.ReactNode): string;
+
   update(key?: string, children?: React.ReactNode): void;
+
   unmount(key?: string): void;
 }
 
 export interface IModalManagerHandles {
   mount(key: string, children: React.ReactNode): void;
+
   update(key?: string, children?: React.ReactNode): void;
+
   unmount(key?: string): void;
 }

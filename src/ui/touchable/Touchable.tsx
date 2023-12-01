@@ -13,7 +13,7 @@ export interface TouchableProps<T extends any = undefined>
   ctx?: T;
 }
 
-interface Touchable {
+export interface Touchable {
   <T extends any = undefined>(props: TouchableProps<T>): ReturnType<FC>;
 }
 

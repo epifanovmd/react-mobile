@@ -13,6 +13,7 @@ import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { FlatListProps } from 'react-native/Libraries/Lists/FlatList';
 import { Touchable } from '../touchable';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { mergeRefs } from '../../helpers';
 
 export interface CarouselProps<T = any>
   extends Omit<
@@ -34,22 +35,6 @@ export interface CarouselProps<T = any>
 export interface CarouselFC<P extends any = null> {
   <T>(props: CarouselProps<P extends null ? T : P>): ReturnType<FC>;
 }
-
-const mergeRefs =
-  <T = any,>(
-    refs: Array<
-      React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null
-    >,
-  ): React.RefCallback<T> =>
-  value => {
-    refs.forEach(ref => {
-      if (typeof ref === 'function') {
-        ref(value);
-      } else if (ref != null) {
-        (ref as React.MutableRefObject<T | null>).current = value;
-      }
-    });
-  };
 
 export const Carousel: CarouselFC = memo(
   forwardRef<FlatList, CarouselProps>(
@@ -111,10 +96,7 @@ export const Carousel: CarouselFC = memo(
           <GestureHandlerRootView>
             <FlatList
               ref={mergeRefs([ref, flatListRef])}
-              data={data}
               horizontal={true}
-              ListHeaderComponent={EmptyHorizontalItem}
-              ListFooterComponent={EmptyHorizontalItem}
               showsHorizontalScrollIndicator={false}
               bounces={false}
               decelerationRate={0.95}
@@ -123,7 +105,10 @@ export const Carousel: CarouselFC = memo(
               snapToAlignment="start"
               keyExtractor={(_item, index) => `${index}`}
               {...rest}
+              data={data}
               renderItem={_renderItem}
+              ListHeaderComponent={EmptyHorizontalItem}
+              ListFooterComponent={EmptyHorizontalItem}
               ListEmptyComponent={_renderItem}
             />
           </GestureHandlerRootView>
