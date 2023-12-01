@@ -23,7 +23,7 @@ import {
 } from 'react-native-gesture-handler';
 
 import { ModalProps, TClose, TOpen, TPosition, TStyle } from './types';
-import { useDimensions } from '../../../hooks';
+import { useDimensions } from '../../hooks';
 import { getSpringConfig } from './utils/get-spring-config';
 import { invariant } from './utils/invariant';
 import { ModalPortal } from './ModalPortal';

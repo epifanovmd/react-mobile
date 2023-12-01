@@ -13,7 +13,7 @@ import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { FlatListProps } from 'react-native/Libraries/Lists/FlatList';
 import { Touchable } from '../touchable';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { mergeRefs } from '../../../helpers';
+import { mergeRefs } from '../../helpers';
 
 export interface CarouselProps<T = any>
   extends Omit<
