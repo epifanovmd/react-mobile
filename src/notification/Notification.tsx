@@ -1,9 +1,10 @@
-import React, { forwardRef, useCallback, useState } from 'react';
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native';
 import {
@@ -36,13 +37,20 @@ export interface NotificationProps extends NotificationToastOptions {
   offsetTop?: number;
   offsetBottom?: number;
   swipeEnabled?: boolean;
+  safeArea?: boolean;
 
   renderToast?(toast: NotificationToastProps): React.JSX.Element;
 }
 
 export const Notification = forwardRef<NotificationActions, NotificationProps>(
   (props, ref) => {
-    const { offset = 10, offsetTop, offsetBottom, swipeEnabled = true } = props;
+    const {
+      offset = 10,
+      offsetTop,
+      offsetBottom,
+      swipeEnabled = true,
+      safeArea = true,
+    } = props;
     const [toasts, setToasts] = useState<NotificationToastProps[]>([]);
     const { height, width } = useDimensions();
 
@@ -120,6 +128,11 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
       isOpen,
     }));
 
+    const SafeAreOrView = useMemo(
+      () => (safeArea ? SafeAreaView : View),
+      [safeArea],
+    );
+
     const renderBottomToasts = useCallback(() => {
       const style: ViewStyle = {
         bottom: offsetBottom || offset,
@@ -134,16 +147,16 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
           style={[styles.container, style]}
           pointerEvents="box-none"
         >
-          <SafeAreaView>
+          <SafeAreOrView>
             {toasts
               .filter(t => !t.placement || t.placement === 'bottom')
               .map(toast => (
                 <NotificationToast key={toast.id} {...toast} />
               ))}
-          </SafeAreaView>
+          </SafeAreOrView>
         </KeyboardAvoidingView>
       );
-    }, [offset, offsetBottom, toasts, width]);
+    }, [SafeAreOrView, offset, offsetBottom, toasts, width]);
 
     const renderTopToasts = useCallback(() => {
       const style: ViewStyle = {
@@ -159,16 +172,16 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
           style={[styles.container, style]}
           pointerEvents="box-none"
         >
-          <SafeAreaView>
+          <SafeAreOrView>
             {toasts
               .filter(t => t.placement === 'top')
               .map(toast => (
                 <NotificationToast key={toast.id} {...toast} />
               ))}
-          </SafeAreaView>
+          </SafeAreOrView>
         </KeyboardAvoidingView>
       );
-    }, [offset, offsetTop, toasts, width]);
+    }, [SafeAreOrView, offset, offsetTop, toasts, width]);
 
     const renderCenterToasts = useCallback(() => {
       const style: ViewStyle = {
