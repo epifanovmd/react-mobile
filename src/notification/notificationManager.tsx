@@ -19,4 +19,4 @@ class NotificationManager implements NotificationActions {
   }
 }
 
-export default new NotificationManager();
+export const notificationManager = new NotificationManager();
