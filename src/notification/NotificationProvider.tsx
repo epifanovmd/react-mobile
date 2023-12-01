@@ -3,7 +3,7 @@ import {
   Notification,
   NotificationActions,
   NotificationProps,
-} from './NotificationActions';
+} from './Notification';
 import { notificationManager } from './notificationManager';
 
 type PropsWithChildren = NotificationProps & {

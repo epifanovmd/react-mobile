@@ -42,7 +42,7 @@ export interface NotificationProps extends NotificationToastOptions {
 
 export const Notification = forwardRef<NotificationActions, NotificationProps>(
   (props, ref) => {
-    const { offset = 10, offsetTop, offsetBottom } = props;
+    const { offset = 10, offsetTop, offsetBottom, swipeEnabled = true } = props;
     const [toasts, setToasts] = useState<NotificationToastProps[]>([]);
     const { height, width } = useDimensions();
 
@@ -90,6 +90,7 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
               onHide: () => hide(id),
               ...props,
               ...toastOptions,
+              swipeEnabled,
             },
             ...items.filter(toast => toast.open),
           ]);
@@ -97,7 +98,7 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
 
         return id;
       },
-      [hide, props],
+      [hide, props, swipeEnabled],
     );
 
     const hideAll = useCallback(() => {

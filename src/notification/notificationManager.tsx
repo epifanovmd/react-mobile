@@ -1,4 +1,4 @@
-import { NotificationActions } from './NotificationActions';
+import { NotificationActions } from './Notification';
 
 class NotificationManager implements NotificationActions {
   private notificationInstance: NotificationActions | null = null;
