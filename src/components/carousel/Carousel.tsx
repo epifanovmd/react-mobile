@@ -91,6 +91,11 @@ export const Carousel: CarouselFC = memo(
         [emptyItemLength],
       );
 
+      const keyExtractor = useCallback(
+        (_item: any, index: number) => `${index}`,
+        [],
+      );
+
       return (
         <Row {...containerProps} onLayout={onLayout}>
           <GestureHandlerRootView>
@@ -103,7 +108,7 @@ export const Carousel: CarouselFC = memo(
               renderToHardwareTextureAndroid
               snapToInterval={itemLength}
               snapToAlignment="start"
-              keyExtractor={(_item, index) => `${index}`}
+              keyExtractor={keyExtractor}
               {...rest}
               data={data}
               renderItem={_renderItem}
