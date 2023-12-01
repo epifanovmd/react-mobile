@@ -12,8 +12,14 @@ export interface SafeAreaProps extends Omit<FlexProps, Keys> {
   top?: boolean;
 }
 
-const withCondition = (value: boolean | undefined, style: ViewStyle) =>
-  value === true || value === undefined ? style : {};
+const withCondition = (
+  withoutUndefined: boolean,
+  value: boolean | undefined,
+  style: ViewStyle,
+) =>
+  value === true || (withoutUndefined ? false : value === undefined)
+    ? style
+    : {};
 
 export const SafeArea: FC<PropsWithChildren<SafeAreaProps>> = memo(
   ({ children, top, bottom, left, right, ...rest }) => {
@@ -23,13 +29,16 @@ export const SafeArea: FC<PropsWithChildren<SafeAreaProps>> = memo(
 
     const { ...insets } = useSafeAreaInsets();
 
+    const hasTrue =
+      top === true || bottom === true || left === true || right === true;
+
     const _style = useMemo(
       () => ({
         ...style,
-        ...withCondition(top, { paddingTop: insets.top }),
-        ...withCondition(bottom, { paddingBottom: insets.bottom }),
-        ...withCondition(left, { paddingLeft: insets.left }),
-        ...withCondition(right, { paddingRight: insets.right }),
+        ...withCondition(hasTrue, top, { paddingTop: insets.top }),
+        ...withCondition(hasTrue, bottom, { paddingBottom: insets.bottom }),
+        ...withCondition(hasTrue, left, { paddingLeft: insets.left }),
+        ...withCondition(hasTrue, right, { paddingRight: insets.right }),
       }),
       [
         style,
@@ -37,6 +46,7 @@ export const SafeArea: FC<PropsWithChildren<SafeAreaProps>> = memo(
         insets.left,
         insets.right,
         insets.top,
+        hasTrue,
         left,
         right,
         top,
