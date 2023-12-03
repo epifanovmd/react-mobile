@@ -1,6 +1,7 @@
 import { FlexProps } from './types';
 import { TextStyle, ViewStyle } from 'react-native';
 import { flexPropsMap } from './flexPropsMap';
+import { resolveStyleProp } from '../../helpers';
 
 export const flexPropsConverter = <
   TProps extends FlexProps,
@@ -52,6 +53,6 @@ export const flexPropsConverter = <
   }
 
   if (props.style) {
-    Object.assign(os, props.style);
+    Object.assign(os, resolveStyleProp(props.style));
   }
 };
