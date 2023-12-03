@@ -106,8 +106,8 @@ export const Input = memo(
       }, [onChangeText]);
 
       const style = useMemo(
-        () => [s.input, { color: inputTextColor }, rest.style],
-        [inputTextColor, rest.style],
+        () => [s.input, { color: inputTextColor }, rest.inputStyle],
+        [inputTextColor, rest.inputStyle],
       );
 
       const numberType = type === 'number' || type === 'floating';
@@ -119,7 +119,7 @@ export const Input = memo(
       const secureTextEntry = type === 'password' && !visiblePassword;
 
       return (
-        <Row alignItems={'center'} pv={8} {...flexProps}>
+        <Row alignItems={'center'} pv={6} {...flexProps}>
           {leftSlot}
 
           <TextInput
