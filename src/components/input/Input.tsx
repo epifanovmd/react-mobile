@@ -106,7 +106,7 @@ export const Input = memo(
       }, [onChangeText]);
 
       const style = useMemo(
-        () => [s.input, rest.style, { color: inputTextColor }],
+        () => [s.input, { color: inputTextColor }, rest.style],
         [inputTextColor, rest.style],
       );
 
@@ -161,6 +161,7 @@ const s = StyleSheet.create({
     padding: 0,
     flexShrink: 1,
     fontSize: 16,
+    marginVertical: 2,
   },
   icon: { marginHorizontal: 4 },
 });
