@@ -85,11 +85,15 @@ const _InputField: FC<
 
     const onClose = useCallback(() => {
       modal?.onClose?.();
-      setModalValue('');
       input?.onChangeText?.(modalValue);
 
       inputRef.current?.blur();
     }, [input, modal, modalValue]);
+
+    const onClosed = useCallback(() => {
+      modal?.onClosed?.();
+      setModalValue('');
+    }, [modal]);
 
     const onRequestClose = useCallback(() => {
       modalRef.current?.close();
@@ -145,6 +149,7 @@ const _InputField: FC<
             {...modal}
             modalStyle={modalStyle}
             onClose={onClose}
+            onClosed={onClosed}
           >
             <ScrollView
               bounces={false}
