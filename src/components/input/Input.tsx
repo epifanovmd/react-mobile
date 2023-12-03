@@ -119,7 +119,7 @@ export const Input = memo(
       const secureTextEntry = type === 'password' && !visiblePassword;
 
       return (
-        <Row alignItems={'center'} {...flexProps} pv={8}>
+        <Row alignItems={'center'} pv={8} {...flexProps}>
           {leftSlot}
 
           <TextInput
