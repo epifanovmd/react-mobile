@@ -22,7 +22,7 @@ import { Touchable } from '../touchable';
 
 type OmittedTextProps = Omit<
   TextInputProps,
-  'style' | 'editable' | 'textContentType' | 'secureTextEntry' | 'cursorColor'
+  'editable' | 'textContentType' | 'secureTextEntry' | 'cursorColor'
 >;
 
 export interface InputProps extends OmittedTextProps {
@@ -49,7 +49,6 @@ export const Input = memo(
         flexProps,
         value,
         onChangeText,
-        inputStyle,
         type = 'text',
         clearable,
         disabled,
@@ -107,8 +106,8 @@ export const Input = memo(
       }, [onChangeText]);
 
       const style = useMemo(
-        () => [s.input, { color: inputTextColor }, inputStyle],
-        [inputStyle, inputTextColor],
+        () => [s.input, rest.style, { color: inputTextColor }],
+        [inputTextColor, rest.style],
       );
 
       const numberType = type === 'number' || type === 'floating';
@@ -120,7 +119,7 @@ export const Input = memo(
       const secureTextEntry = type === 'password' && !visiblePassword;
 
       return (
-        <Row alignItems={'center'} {...flexProps}>
+        <Row alignItems={'center'} {...flexProps} pv={8}>
           {leftSlot}
 
           <TextInput
@@ -162,7 +161,6 @@ const s = StyleSheet.create({
     padding: 0,
     flexShrink: 1,
     fontSize: 16,
-    marginVertical: 8,
   },
   icon: { marginHorizontal: 4 },
 });
