@@ -173,7 +173,7 @@ type BorderProps = {
   // circle - диаметр круга
   circle?: number;
   overflow?: 'visible' | 'hidden' | 'scroll';
-  borderColor?: WithAnimatedValue<string>;
+  borderColor?: WithAnimatedValue<ColorValue>;
   borderWidth?: WithAnimatedValue<number>;
   borderBottomWidth?: WithAnimatedValue<number>;
   borderTopWidth?: WithAnimatedValue<number>;
@@ -203,7 +203,7 @@ type ColorProps = {
 };
 
 type TextProps = {
-  color?: ColorValue | Animated.Animated;
+  color?: WithAnimatedValue<ColorValue>;
   fontFamily?: string;
   fontSize?: number | Animated.Animated;
   fontStyle?: 'normal' | 'italic';
@@ -228,7 +228,7 @@ type TextProps = {
     | 'line-through'
     | 'underline line-through';
   textDecorationStyle?: 'solid' | 'double' | 'dotted' | 'dashed';
-  textDecorationColor?: ColorValue | Animated.Animated;
+  textDecorationColor?: WithAnimatedValue<ColorValue>;
   textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
 };
 
