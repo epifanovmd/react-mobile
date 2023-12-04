@@ -1,0 +1,13 @@
+export { BulbIcon } from './Bulb';
+export { CoffeToGoIcon } from './CoffeToGo';
+export { CoffeeIcon } from './Coffee';
+export { CookieIcon } from './Cookie';
+export { CupcakeIcon } from './Cupcake';
+export { FirstAidIcon } from './FirstAid';
+export { LeafIcon } from './Leaf';
+export { MoonIcon } from './Moon';
+export { PlanetIcon } from './Planet';
+export { PuzzleIcon } from './Puzzle';
+export { RainbowIcon } from './Rainbow';
+export { SunIcon } from './Sun';
+export { WaterDropIcon } from './WaterDrop';
