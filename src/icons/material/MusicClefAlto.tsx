@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const MusicClefAltoIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const MusicClefAltoIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M5 4H7V20H5V4ZM15.46 13H14.83L13.83 12L14.83 11H15.46C16.1522 11 16.8289 10.7947 17.4045 10.4101C17.9801 10.0256 18.4287 9.47893 18.6936 8.83939C18.9585 8.19985 19.0278 7.49612 18.8927 6.81719C18.7577 6.13825 18.4244 5.51461 17.9349 5.02513C17.4454 4.53564 16.8217 4.2023 16.1428 4.06725C15.4639 3.9322 14.7601 4.00152 14.1206 4.26642C13.4811 4.53133 12.9344 4.97993 12.5499 5.55551C12.1653 6.13108 11.96 6.80777 11.96 7.5H13.96C13.96 7.20333 14.048 6.91332 14.2128 6.66665C14.3776 6.41997 14.6119 6.22771 14.886 6.11418C15.1601 6.00065 15.4617 5.97095 15.7526 6.02882C16.0436 6.0867 16.3109 6.22956 16.5207 6.43934C16.7304 6.64912 16.8733 6.91639 16.9312 7.20737C16.9891 7.49834 16.9594 7.79994 16.8458 8.07403C16.7323 8.34812 16.54 8.58238 16.2934 8.74721C16.0467 8.91203 15.7567 9 15.46 9H14L12 11H11V4H9V20H11V13H12L14 15H15.46C15.7567 15 16.0467 15.088 16.2934 15.2528C16.54 15.4176 16.7323 15.6519 16.8458 15.926C16.9594 16.2001 16.9891 16.5017 16.9312 16.7926C16.8733 17.0836 16.7304 17.3509 16.5207 17.5607C16.3109 17.7704 16.0436 17.9133 15.7526 17.9712C15.4617 18.0291 15.1601 17.9994 14.886 17.8858C14.6119 17.7723 14.3776 17.58 14.2128 17.3334C14.048 17.0867 13.96 16.7967 13.96 16.5H11.96C11.96 17.1922 12.1653 17.8689 12.5499 18.4445C12.9344 19.0201 13.4811 19.4687 14.1206 19.7336C14.7601 19.9985 15.4639 20.0678 16.1428 19.9327C16.8217 19.7977 17.4454 19.4644 17.9349 18.9749C18.4244 18.4854 18.7577 17.8617 18.8927 17.1828C19.0278 16.5039 18.9585 15.8002 18.6936 15.1606C18.4287 14.5211 17.9801 13.9744 17.4045 13.5899C16.8289 13.2053 16.1522 13 15.46 13Z" />
     </Svg>

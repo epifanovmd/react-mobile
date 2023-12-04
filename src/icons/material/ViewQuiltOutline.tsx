@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const ViewQuiltOutlineIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const ViewQuiltOutlineIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M4 5V18H21V5H4ZM6 16V7H9V16H6ZM11 16V12.5H14V16H11ZM19 16H16V12.5H19V16ZM11 10.5V7H19V10.5H11Z" />
     </Svg>

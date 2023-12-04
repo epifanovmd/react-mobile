@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const TableEyeIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const TableEyeIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M17 16.88C17.56 16.88 18 17.32 18 17.88C18 18.44 17.56 18.88 17 18.88C16.44 18.88 16 18.43 16 17.88C16 17.33 16.44 16.88 17 16.88ZM17 13.88C19.73 13.88 22.06 15.54 23 17.88C22.06 20.22 19.73 21.88 17 21.88C14.27 21.88 11.94 20.22 11 17.88C11.94 15.54 14.27 13.88 17 13.88ZM17 15.38C15.62 15.38 14.5 16.5 14.5 17.88C14.5 19.26 15.62 20.38 17 20.38C18.38 20.38 19.5 19.26 19.5 17.88C19.5 16.5 18.38 15.38 17 15.38ZM18 3H4C2.9 3 2 3.9 2 5V17C2 18.1 2.9 19 4 19H9.42C9.26 18.68 9.12 18.34 9 18C9.12 17.66 9.26 17.32 9.42 17H4V13H10V15.97C10.55 15.11 11.23 14.37 12 13.76V13H13.15C14.31 12.36 15.62 12 17 12C18.06 12 19.07 12.21 20 12.59V5C20 3.9 19.1 3 18 3ZM10 11H4V7H10V11ZM18 11H12V7H18V11Z" />
     </Svg>

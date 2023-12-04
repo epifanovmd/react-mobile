@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const LightbulbGroupOffOutlineIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const LightbulbGroupOffOutlineIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M22.1101 21.4605L2.39011 1.73047L1.11011 3.00047L5.20011 7.09047C3.25011 7.50047 1.85011 9.27047 2.00011 11.3105C2.12011 12.6205 2.86011 13.7905 4.00011 14.4505V16.0005C4.00011 16.5505 4.45011 17.0005 5.00011 17.0005H7.00011V14.8805C5.72011 13.5805 5.00011 11.8305 5.00011 10.0005C5.00011 9.11047 5.18011 8.23047 5.50011 7.40047L7.12011 9.00047C6.74011 10.8405 7.40011 12.8005 9.00011 14.0005V16.0005C9.00011 16.5505 9.45011 17.0005 10.0001 17.0005H14.0001C14.3101 17.0005 14.5701 16.8605 14.7501 16.6405L17.0001 18.8905V19.0005C17.0001 19.3405 16.9401 19.6805 16.8301 20.0005H18.0001C18.0301 20.0005 18.0601 20.0005 18.0901 20.0005L20.8401 22.7305L22.1101 21.4605ZM9.23011 11.1205L10.8701 12.7605C10.1101 12.4605 9.53011 11.8605 9.23011 11.1205ZM13.0001 15.0005H11.0001V12.8905L13.0001 14.8905V15.0005ZM10.5701 7.37047L9.13011 5.93047C10.8601 4.72047 13.2201 4.67047 15.0001 6.00047C16.2601 6.94047 17.0001 8.43047 17.0001 10.0005C17.0001 11.0505 16.6701 12.0505 16.0801 12.8805L14.6301 11.4305C14.8601 11.0005 15.0001 10.5005 15.0001 10.0005C15.0001 8.34047 13.6701 7.00047 12.0001 7.00047C11.5001 7.00047 11.0001 7.14047 10.5701 7.37047ZM17.5001 14.3105C18.4701 13.0905 19.0001 11.5705 19.0001 10.0005C19.0001 8.96047 18.7701 7.94047 18.3201 7.00047C19.6301 7.11047 20.8001 7.85047 21.4601 9.00047C22.5701 10.9005 21.9101 13.3405 20.0001 14.4505V16.0005C20.0001 16.2205 19.9101 16.4205 19.7901 16.5905L17.5001 14.3105ZM10.0001 18.0005H14.0001V19.0005C14.0001 19.5505 13.5501 20.0005 13.0001 20.0005H11.0001C10.4501 20.0005 10.0001 19.5505 10.0001 19.0005V18.0005ZM7.00011 19.0005C7.00011 19.3405 7.06011 19.6805 7.17011 20.0005H6.00011C5.45011 20.0005 5.00011 19.5505 5.00011 19.0005V18.0005H7.00011V19.0005Z" />
     </Svg>

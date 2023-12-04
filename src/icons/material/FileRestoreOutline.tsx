@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const FileRestoreOutlineIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const FileRestoreOutlineIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13L18 9V20ZM17 13.24C17 15.86 14.87 18 12.24 18C10.29 18 8.61 16.82 7.88 15.14H9.5C10.11 16 11.11 16.57 12.24 16.57C14.08 16.57 15.57 15.07 15.57 13.24C15.57 11.41 14.08 9.9 12.24 9.9C10.95 9.9 9.86 10.65 9.29 11.71L10.81 13.24H7V9.43L8.24 10.67C9.09 9.35 10.55 8.5 12.24 8.5C14.87 8.47 17 10.61 17 13.24Z" />
     </Svg>

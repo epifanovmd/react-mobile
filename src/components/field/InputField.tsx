@@ -12,7 +12,7 @@ import React, {
 import { Field, FieldProps, FieldSlots } from './Field';
 import { GestureResponderEvent, ScrollView, TextInput } from 'react-native';
 import { Text, TextProps } from '../text';
-import Svg, { Path, SvgProps } from 'react-native-svg';
+import { SvgProps } from 'react-native-svg';
 import { Modal, ModalProps, useModal } from '../modal';
 import { Input, InputProps } from '../input';
 import {
@@ -24,6 +24,8 @@ import {
 import { FlexProps, Row } from '../flexView';
 import { Touchable } from '../touchable';
 import { SafeArea } from '../safeArea';
+import { CloseIcon } from '../../icons/material/Close';
+import { FlexSvgProps } from '../../icons';
 
 interface InputFieldProps extends FieldProps {}
 
@@ -206,8 +208,6 @@ InputField.Content = Field.Content;
 InputField.Description = Field.Description;
 InputField.Error = Field.Error;
 
-const _renderCloseIcon = (svgProps?: SvgProps) => (
-  <Svg height={24} width={24} viewBox="0 0 24 24" {...svgProps}>
-    <Path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z" />
-  </Svg>
+const _renderCloseIcon = (svgProps?: FlexSvgProps) => (
+  <CloseIcon {...svgProps} />
 );

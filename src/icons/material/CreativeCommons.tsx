@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const CreativeCommonsIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const CreativeCommonsIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M11.89 10.34L10.55 11.04C10.41 10.74 10.24 10.53 10.03 10.41C9.82 10.29 9.62 10.23 9.45 10.23C8.55 10.23 8.11 10.82 8.11 12C8.11 12.54 8.22 12.97 8.45 13.29C8.67 13.61 9 13.77 9.45 13.77C10.03 13.77 10.44 13.5 10.68 12.91L11.91 13.54C11.65 14.03 11.29 14.41 10.82 14.69C10.36 14.97 9.85 15.11 9.29 15.11C8.39 15.11 7.67 14.84 7.12 14.29C6.58 13.74 6.3 13 6.3 12C6.3 11.05 6.58 10.3 7.13 9.74C7.69 9.18 8.39 8.9 9.23 8.9C10.47 8.89 11.36 9.38 11.89 10.34ZM17.66 10.34L16.34 11.04C16.2 10.74 16 10.53 15.81 10.41C15.6 10.29 15.4 10.23 15.21 10.23C14.32 10.23 13.87 10.82 13.87 12C13.87 12.54 14 12.97 14.21 13.29C14.44 13.61 14.77 13.77 15.21 13.77C15.8 13.77 16.21 13.5 16.45 12.91L17.7 13.54C17.42 14.03 17.05 14.41 16.59 14.69C16.12 14.97 15.62 15.11 15.07 15.11C14.17 15.11 13.44 14.84 12.9 14.29C12.36 13.74 12.09 13 12.09 12C12.09 11.05 12.37 10.3 12.92 9.74C13.47 9.18 14.17 8.9 15 8.9C16.26 8.89 17.14 9.38 17.66 10.34ZM12 3.5C14.2543 3.5 16.4163 4.39553 18.0104 5.98959C19.6045 7.58365 20.5 9.74566 20.5 12C20.5 14.2543 19.6045 16.4163 18.0104 18.0104C16.4163 19.6045 14.2543 20.5 12 20.5C9.74566 20.5 7.58365 19.6045 5.98959 18.0104C4.39553 16.4163 3.5 14.2543 3.5 12C3.5 9.74566 4.39553 7.58365 5.98959 5.98959C7.58365 4.39553 9.74566 3.5 12 3.5ZM12 2C10.6868 2 9.38642 2.25866 8.17317 2.7612C6.95991 3.26375 5.85752 4.00035 4.92893 4.92893C3.05357 6.8043 2 9.34784 2 12C2 14.6522 3.05357 17.1957 4.92893 19.0711C5.85752 19.9997 6.95991 20.7362 8.17317 21.2388C9.38642 21.7413 10.6868 22 12 22C14.6522 22 17.1957 20.9464 19.0711 19.0711C20.9464 17.1957 22 14.6522 22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7362 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2Z" />
     </Svg>

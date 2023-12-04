@@ -3,15 +3,41 @@ import { FlexSvgProps } from '../types';
 import Svg, { Path } from 'react-native-svg';
 import { useFlexProps } from '../../components';
 
-export const HandshakeIcon: FC<FlexSvgProps> = props => {
-  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+export const HandshakeIcon: FC<FlexSvgProps> = ({
+  height = 24,
+  width = 24,
+  scale,
+  opacity,
+  translateY,
+  translateX,
+  color = '#ffffff',
+  fontSize,
+  fontFamily,
+  fontStyle,
+  fontWeight,
+  letterSpacing,
+  ...rest
+}) => {
+  const { style, ownProps } = useFlexProps(rest);
 
   return (
     <Svg
       viewBox="0 0 24 24"
+      height={height}
+      width={width}
+      scale={scale}
+      opacity={opacity}
+      translateY={translateY}
+      translateX={translateX}
+      color={color}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontStyle={fontStyle}
+      fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       style={style}
       {...ownProps}
-      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+      fill={ownProps?.fill || color || '#ffffff'}
     >
       <Path d="M11 6.0001H14L17.29 2.7001C17.3829 2.60637 17.4935 2.53197 17.6154 2.4812C17.7373 2.43044 17.868 2.4043 18 2.4043C18.132 2.4043 18.2627 2.43044 18.3846 2.4812C18.5064 2.53197 18.617 2.60637 18.71 2.7001L21.29 5.2901C21.4762 5.47746 21.5808 5.73091 21.5808 5.9951C21.5808 6.25928 21.4762 6.51273 21.29 6.7001L19 9.0001H11V11.0001C11 11.2653 10.8946 11.5197 10.7071 11.7072C10.5196 11.8947 10.2652 12.0001 9.99998 12.0001C9.73477 12.0001 9.48041 11.8947 9.29288 11.7072C9.10534 11.5197 8.99998 11.2653 8.99998 11.0001V8.0001C8.99998 7.46966 9.2107 6.96095 9.58577 6.58588C9.96084 6.21081 10.4695 6.0001 11 6.0001ZM4.99998 11.0001V15.0001L2.70998 17.2901C2.52373 17.4775 2.41919 17.7309 2.41919 17.9951C2.41919 18.2593 2.52373 18.5127 2.70998 18.7001L5.28998 21.2901C5.38295 21.3838 5.49355 21.4582 5.61541 21.509C5.73726 21.5598 5.86797 21.5859 5.99998 21.5859C6.13199 21.5859 6.2627 21.5598 6.38456 21.509C6.50642 21.4582 6.61702 21.3838 6.70998 21.2901L11 17.0001H15C15.2652 17.0001 15.5196 16.8947 15.7071 16.7072C15.8946 16.5197 16 16.2653 16 16.0001V15.0001H17C17.2652 15.0001 17.5196 14.8947 17.7071 14.7072C17.8946 14.5197 18 14.2653 18 14.0001V13.0001H19C19.2652 13.0001 19.5196 12.8947 19.7071 12.7072C19.8946 12.5197 20 12.2653 20 12.0001V11.0001H13V12.0001C13 12.5305 12.7893 13.0392 12.4142 13.4143C12.0391 13.7894 11.5304 14.0001 11 14.0001H8.99998C8.46955 14.0001 7.96084 13.7894 7.58577 13.4143C7.2107 13.0392 6.99998 12.5305 6.99998 12.0001V9.0001L4.99998 11.0001Z" />
     </Svg>
