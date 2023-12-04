@@ -7,7 +7,12 @@ export const FormatHorizontalAlignLeftIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M11 16V13H21V11H11V8L7 12L11 16ZM3 20H5V4H3V20Z" />
     </Svg>
   );

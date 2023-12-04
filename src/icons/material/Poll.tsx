@@ -7,7 +7,12 @@ export const PollIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M3 22V8H7V22H3ZM10 22V2H14V22H10ZM17 22V14H21V22H17Z" />
     </Svg>
   );

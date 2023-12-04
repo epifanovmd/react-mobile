@@ -7,7 +7,12 @@ export const ChevronDownIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M7.41 8.58008L12 13.1701L16.59 8.58008L18 10.0001L12 16.0001L6 10.0001L7.41 8.58008Z" />
     </Svg>
   );

@@ -7,7 +7,12 @@ export const SwapVerticalBoldIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M14 8H11V14H6V8H3L8.5 2L14 8ZM15.5 22L21 16H18V10H13V16H10L15.5 22Z" />
     </Svg>
   );

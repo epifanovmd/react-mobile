@@ -7,7 +7,12 @@ export const SettingsHelperIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M7 22H9V24H7V22ZM11 22H13V24H11V22ZM15 22H17V24H15V22Z" />
     </Svg>
   );

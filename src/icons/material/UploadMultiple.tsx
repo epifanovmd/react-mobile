@@ -7,7 +7,12 @@ export const UploadMultipleIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M9 14V8H5L12 1L19 8H15V14H9ZM5 18V16H19V18H5ZM19 20H5V22H19V20Z" />
     </Svg>
   );

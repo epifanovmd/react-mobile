@@ -7,7 +7,12 @@ export const ArchiveArrowDownIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M3 3H21V7H3V3ZM4 21V8H20V21H4ZM14 14V11H10V14H7L12 19L17 14H14Z" />
     </Svg>
   );

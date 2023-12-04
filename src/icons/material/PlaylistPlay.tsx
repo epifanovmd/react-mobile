@@ -7,7 +7,12 @@ export const PlaylistPlayIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M19 9H2V11H19V9ZM19 5H2V7H19V5ZM2 15H15V13H2V15ZM17 13V19L22 16L17 13Z" />
     </Svg>
   );

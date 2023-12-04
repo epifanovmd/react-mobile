@@ -7,7 +7,12 @@ export const ViewSplitHorizontalIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M3 5H21V7H3V5ZM3 11V9H21V11H3ZM3 19V13H21V19H3Z" />
     </Svg>
   );

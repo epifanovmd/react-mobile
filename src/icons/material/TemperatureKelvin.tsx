@@ -7,7 +7,12 @@ export const TemperatureKelvinIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M7 5H10V11L15 5H19L13.88 10.78L19 20H15.38L11.76 13.17L10 15.15V20H7V5Z" />
     </Svg>
   );

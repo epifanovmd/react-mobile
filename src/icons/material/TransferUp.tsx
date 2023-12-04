@@ -7,7 +7,12 @@ export const TransferUpIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M8 21V19H16V21H8ZM8 17V15H16V17H8ZM8 13V11H16V13H8ZM19 9H5L12 2L19 9Z" />
     </Svg>
   );

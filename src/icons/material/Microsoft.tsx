@@ -7,7 +7,12 @@ export const MicrosoftIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M2 3H11V12H2V3ZM11 22H2V13H11V22ZM21 3V12H12V3H21ZM21 22H12V13H21V22Z" />
     </Svg>
   );

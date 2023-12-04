@@ -7,7 +7,12 @@ export const EthernetCableIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M11 3V7H13V3H11ZM8 4V11H16V4H14V8H10V4H8ZM10 12V22H14V12H10Z" />
     </Svg>
   );

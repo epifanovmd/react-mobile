@@ -7,7 +7,12 @@ export const ViewParallelOutlineIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M19 3H5V21H19V3ZM17 19H15V5H17V19ZM13 19H11V5H13V19ZM7 5H9V19H7V5Z" />
     </Svg>
   );

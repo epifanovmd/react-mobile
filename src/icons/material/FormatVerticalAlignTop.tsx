@@ -7,7 +7,12 @@ export const FormatVerticalAlignTopIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M8 11H11V21H13V11H16L12 7L8 11ZM4 3V5H20V3H4Z" />
     </Svg>
   );

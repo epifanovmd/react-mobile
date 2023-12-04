@@ -7,7 +7,12 @@ export const ArrowUpBoldOutlineIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M16 13V21H8V13H2L12 3L22 13H16ZM7 11H10V19H14V11H17L12 6L7 11Z" />
     </Svg>
   );

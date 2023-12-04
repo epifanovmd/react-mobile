@@ -7,7 +7,12 @@ export const StoreSettingsIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M20 6H4V4H20V6ZM21 12V14H20V20H18V14H14V20H4V14H3V12L4 7H20L21 12ZM12 14H6V18H12V14ZM7 24H9V22H7V24ZM11 24H13V22H11V24ZM15 24H17V22H15V24Z" />
     </Svg>
   );

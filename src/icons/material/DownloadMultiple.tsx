@@ -7,7 +7,12 @@ export const DownloadMultipleIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M9 1V7H5L12 14L19 7H15V1H9ZM5 16V18H19V16H5ZM5 20V22H19V20H5Z" />
     </Svg>
   );

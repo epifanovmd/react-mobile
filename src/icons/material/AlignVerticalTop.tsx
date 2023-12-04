@@ -7,7 +7,12 @@ export const AlignVerticalTopIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M22 2V4H2V2H22ZM7 22H10V6H7V22ZM14 16H17V6H14V16Z" />
     </Svg>
   );

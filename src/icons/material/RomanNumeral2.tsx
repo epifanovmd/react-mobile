@@ -7,7 +7,12 @@ export const RomanNumeral2Icon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M11 7V9H10V15H11V17H7V15H8V9H7V7H11ZM17 7V9H16V15H17V17H13V15H14V9H13V7H17Z" />
     </Svg>
   );

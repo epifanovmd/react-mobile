@@ -7,7 +7,12 @@ export const TransferLeftIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M21 16H19V8H21V16ZM17 16H15V8H17V16ZM13 16H11V8H13V16ZM9 5V19L2 12L9 5Z" />
     </Svg>
   );

@@ -7,7 +7,12 @@ export const GarageOpenVariantIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M22 9V20H20V11H4V20H2V9L12 5L22 9ZM19 12H5V14H19V12Z" />
     </Svg>
   );

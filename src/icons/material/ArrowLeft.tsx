@@ -7,7 +7,12 @@ export const ArrowLeftIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M20 11.0001V13.0001H8.00003L13.5 18.5001L12.08 19.9201L4.16003 12.0001L12.08 4.08008L13.5 5.50008L8.00003 11.0001H20Z" />
     </Svg>
   );

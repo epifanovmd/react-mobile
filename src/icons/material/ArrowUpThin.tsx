@@ -7,7 +7,12 @@ export const ArrowUpThinIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M7.03003 9.96997H11.03V18.89L13.04 18.92V9.96997H17.03L12.03 4.96997L7.03003 9.96997Z" />
     </Svg>
   );

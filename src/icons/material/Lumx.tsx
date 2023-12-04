@@ -7,7 +7,12 @@ export const LumxIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M12.3501 1.75L20.1301 9.53L13.7701 15.89L12.3501 14.47L17.3001 9.53L10.9401 3.16L12.3501 1.75ZM15.8901 9.53L14.4701 10.94L10.2301 6.7L5.28012 11.65L3.87012 10.23L10.2301 3.87L15.8901 9.53ZM10.2301 8.11L11.6501 9.53L6.70012 14.47L13.0601 20.84L11.6501 22.25L3.87012 14.47L10.2301 8.11ZM8.11012 14.47L9.53012 13.06L13.7701 17.3L18.7201 12.35L20.1301 13.77L13.7701 20.13L8.11012 14.47Z" />
     </Svg>
   );

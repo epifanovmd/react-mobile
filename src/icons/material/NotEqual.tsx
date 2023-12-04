@@ -7,7 +7,12 @@ export const NotEqualIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M21 10H9V8H21V10ZM21 16H9V14H21V16ZM4 5H6V16H4V5ZM6 18V20H4V18H6Z" />
     </Svg>
   );

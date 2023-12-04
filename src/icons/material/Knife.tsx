@@ -7,7 +7,12 @@ export const KnifeIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M20.62 2C23.97 7.61 12.47 20.15 12.47 20.15L9.60002 17.28L4.91002 22L2.77002 19.86L20.62 2Z" />
     </Svg>
   );

@@ -7,7 +7,12 @@ export const ArrowSplitHorizontalIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg
+      viewBox="0 0 24 24"
+      style={style}
+      {...ownProps}
+      fill={ownProps?.fill || ownProps?.color || '#ffffff'}
+    >
       <Path d="M8 18H11V15H2V13H22V15H13V18H16L12 22L8 18ZM12 2L8 6H11V9H2V11H22V9H13V6H16L12 2Z" />
     </Svg>
   );
