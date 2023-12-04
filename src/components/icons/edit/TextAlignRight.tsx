@@ -10,7 +10,7 @@ export const TextAlignRightIcon: FC<FlexSvgProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M20 18H10M20 14H4M20 10H10M20 6H4"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

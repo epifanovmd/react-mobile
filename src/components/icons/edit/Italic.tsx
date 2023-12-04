@@ -10,7 +10,7 @@ export const ItalicIcon: FC<FlexSvgProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M8 19H10M10 19H12M10 19L14 5M12 5H14M14 5H16"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

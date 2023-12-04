@@ -12,7 +12,7 @@ export const ChevronLeftDuoIcon: FC<IProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M17 16L13 12L17 8M11 16L7 12L11 8"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

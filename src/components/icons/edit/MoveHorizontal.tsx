@@ -10,7 +10,7 @@ export const MoveHorizontalIcon: FC<FlexSvgProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M3 12H21M3 12L6 15M3 12L6 9M21 12L18 9M21 12L18 15"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

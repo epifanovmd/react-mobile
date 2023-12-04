@@ -10,7 +10,7 @@ export const WarningIcon: FC<FlexSvgProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M12 6V14M12.0498 18V18.1L11.9502 18.1002V18H12.0498Z"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

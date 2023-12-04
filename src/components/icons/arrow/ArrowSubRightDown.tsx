@@ -12,7 +12,7 @@ export const ArrowSubRightDownIcon: FC<IProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M11 13L16 18M16 18L21 13M16 18V10.1969C16 9.07899 16 8.5192 15.7822 8.0918C15.5905 7.71547 15.2839 7.40973 14.9076 7.21799C14.4798 7 13.9201 7 12.8 7H3"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

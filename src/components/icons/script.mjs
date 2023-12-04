@@ -88,7 +88,7 @@ await Promise.all(filterDirs.map(async (dir) => {
   //
   //     const data = await fsReadFile(path.resolve(currentDir, fileName))
   //     await fsWrite(path.resolve(currentDir, fileName), data.toString()
-  //       .replace('fill=\"#ffffff\" style={style} {...ownProps}', 'style={style} {...ownProps} fill=\"none\"'));
+  //       .replace('stroke={ownProps.fill}', "stroke={ownProps.fill || ownProps.color || '#fff'}"));
   //
   //     return Promise.resolve();
   //   }),

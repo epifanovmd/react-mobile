@@ -12,7 +12,7 @@ export const ArrowLeftMDIcon: FC<IProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M19 12H5M5 12L11 18M5 12L11 6"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

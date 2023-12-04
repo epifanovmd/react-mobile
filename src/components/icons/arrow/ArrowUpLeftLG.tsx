@@ -12,7 +12,7 @@ export const ArrowUpLeftLGIcon: FC<IProps> = props => {
     <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M5.63574 5.63574V12.7068M5.63574 5.63574H12.7068M5.63574 5.63574L18.3637 18.3637"
-        stroke={ownProps.fill}
+        stroke={ownProps.fill || ownProps.color || '#fff'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
