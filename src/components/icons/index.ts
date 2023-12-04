@@ -1,14 +1,3 @@
-export * from './arrow';
-export * from './calendar';
-export * from './communication';
-export * from './edit';
-export * from './environment';
-export * from './file';
-export * from './interface';
-export * from './media';
-export * from './menu';
-export * from './navigation';
-export * from './shape';
-export * from './system';
-export * from './user';
-export * from './warning';
+// https://www.figma.com/file/4dXeFSC5tplxbV0HJl7QiG/Icon-Design-System---Material-Design-Icons-(Community)?node-id=0%3A1&mode=dev
+export * from './material';
+export * from './types';
