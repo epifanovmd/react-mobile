@@ -137,7 +137,7 @@ const _InputField: FC<
             />
           </Field.Content>
           <Field.RightIcon {...rightIcon} />
-          <Field.Error {...error} />
+          <Field.Error color={'red'} {...error} />
           <Field.Description {...description} />
         </Field>
         {!!modal && (
