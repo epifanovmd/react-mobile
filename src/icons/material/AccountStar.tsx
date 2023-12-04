@@ -1,0 +1,14 @@
+import React, { FC } from 'react';
+import { FlexSvgProps } from '../types';
+import Svg, { Path } from 'react-native-svg';
+import { useFlexProps } from '../../components';
+
+export const AccountStarIcon: FC<FlexSvgProps> = props => {
+  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+
+  return (
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+      <Path d="M15 14C12.33 14 7 15.33 7 18V20H23V18C23 15.33 17.67 14 15 14ZM15 12C16.0609 12 17.0783 11.5786 17.8284 10.8284C18.5786 10.0783 19 9.06087 19 8C19 6.93913 18.5786 5.92172 17.8284 5.17157C17.0783 4.42143 16.0609 4 15 4C13.9391 4 12.9217 4.42143 12.1716 5.17157C11.4214 5.92172 11 6.93913 11 8C11 9.06087 11.4214 10.0783 12.1716 10.8284C12.9217 11.5786 13.9391 12 15 12ZM5 13.28L7.45 14.77L6.8 11.96L9 10.08L6.11 9.83L5 7.19L3.87 9.83L1 10.08L3.18 11.96L2.5 14.77L5 13.28Z" />
+    </Svg>
+  );
+};

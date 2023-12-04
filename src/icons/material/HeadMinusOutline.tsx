@@ -1,0 +1,14 @@
+import React, { FC } from 'react';
+import { FlexSvgProps } from '../types';
+import Svg, { Path } from 'react-native-svg';
+import { useFlexProps } from '../../components';
+
+export const HeadMinusOutlineIcon: FC<FlexSvgProps> = props => {
+  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+
+  return (
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+      <Path d="M13 3C16.9 3 20 6.1 20 10C20 12.8 18.4 15.2 16 16.3V21H8.99996V18H7.99996C6.89996 18 5.99996 17.1 5.99996 16V13H4.49996C4.09996 13 3.79996 12.5 4.09996 12.2L5.99996 9.7C6.19996 5.9 9.19996 3 13 3ZM13 1C8.39996 1 4.59996 4.4 4.09996 8.9L2.49996 11C1.89996 11.7 1.79996 12.7 2.19996 13.6C2.59996 14.3 3.19996 14.8 3.99996 15V16C3.99996 17.9 5.29996 19.4 6.99996 19.9V23H18V17.5C20.5 15.9 22 13.1 22 10C22 5 18 1 13 1ZM17 10H8.99996V8H17V10Z" />
+    </Svg>
+  );
+};

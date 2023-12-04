@@ -18,10 +18,10 @@ import {
 import { FlexProps, Row } from '../flexView';
 import { mergeRefs } from '../../helpers';
 import { Touchable } from '../touchable';
-import { EyeIcon } from '../../../icons/material/Eye';
-import { EyeOffIcon } from '../../../icons/material/EyeOff';
-import { CloseCircleIcon } from '../../../icons/material/CloseCircle';
-import { FlexSvgProps } from '../../../icons';
+import { EyeIcon } from '../../icons/material/Eye';
+import { EyeOffIcon } from '../../icons/material/EyeOff';
+import { CloseCircleIcon } from '../../icons/material/CloseCircle';
+import { FlexSvgProps } from '../../icons';
 
 type OmittedTextProps = Omit<
   TextInputProps,
