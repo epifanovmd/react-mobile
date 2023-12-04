@@ -7,10 +7,10 @@ export const ColumnsIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#000000" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
       <Path
         d="M14 6.5V17.5C14 17.9647 14 18.197 14.0384 18.3902C14.1962 19.1836 14.8165 19.8036 15.6099 19.9614C15.8031 19.9999 16.0354 19.9999 16.5 19.9999C16.9647 19.9999 17.1969 19.9999 17.3901 19.9614C18.1835 19.8036 18.8036 19.1836 18.9614 18.3902C18.9999 18.197 19 17.9647 19 17.5V6.5C19 6.03535 18.9999 5.80306 18.9614 5.60986C18.8036 4.81648 18.1836 4.19624 17.3902 4.03843C17.197 4 16.9647 4 16.5 4C16.0353 4 15.8031 4 15.6099 4.03843C14.8165 4.19624 14.1962 4.81648 14.0384 5.60986C14 5.80306 14 6.03534 14 6.5Z"
-        stroke="white"
+        stroke={ownProps.fill}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

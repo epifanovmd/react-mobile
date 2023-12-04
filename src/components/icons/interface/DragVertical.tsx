@@ -7,10 +7,10 @@ export const DragVerticalIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#000000" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
       <Path
         d="M14 18C14 18.5523 14.4477 19 15 19C15.5523 19 16 18.5523 16 18C16 17.4477 15.5523 17 15 17C14.4477 17 14 17.4477 14 18Z"
-        stroke="white"
+        stroke={ownProps.fill}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

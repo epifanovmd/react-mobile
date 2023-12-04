@@ -7,10 +7,10 @@ export const MoreGridBigIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#000000" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
       <Path
         d="M17 18C17 18.5523 17.4477 19 18 19C18.5523 19 19 18.5523 19 18C19 17.4477 18.5523 17 18 17C17.4477 17 17 17.4477 17 18Z"
-        stroke="white"
+        stroke={ownProps.fill}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

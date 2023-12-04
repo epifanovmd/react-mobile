@@ -7,10 +7,10 @@ export const RowsIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#000000" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
       <Path
         d="M6.5 19H17.5C17.9647 19 18.197 18.9999 18.3902 18.9614C19.1836 18.8036 19.8036 18.1836 19.9614 17.3902C19.9999 17.197 19.9999 16.9647 19.9999 16.5C19.9999 16.0353 19.9999 15.8031 19.9614 15.6099C19.8036 14.8165 19.1836 14.1962 18.3902 14.0384C18.197 14 17.9647 14 17.5 14H6.5C6.03534 14 5.80306 14 5.60986 14.0384C4.81648 14.1962 4.19624 14.8165 4.03843 15.6099C4 15.8031 4 16.0354 4 16.5C4 16.9647 4 17.1969 4.03843 17.3901C4.19624 18.1835 4.81648 18.8036 5.60986 18.9614C5.80306 18.9999 6.03535 19 6.5 19Z"
-        stroke="white"
+        stroke={ownProps.fill}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
