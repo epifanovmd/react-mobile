@@ -50,7 +50,7 @@ await Promise.all(filterDirs.map(async (dir) => {
 
   // формируем React Native компоненты из иконок svg
   await Promise.all(
-    files.map(async (fileName) => {
+    files.filter(item => item.includes('.svg')).map(async (fileName) => {
       const fileNamePath = path.resolve(currentDir, fileName);
       const newFileName = fileName.replaceAll('_', '').replaceAll('.svg', '.tsx')
       const newFileNamePath = path.resolve(currentDir, newFileName);
@@ -79,7 +79,7 @@ await Promise.all(filterDirs.map(async (dir) => {
     return `export { ${name} } from './${file}';\n`;
   });
 
-  await fsWrite(`${workDir}/index.ts`, names.toString().replace(/,/gm, ''));
+  await fsWrite(`${currentDir}/index.ts`, names.toString().replace(/,/gm, ''));
 
 
   // внусим изменения во все фалы иконок если нужно
