@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { useKey } from './hooks/useKey';
 import { ModalManager } from './ModalManager';
 import { IModalHostProps, IModalManagerHandles, IModalProvider } from './types';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 export const ModalContext = React.createContext<IModalProvider | null>(null);
 
@@ -76,13 +76,11 @@ export const ModalHost = memo(({ children, style }: IModalHostProps) => {
     }
   };
 
+  const _style = useMemo(() => [{ flex: 1 }, style], [style]);
+
   return (
     <ModalContext.Provider value={{ mount, update, unmount }}>
-      <View
-        style={[{ flex: 1 }, style]}
-        collapsable={false}
-        pointerEvents="box-none"
-      >
+      <View style={_style} collapsable={false} pointerEvents="box-none">
         {children}
       </View>
 

@@ -2,6 +2,7 @@ const genericMessage = 'Invariant Violation modal';
 
 const {
   setPrototypeOf = (obj: any, proto: any): any => {
+    // eslint-disable-next-line no-proto
     obj.__proto__ = proto;
 
     return obj;

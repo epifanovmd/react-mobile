@@ -18,7 +18,10 @@ import {
 import { FlexProps, Row } from '../flexView';
 import { mergeRefs } from '../../helpers';
 import { Touchable } from '../touchable';
-import { CloseCircleIcon, FlexSvgProps, EyeIcon, EyeOffIcon } from '../icons';
+import { EyeIcon } from '../../../icons/material/Eye';
+import { EyeOffIcon } from '../../../icons/material/EyeOff';
+import { CloseCircleIcon } from '../../../icons/material/CloseCircle';
+import { FlexSvgProps } from '../../../icons';
 
 type OmittedTextProps = Omit<
   TextInputProps,
@@ -167,11 +170,11 @@ const s = StyleSheet.create({
 
 const _renderSecurityIcon = (visible: boolean, svgProps?: FlexSvgProps) =>
   visible ? (
-    <EyeIcon mh={4} {...svgProps} />
+    <EyeIcon height={18} width={18} mh={4} {...svgProps} />
   ) : (
-    <EyeOffIcon mh={4} {...svgProps} />
+    <EyeOffIcon height={18} width={18} mh={4} {...svgProps} />
   );
 
 const _renderClearableIcon = (svgProps?: FlexSvgProps) => (
-  <CloseCircleIcon mh={4} {...svgProps} />
+  <CloseCircleIcon height={18} width={18} mh={4} {...svgProps} />
 );

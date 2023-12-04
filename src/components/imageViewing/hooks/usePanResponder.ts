@@ -224,6 +224,7 @@ const usePanResponder = ({
       }
 
       const isTapGesture =
+        // eslint-disable-next-line eqeqeq
         numberInitialTouches == 1 && gestureState.numberActiveTouches === 1;
       const isPinchGesture =
         numberInitialTouches === 2 && gestureState.numberActiveTouches === 2;
@@ -276,12 +277,12 @@ const usePanResponder = ({
 
       if (isTapGesture && currentScale > initialScale) {
         const { x, y } = currentTranslate;
-        const { dx, dy } = gestureState;
+        const { dx: _dx, dy: _dy } = gestureState;
         const [topBound, leftBound, bottomBound, rightBound] =
           getBounds(currentScale);
 
-        let nextTranslateX = x + dx;
-        let nextTranslateY = y + dy;
+        let nextTranslateX = x + _dx;
+        let nextTranslateY = y + _dy;
 
         if (nextTranslateX > leftBound) {
           nextTranslateX -= (nextTranslateX - leftBound) * OUT_BOUND_MULTIPLIER;

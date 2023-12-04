@@ -1,0 +1,14 @@
+import React, { FC } from 'react';
+import { FlexSvgProps } from '../types';
+import Svg, { Path } from 'react-native-svg';
+import { useFlexProps } from '../../src';
+
+export const CreationIcon: FC<FlexSvgProps> = props => {
+  const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
+
+  return (
+    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+      <Path d="M19 1L17.74 3.75L15 5L17.74 6.26L19 9L20.25 6.26L23 5L20.25 3.75L19 1ZM9 4L6.5 9.5L1 12L6.5 14.5L9 20L11.5 14.5L17 12L11.5 9.5L9 4ZM19 15L17.74 17.74L15 19L17.74 20.25L19 23L20.25 20.25L23 19L20.25 17.74" />
+    </Svg>
+  );
+};
