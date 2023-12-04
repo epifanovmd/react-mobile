@@ -9,7 +9,7 @@ export const ArrowDownLGIcon: FC<IProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M12 21L17 16M12 21L7 16M12 21V3"
         stroke={ownProps.fill}

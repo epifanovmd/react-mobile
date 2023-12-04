@@ -9,7 +9,7 @@ export const ShrinkIcon: FC<IProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M5 14H10V19M19 10H14V5"
         stroke={ownProps.fill}

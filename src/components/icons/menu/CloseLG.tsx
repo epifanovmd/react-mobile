@@ -7,7 +7,7 @@ export const CloseLGIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001"
         stroke={ownProps.fill}

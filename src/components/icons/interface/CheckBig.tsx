@@ -7,7 +7,7 @@ export const CheckBigIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M4 12L8.94975 16.9497L19.5572 6.34326"
         stroke={ownProps.fill}

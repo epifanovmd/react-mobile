@@ -7,7 +7,7 @@ export const ForwardIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M12 12V7L21 12L12 17V12ZM12 12L3 17V7L12 12Z"
         stroke={ownProps.fill}

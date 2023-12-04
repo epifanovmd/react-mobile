@@ -9,7 +9,7 @@ export const ArrowLeftMDIcon: FC<IProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M19 12H5M5 12L11 18M5 12L11 6"
         stroke={ownProps.fill}

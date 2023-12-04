@@ -7,7 +7,7 @@ export const TextAlignLeftIcon: FC<FlexSvgProps> = props => {
   const { style, ownProps } = useFlexProps(props, { height: 24, width: 24 });
 
   return (
-    <Svg viewBox="0 0 24 24" fill="#ffffff" style={style} {...ownProps}>
+    <Svg viewBox="0 0 24 24" style={style} {...ownProps} fill="none">
       <Path
         d="M4 18H14M4 14H20M4 10H14M4 6H20"
         stroke={ownProps.fill}
