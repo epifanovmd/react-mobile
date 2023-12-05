@@ -10,9 +10,13 @@ import React, {
   useState,
 } from 'react';
 import { Field, FieldProps, FieldSlots } from './Field';
-import { GestureResponderEvent, ScrollView, TextInput } from 'react-native';
+import {
+  ColorValue,
+  GestureResponderEvent,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import { Text, TextProps } from '../text';
-import { SvgProps } from 'react-native-svg';
 import { Modal, ModalProps, useModal } from '../modal';
 import { Input, InputProps } from '../input';
 import {
@@ -25,12 +29,11 @@ import { FlexProps, Row } from '../flexView';
 import { Touchable } from '../touchable';
 import { SafeArea } from '../safeArea';
 import { CloseIcon } from '../../icons/material/Close';
-import { FlexSvgProps } from '../../icons';
 
 interface InputFieldProps extends FieldProps {}
 
 type ModalPropsWithRenderClose = ModalProps & {
-  renderCloseIcon?: FC<SvgProps>;
+  renderCloseIcon?: (fill?: ColorValue) => React.JSX.Element;
 };
 
 const InputSlot = createSlot<InputProps>('Input');
@@ -119,9 +122,9 @@ const _InputField: FC<
 
     const closeIcon = useMemo(
       () =>
-        (modal?.renderCloseIcon ?? _renderCloseIcon)({
-          fill: resolveStyleProp([modalLabel?.style]).color ?? '#fff',
-        }),
+        (modal?.renderCloseIcon ?? _renderCloseIcon)(
+          resolveStyleProp([modalLabel?.style]).color ?? '#fff',
+        ),
       [modal?.renderCloseIcon, modalLabel?.style],
     );
 
@@ -208,6 +211,4 @@ InputField.Content = Field.Content;
 InputField.Description = Field.Description;
 InputField.Error = Field.Error;
 
-const _renderCloseIcon = (svgProps?: FlexSvgProps) => (
-  <CloseIcon {...svgProps} />
-);
+const _renderCloseIcon = (fill?: ColorValue) => <CloseIcon fill={fill} />;

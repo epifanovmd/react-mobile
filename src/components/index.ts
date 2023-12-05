@@ -1,4 +1,6 @@
+export * from './bounceable';
 export * from './carousel';
+export * from './checkBox';
 export * from './field';
 export * from './flexView';
 export * from './imageViewing';

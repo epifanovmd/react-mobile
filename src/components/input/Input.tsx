@@ -21,7 +21,6 @@ import { Touchable } from '../touchable';
 import { EyeIcon } from '../../icons/material/Eye';
 import { EyeOffIcon } from '../../icons/material/EyeOff';
 import { CloseCircleIcon } from '../../icons/material/CloseCircle';
-import { FlexSvgProps } from '../../icons';
 
 type OmittedTextProps = Omit<
   TextInputProps,
@@ -41,8 +40,11 @@ export interface InputProps extends OmittedTextProps {
   leftSlot?: React.JSX.Element;
   rightSlot?: React.JSX.Element;
 
-  renderClearableIcon?: () => React.JSX.Element | null;
-  renderSecurityIcon?: (visible: boolean) => React.JSX.Element | null;
+  renderClearableIcon?: (fill?: ColorValue) => React.JSX.Element | null;
+  renderSecurityIcon?: (
+    visible: boolean,
+    fill?: ColorValue,
+  ) => React.JSX.Element | null;
 }
 
 export const Input = memo(
@@ -141,13 +143,13 @@ export const Input = memo(
 
           {clearable && hasValue && !disabled && (
             <Touchable disabled={disabled} onPress={clear}>
-              {renderClearableIcon({ fill: inputTextColor })}
+              {renderClearableIcon(inputTextColor)}
             </Touchable>
           )}
 
           {type === 'password' && (
             <Touchable disabled={disabled} onPress={toggleVisiblePassword}>
-              {renderSecurityIcon(visiblePassword, { fill: inputTextColor })}
+              {renderSecurityIcon(visiblePassword, inputTextColor)}
             </Touchable>
           )}
 
@@ -168,13 +170,13 @@ const s = StyleSheet.create({
   },
 });
 
-const _renderSecurityIcon = (visible: boolean, svgProps?: FlexSvgProps) =>
-  visible ? (
-    <EyeIcon height={18} width={18} mh={4} {...svgProps} />
-  ) : (
-    <EyeOffIcon height={18} width={18} mh={4} {...svgProps} />
-  );
-
-const _renderClearableIcon = (svgProps?: FlexSvgProps) => (
-  <CloseCircleIcon height={18} width={18} mh={4} {...svgProps} />
+const _renderClearableIcon = (fill?: ColorValue) => (
+  <CloseCircleIcon height={18} width={18} mh={4} fill={fill} />
 );
+
+const _renderSecurityIcon = (visible: boolean, fill?: ColorValue) =>
+  visible ? (
+    <EyeIcon height={18} width={18} mh={4} fill={fill} />
+  ) : (
+    <EyeOffIcon height={18} width={18} mh={4} fill={fill} />
+  );
