@@ -11,7 +11,6 @@ import {
   Animated,
   FlatListProps,
   LayoutChangeEvent,
-  ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleProp,
@@ -21,12 +20,21 @@ import {
   VirtualizedList,
 } from 'react-native';
 import { PickerItem } from './PickerItem';
+import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { mergeRefs } from '../../helpers';
+import createAnimatedComponent = Animated.createAnimatedComponent;
 
-const AnimatedList = Animated.createAnimatedComponent(VirtualizedList<any>);
+const AnimatedList = createAnimatedComponent(VirtualizedList<any>);
 
 const getItem = (d: any[], i: number) => d[i];
 const getItemCount = (d: any[]) => d?.length;
+
+const triggerHapticFeedback = () => {
+  RNReactNativeHapticFeedback.trigger('effectClick', {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  });
+};
 
 type OmitKeys =
   | 'pagingEnabled'
@@ -63,8 +71,7 @@ export interface PickerProps<T> extends ViewProps {
   onChange: (item: T, index: number) => void;
   renderItem: (item: T, index: number) => React.JSX.Element;
 
-  direction?: 'vertical' | 'horizontal';
-  itemSize?: number;
+  horizontal?: boolean;
   visibleItems?: number;
   height?: number;
   animations?: PickerAnimations;
@@ -86,8 +93,7 @@ export const Picker: Picker = memo(
         data: _data,
         onChange,
         renderItem: _renderItem,
-        direction = 'vertical',
-        itemSize: _itemSize,
+        horizontal = false,
         visibleItems = 2,
         height: _height = 300,
         animations,
@@ -101,12 +107,13 @@ export const Picker: Picker = memo(
       ref,
     ) => {
       const initialized = useRef(false);
-      const [itemSize, setItemSize] = useState(_itemSize || 0);
+      const [itemSize, setItemSize] = useState(0);
       const scrollAnimatedValue = useRef(new Animated.Value(0)).current;
       const scrollListener = useRef('0');
       const active = useRef(0);
       const flatListRef = useRef<VirtualizedList<any>>(null);
       const lastChangeIndex = useRef(0);
+      const isDrag = useRef(false);
 
       const emptyItems = useMemo(
         () => new Array(visibleItems).fill(null),
@@ -122,13 +129,22 @@ export const Picker: Picker = memo(
         scrollListener.current &&
           scrollAnimatedValue.removeListener(scrollListener.current);
         scrollListener.current = scrollAnimatedValue.addListener(
-          ({ value }) => (active.current = value),
+          ({ value }) => {
+            const index = Math.round(value / itemSize);
+            const savedIndex = Math.round(active.current / itemSize);
+
+            if (!isDrag.current && index !== savedIndex) {
+              triggerHapticFeedback();
+            }
+
+            return (active.current = value);
+          },
         );
 
         return () => {
           scrollAnimatedValue.removeListener(scrollListener.current);
         };
-      }, [scrollAnimatedValue]);
+      }, [itemSize, scrollAnimatedValue]);
 
       useEffect(() => {
         if (
@@ -159,9 +175,7 @@ export const Picker: Picker = memo(
         (event: LayoutChangeEvent) => {
           const { height, width } = event.nativeEvent.layout;
 
-          const size =
-            (direction === 'horizontal' ? width : height) /
-            (visibleItems * 2 + 1);
+          const size = (horizontal ? width : height) / (visibleItems * 2 + 1);
 
           if (size) {
             setItemSize(size);
@@ -170,7 +184,7 @@ export const Picker: Picker = memo(
           initialized.current = true;
           _onLayout?.(event);
         },
-        [direction, _onLayout, visibleItems],
+        [horizontal, _onLayout, visibleItems],
       );
 
       const onScroll = useMemo(
@@ -179,10 +193,9 @@ export const Picker: Picker = memo(
             [
               {
                 nativeEvent: {
-                  contentOffset:
-                    direction === 'horizontal'
-                      ? { x: scrollAnimatedValue }
-                      : { y: scrollAnimatedValue },
+                  contentOffset: horizontal
+                    ? { x: scrollAnimatedValue }
+                    : { y: scrollAnimatedValue },
                 },
               },
             ],
@@ -190,7 +203,7 @@ export const Picker: Picker = memo(
               useNativeDriver: true,
             },
           ),
-        [direction, scrollAnimatedValue],
+        [horizontal, scrollAnimatedValue],
       );
 
       const onMomentumScrollEnd = useCallback(
@@ -217,13 +230,19 @@ export const Picker: Picker = memo(
       );
 
       const onScrollToIndexFailed = useCallback(() => {}, []);
+      const onScrollBeginDrag = useCallback(() => {
+        isDrag.current = true;
+      }, []);
+      const onScrollEndDrag = useCallback(() => {
+        isDrag.current = false;
+      }, []);
 
       const renderItem = useCallback(
-        ({ item, index }: ListRenderItemInfo<any>) => (
+        ({ item, index }: any) => (
           <PickerItem
             itemSize={itemSize}
             visibleItems={visibleItems}
-            isHorizontal={direction === 'horizontal'}
+            isHorizontal={horizontal}
             item={item}
             index={index}
             data={data}
@@ -236,7 +255,7 @@ export const Picker: Picker = memo(
         [
           itemSize,
           visibleItems,
-          direction,
+          horizontal,
           data,
           scrollAnimatedValue,
           onPress,
@@ -266,22 +285,17 @@ export const Picker: Picker = memo(
       const style = useMemo<StyleProp<ViewStyle>>(
         () => [
           {
-            height:
-              direction === 'vertical'
-                ? _itemSize
-                  ? _itemSize * (visibleItems * 2 + 1)
-                  : _height
-                : 'auto',
-            flexDirection: direction !== 'horizontal' ? 'row' : 'column',
+            height: horizontal ? 'auto' : _height,
+            flexDirection: horizontal ? 'column' : 'row',
           },
           _style,
         ],
-        [direction, _itemSize, visibleItems, _height, _style],
+        [horizontal, _height, _style],
       );
 
       return (
         <View
-          key={direction + visibleItems}
+          key={String(horizontal) + visibleItems}
           {...rest}
           style={style}
           onLayout={onLayout}
@@ -289,7 +303,7 @@ export const Picker: Picker = memo(
           {!!itemSize && (
             <AnimatedList
               ref={mergeRefs([ref, flatListRef])}
-              decelerationRate={data.length > 100 ? 'normal' : 'fast'}
+              decelerationRate={'fast'}
               keyExtractor={keyExtractor}
               {...listProps}
               initialScrollIndex={currentIndex}
@@ -298,9 +312,11 @@ export const Picker: Picker = memo(
               snapToInterval={itemSize}
               snapToOffsets={snapToOffsets}
               getItemLayout={getItemLayout}
-              horizontal={direction === 'horizontal'}
+              horizontal={horizontal}
               getItemCount={getItemCount}
               getItem={getItem}
+              onScrollBeginDrag={onScrollBeginDrag}
+              onScrollEndDrag={onScrollEndDrag}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               onScroll={onScroll}
