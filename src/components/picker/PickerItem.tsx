@@ -44,10 +44,9 @@ export const PickerItem: PickerItem = memo(
             ...data.map((_: any, i: number) => {
               const center = i + visibleItems;
               const offset = Math.abs(center - index);
-              if (offset <= visibleItems + 1) {
-                if (animationValues[offset] !== undefined) {
-                  return animationValues[offset];
-                }
+
+              if (animationValues[offset] !== undefined) {
+                return animationValues[offset];
               }
 
               return animationValues[animationValues.length] ?? 1;
@@ -63,7 +62,7 @@ export const PickerItem: PickerItem = memo(
     }, [_onPress, index]);
 
     const { scale, ...animatedProps } = useMemo(() => {
-      const o = scrollAnimatedValue.interpolate(animated([1, 0.6, 0.2, 0]));
+      const o = scrollAnimatedValue.interpolate(animated([1, 0.6, 0.4, 0.2]));
       const s = scrollAnimatedValue.interpolate(animated([1.8, 0.9, 0.8, 0.5]));
       const tx = scrollAnimatedValue.interpolate(animated([1, 3, 9, 12]));
 
