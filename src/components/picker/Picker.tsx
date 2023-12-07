@@ -68,7 +68,7 @@ export type PickerAnimations = {
 export interface PickerProps<T> extends ViewProps {
   currentIndex?: number;
   data: T[];
-  onChange: (item: T, index: number) => void;
+  onChange?: (item: T, index: number) => void;
   renderItem: (item: T, index: number) => React.JSX.Element;
 
   horizontal?: boolean;
@@ -214,7 +214,7 @@ export const Picker: Picker = memo(
 
           if (index !== lastChangeIndex.current) {
             lastChangeIndex.current = index;
-            onChange(data[index + visibleItems], index);
+            onChange?.(data[index + visibleItems], index);
           }
         },
         [itemSize, listProps, onChange, data, visibleItems],
@@ -224,7 +224,7 @@ export const Picker: Picker = memo(
         (index: number) => {
           scrollToIndex(index - visibleItems);
           lastChangeIndex.current = index - visibleItems;
-          onChange(data[index], index - visibleItems);
+          onChange?.(data[index], index - visibleItems);
         },
         [data, onChange, scrollToIndex, visibleItems],
       );
