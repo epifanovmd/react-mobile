@@ -50,7 +50,7 @@ export const PickerItem: PickerItem = memo(
                 }
               }
 
-              return 1;
+              return animationValues[animationValues.length] ?? 1;
             }),
           ] as string[] | number[],
         };
