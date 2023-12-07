@@ -113,7 +113,7 @@ export const Picker: Picker = memo(
       const active = useRef(0);
       const flatListRef = useRef<VirtualizedList<any>>(null);
       const lastChangeIndex = useRef(0);
-      const isDrag = useRef(false);
+      const disabledFeedback = useRef(true);
 
       const emptyItems = useMemo(
         () => new Array(visibleItems).fill(null),
@@ -134,10 +134,17 @@ export const Picker: Picker = memo(
 
         scrollListener.current = animatedValue.addListener(({ value }) => {
           const index = Math.round(value / itemSize);
-          const savedIndex = Math.round(active.current / itemSize);
 
-          if (!isDrag.current && index !== savedIndex) {
-            triggerHapticFeedback();
+          if (
+            !disabledFeedback.current &&
+            index > 0 &&
+            index < data.length - 1 - visibleItems * 2
+          ) {
+            const savedIndex = Math.round(active.current / itemSize);
+
+            if (index !== savedIndex) {
+              triggerHapticFeedback();
+            }
           }
 
           return (active.current = value);
@@ -148,6 +155,7 @@ export const Picker: Picker = memo(
             animatedValue.removeListener(scrollListener.current);
           }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [itemSize]);
 
       useEffect(() => {
@@ -156,6 +164,7 @@ export const Picker: Picker = memo(
           initialized.current &&
           currentIndex !== lastChangeIndex.current
         ) {
+          disabledFeedback.current = true;
           scrollToIndex(currentIndex);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,6 +235,8 @@ export const Picker: Picker = memo(
 
       const onPress = useCallback(
         (index: number) => {
+          disabledFeedback.current = true;
+          triggerHapticFeedback();
           scrollToIndex(index - visibleItems);
           lastChangeIndex.current = index - visibleItems;
           onChange?.(data[index], index - visibleItems);
@@ -234,11 +245,9 @@ export const Picker: Picker = memo(
       );
 
       const onScrollToIndexFailed = useCallback(() => {}, []);
+
       const onScrollBeginDrag = useCallback(() => {
-        isDrag.current = true;
-      }, []);
-      const onScrollEndDrag = useCallback(() => {
-        isDrag.current = false;
+        disabledFeedback.current = false;
       }, []);
 
       const renderItem = useCallback(
@@ -321,7 +330,6 @@ export const Picker: Picker = memo(
               scrollEventThrottle={1}
               getItem={getItem}
               onScrollBeginDrag={onScrollBeginDrag}
-              onScrollEndDrag={onScrollEndDrag}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               onScroll={onScroll}
