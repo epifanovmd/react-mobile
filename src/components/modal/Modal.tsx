@@ -706,6 +706,11 @@ export const Modal = memo(
         withHandle,
       ]);
 
+      const _childrenStyle = useMemo(
+        () => [{ flexShrink: 1 }, childrenStyle],
+        [childrenStyle],
+      );
+
       const renderChildren = useCallback(
         () => (
           <PanGestureHandler
@@ -722,20 +727,23 @@ export const Modal = memo(
             activeOffsetX={ACTIVATED}
             onHandlerStateChange={handleChildren}
           >
-            <Animated.View onLayout={handleContentLayout} style={childrenStyle}>
+            <Animated.View
+              onLayout={handleContentLayout}
+              style={_childrenStyle}
+            >
               <NativeViewGestureHandler
                 ref={nativeViewChildrenRef}
                 waitFor={tapGestureModalizeRef}
                 simultaneousHandlers={panGestureChildrenRef}
               >
-                <View>{children}</View>
+                <View style={s.children}>{children}</View>
               </NativeViewGestureHandler>
             </Animated.View>
           </PanGestureHandler>
         ),
         [
           children,
-          childrenStyle,
+          _childrenStyle,
           handleChildren,
           handleContentLayout,
           handleGestureEvent,
@@ -932,9 +940,11 @@ const s = StyleSheet.create({
     zIndex: 9998,
   },
   modalContainer: {
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
     overflow: 'hidden',
+  },
+  children: {
+    flexShrink: 1,
   },
   overlayContainer: {
     position: 'absolute',
