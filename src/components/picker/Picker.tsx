@@ -109,6 +109,7 @@ export const Picker: Picker = memo(
       const initialized = useRef(false);
       const [itemSize, setItemSize] = useState(0);
       const scrollAnimatedValue = useRef(new Animated.Value(0));
+      const scrollListener = useRef('0');
       const active = useRef(0);
       const flatListRef = useRef<VirtualizedList<any>>(null);
       const lastChangeIndex = useRef(0);
@@ -125,11 +126,13 @@ export const Picker: Picker = memo(
       );
 
       useEffect(() => {
-        if (scrollAnimatedValue.current.hasListeners()) {
-          scrollAnimatedValue.current.removeAllListeners();
+        const animatedValue = scrollAnimatedValue.current;
+
+        if (scrollListener.current) {
+          animatedValue.removeListener(scrollListener.current);
         }
 
-        scrollAnimatedValue.current.addListener(({ value }) => {
+        scrollListener.current = animatedValue.addListener(({ value }) => {
           const index = Math.round(value / itemSize);
           const savedIndex = Math.round(active.current / itemSize);
 
@@ -140,7 +143,11 @@ export const Picker: Picker = memo(
           return (active.current = value);
         });
 
-        return scrollAnimatedValue.current.removeAllListeners;
+        return () => {
+          if (scrollListener.current) {
+            animatedValue.removeListener(scrollListener.current);
+          }
+        };
       }, [itemSize]);
 
       useEffect(() => {
