@@ -9,40 +9,55 @@ import React, {
 } from 'react';
 import {
   Animated,
-  FlatList,
   FlatListProps,
   LayoutChangeEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  StyleProp,
+  View,
+  ViewProps,
+  ViewStyle,
+  VirtualizedList,
 } from 'react-native';
-import { isString } from '@force-dev/utils';
-import { Col, FlexProps, FlexView } from '../flexView';
-import { Bounceable } from '../bounceable';
+import { PickerItem } from './PickerItem';
 import { mergeRefs } from '../../helpers';
-import { Text } from '../text';
+
+const AnimatedList = Animated.createAnimatedComponent(VirtualizedList<any>);
+
+const getItem = (d: any[], i: number) => d[i];
+const getItemCount = (d: any[]) => d?.length;
 
 type OmitKeys =
   | 'pagingEnabled'
+  | 'initialScrollIndex'
   | 'showsVerticalScrollIndicator'
   | 'showsHorizontalScrollIndicator'
   | 'snapToInterval'
   | 'snapToOffsets'
-  | 'horizontal'
-  | 'data'
   | 'getItemLayout'
+  | 'horizontal'
+  | 'getItemCount'
+  | 'getItem'
   | 'onScroll'
+  | 'data'
+  // | 'onMomentumScrollEnd'
+  | 'renderItem'
+  | 'onScrollToIndexFailed'
   | 'ListFooterComponent'
   | 'ListHeaderComponent'
   | 'ListEmptyComponent'
   | 'ListFooterComponentStyle'
-  | 'ListHeaderComponentStyle'
-  | 'renderItem';
+  | 'ListHeaderComponentStyle';
 
-export interface PickerProps<T> extends FlexProps {
-  prefix?: string | React.JSX.Element;
-  suffix?: string | React.JSX.Element;
+export type PickerAnimations = {
+  rotate?: string[];
+  scale?: number[];
+  translateX?: number[];
+  translateY?: number[];
+};
 
+export interface PickerProps<T> extends ViewProps {
   currentIndex?: number;
   data: T[];
   onChange: (item: T, index: number) => void;
@@ -52,24 +67,21 @@ export interface PickerProps<T> extends FlexProps {
   itemSize?: number;
   visibleItems?: number;
   height?: number;
+  animations?: PickerAnimations;
 
-  flatListProps?: Omit<FlatListProps<T>, OmitKeys>;
-  prefixContainerProps?: FlexProps;
-  suffixContainerProps?: FlexProps;
+  listProps?: Omit<FlatListProps<T>, OmitKeys>;
 }
 
 export interface Picker {
   <T extends any>(
-    props: PickerProps<T> & { ref?: React.Ref<FlatList> },
+    props: PickerProps<T> & { ref?: React.Ref<VirtualizedList<T>> },
   ): React.JSX.Element | null;
 }
 
 export const Picker: Picker = memo(
-  forwardRef(
+  forwardRef<any, PickerProps<any>>(
     (
       {
-        prefix,
-        suffix,
         currentIndex,
         data: _data,
         onChange,
@@ -78,27 +90,33 @@ export const Picker: Picker = memo(
         itemSize: _itemSize,
         visibleItems = 2,
         height: _height = 300,
+        animations,
 
-        flatListProps,
-        prefixContainerProps,
-        suffixContainerProps,
+        listProps,
 
+        style: _style,
+        onLayout: _onLayout,
         ...rest
       },
       ref,
     ) => {
+      const initialized = useRef(false);
       const [itemSize, setItemSize] = useState(_itemSize || 0);
       const scrollAnimatedValue = useRef(new Animated.Value(0)).current;
       const scrollListener = useRef('0');
       const active = useRef(0);
-      const flatListRef = useRef<FlatList>(null);
+      const flatListRef = useRef<VirtualizedList<any>>(null);
       const lastChangeIndex = useRef(0);
 
-      const data = useMemo(() => {
-        const emptyItems = new Array(visibleItems).fill(null);
+      const emptyItems = useMemo(
+        () => new Array(visibleItems).fill(null),
+        [visibleItems],
+      );
 
-        return [...emptyItems, ..._data, ...emptyItems] as any;
-      }, [_data, visibleItems]);
+      const data = useMemo(
+        () => [...emptyItems, ..._data, ...emptyItems] as any,
+        [_data, emptyItems],
+      );
 
       useEffect(() => {
         scrollListener.current &&
@@ -113,121 +131,46 @@ export const Picker: Picker = memo(
       }, [scrollAnimatedValue]);
 
       useEffect(() => {
-        if (currentIndex !== undefined) {
+        if (
+          currentIndex !== undefined &&
+          initialized.current &&
+          currentIndex !== lastChangeIndex.current
+        ) {
           scrollToIndex(currentIndex);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [currentIndex, data.length]);
 
+      // methods
       const scrollToIndex = useCallback(
-        (index: number) => {
+        (index: number, animated: boolean = true) => {
           if (index <= _data.length) {
-            flatListRef.current?.scrollToIndex({
-              animated: true,
-              index,
+            flatListRef.current?.scrollToOffset({
+              animated,
+              offset: index * itemSize,
             });
           }
         },
-        [_data],
+        [_data.length, itemSize],
       );
 
+      // handlers
       const onLayout = useCallback(
-        ({ nativeEvent }: LayoutChangeEvent) => {
-          const { height, width } = nativeEvent.layout;
+        (event: LayoutChangeEvent) => {
+          const { height, width } = event.nativeEvent.layout;
 
           const size =
             (direction === 'horizontal' ? width : height) /
             (visibleItems * 2 + 1);
 
-          if (currentIndex !== undefined) {
-            scrollToIndex(currentIndex);
-          }
-
           if (size) {
             setItemSize(size);
           }
+
+          initialized.current = true;
+          _onLayout?.(event);
         },
-        [currentIndex, direction, scrollToIndex, visibleItems],
-      );
-
-      const renderItem = useCallback(
-        ({ item, index }: ListRenderItemInfo<any>) => {
-          const isHorizontal = direction === 'horizontal';
-          const makeAnimated = (a: number, b: number, c: number) => {
-            return {
-              inputRange: [...data.map((_: any, i: number) => i * itemSize)],
-              outputRange: [
-                ...data.map((_: any, i: number) => {
-                  const center = i + visibleItems;
-                  if (center === index) {
-                    return a;
-                  } else if (center + 1 === index || center - 1 === index) {
-                    return b;
-                  } else {
-                    return c;
-                  }
-                }),
-              ],
-            };
-          };
-
-          if (item === null) {
-            return (
-              <Col
-                height={isHorizontal ? undefined : itemSize}
-                width={isHorizontal ? itemSize : undefined}
-              />
-            );
-          }
-
-          const onPress = () => {
-            scrollToIndex(index - visibleItems);
-            lastChangeIndex.current = index - visibleItems;
-            setTimeout(() => {
-              onChange(data[index], index - visibleItems);
-            }, 0);
-          };
-
-          const opacity = scrollAnimatedValue.interpolate(
-            makeAnimated(1, 0.6, 0.2),
-          );
-
-          const scale = scrollAnimatedValue.interpolate(
-            makeAnimated(1.8, 0.9, 0.8),
-          );
-
-          return (
-            <Bounceable onPress={onPress}>
-              <Col
-                animated={true}
-                alignItems={'center'}
-                justifyContent={'center'}
-                height={isHorizontal ? undefined : itemSize}
-                width={isHorizontal ? itemSize : undefined}
-                opacity={opacity}
-              >
-                <Col
-                  pa={4}
-                  animated={true}
-                  scale={scale}
-                  height={itemSize ? undefined : 0}
-                >
-                  {_renderItem(item, index)}
-                </Col>
-              </Col>
-            </Bounceable>
-          );
-        },
-        [
-          direction,
-          scrollAnimatedValue,
-          itemSize,
-          _renderItem,
-          data,
-          visibleItems,
-          scrollToIndex,
-          onChange,
-        ],
+        [direction, _onLayout, visibleItems],
       );
 
       const onScroll = useMemo(
@@ -254,16 +197,55 @@ export const Picker: Picker = memo(
         (event: NativeSyntheticEvent<NativeScrollEvent>) => {
           const index = Math.round(active.current / itemSize);
 
-          flatListProps?.onMomentumScrollEnd?.(event);
+          listProps?.onMomentumScrollEnd?.(event);
 
           if (index !== lastChangeIndex.current) {
             lastChangeIndex.current = index;
             onChange(data[index + visibleItems], index);
           }
         },
-        [itemSize, flatListProps, onChange, data, visibleItems],
+        [itemSize, listProps, onChange, data, visibleItems],
       );
 
+      const onPress = useCallback(
+        (index: number) => {
+          scrollToIndex(index - visibleItems);
+          lastChangeIndex.current = index - visibleItems;
+          onChange(data[index], index - visibleItems);
+        },
+        [data, onChange, scrollToIndex, visibleItems],
+      );
+
+      const onScrollToIndexFailed = useCallback(() => {}, []);
+
+      const renderItem = useCallback(
+        ({ item, index }: ListRenderItemInfo<any>) => (
+          <PickerItem
+            itemSize={itemSize}
+            visibleItems={visibleItems}
+            isHorizontal={direction === 'horizontal'}
+            item={item}
+            index={index}
+            data={data}
+            scrollAnimatedValue={scrollAnimatedValue}
+            onPress={onPress}
+            renderItem={_renderItem}
+            animations={animations}
+          />
+        ),
+        [
+          itemSize,
+          visibleItems,
+          direction,
+          data,
+          scrollAnimatedValue,
+          onPress,
+          _renderItem,
+          animations,
+        ],
+      );
+
+      // performance
       const keyExtractor = useCallback((_: number, i: number) => String(i), []);
 
       const snapToOffsets = useMemo(
@@ -273,60 +255,60 @@ export const Picker: Picker = memo(
 
       const getItemLayout = useCallback(
         (_: any, index: number) => ({
-          length: data?.length || 0,
-          index: index,
-          offset: index * itemSize,
+          length: itemSize,
+          offset: itemSize * index,
+          index,
         }),
-        [itemSize, data?.length],
+        [itemSize],
       );
 
-      const height = _itemSize ? _itemSize * (visibleItems * 2 + 1) : _height;
+      // styles
+      const style = useMemo<StyleProp<ViewStyle>>(
+        () => [
+          {
+            height:
+              direction === 'vertical'
+                ? _itemSize
+                  ? _itemSize * (visibleItems * 2 + 1)
+                  : _height
+                : 'auto',
+            flexDirection: direction !== 'horizontal' ? 'row' : 'column',
+          },
+          _style,
+        ],
+        [direction, _itemSize, visibleItems, _height, _style],
+      );
 
       return (
-        <FlexView
+        <View
           key={direction + visibleItems}
-          row={direction !== 'horizontal' || undefined}
-          height={direction === 'vertical' ? height : undefined}
           {...rest}
+          style={style}
           onLayout={onLayout}
         >
-          <FlexView
-            minWidth={40}
-            row={direction === 'horizontal' || undefined}
-            justifyContent={'center'}
-            alignItems={'flex-end'}
-            {...prefixContainerProps}
-          >
-            {isString(prefix) ? <Text fontSize={18}>{prefix}</Text> : prefix}
-          </FlexView>
-          <FlexView row={direction !== 'horizontal' || undefined}>
-            <Animated.FlatList<any>
+          {!!itemSize && (
+            <AnimatedList
               ref={mergeRefs([ref, flatListRef])}
-              decelerationRate={'fast'}
+              decelerationRate={data.length > 100 ? 'normal' : 'fast'}
               keyExtractor={keyExtractor}
-              {...flatListProps}
-              pagingEnabled
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
+              {...listProps}
+              initialScrollIndex={currentIndex}
+              data={data}
+              renderItem={renderItem}
               snapToInterval={itemSize}
               snapToOffsets={snapToOffsets}
-              horizontal={direction === 'horizontal'}
-              onScroll={onScroll}
-              data={data}
               getItemLayout={getItemLayout}
+              horizontal={direction === 'horizontal'}
+              getItemCount={getItemCount}
+              getItem={getItem}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              onScroll={onScroll}
+              onScrollToIndexFailed={onScrollToIndexFailed}
               onMomentumScrollEnd={onMomentumScrollEnd}
-              renderItem={renderItem}
             />
-          </FlexView>
-          <FlexView
-            row={direction === 'horizontal' || undefined}
-            justifyContent={'center'}
-            alignItems={'flex-start'}
-            {...suffixContainerProps}
-          >
-            {isString(suffix) ? <Text fontSize={18}>{suffix}</Text> : suffix}
-          </FlexView>
-        </FlexView>
+          )}
+        </View>
       );
     },
   ),
