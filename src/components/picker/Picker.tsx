@@ -142,9 +142,9 @@ export const Picker: Picker = memo(
         );
 
         return () => {
-          scrollAnimatedValue.removeListener(scrollListener.current);
+          scrollAnimatedValue.removeAllListeners();
         };
-      }, [itemSize, scrollAnimatedValue]);
+      }, [itemSize]);
 
       useEffect(() => {
         if (
@@ -314,6 +314,7 @@ export const Picker: Picker = memo(
               getItemLayout={getItemLayout}
               horizontal={horizontal}
               getItemCount={getItemCount}
+              scrollEventThrottle={1}
               getItem={getItem}
               onScrollBeginDrag={onScrollBeginDrag}
               onScrollEndDrag={onScrollEndDrag}
