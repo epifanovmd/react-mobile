@@ -108,7 +108,7 @@ export const Picker: Picker = memo(
     ) => {
       const initialized = useRef(false);
       const [itemSize, setItemSize] = useState(0);
-      const scrollAnimatedValue = useRef(new Animated.Value(0)).current;
+      const scrollAnimatedValue = useRef(new Animated.Value(0));
       const scrollListener = useRef('0');
       const active = useRef(0);
       const flatListRef = useRef<VirtualizedList<any>>(null);
@@ -127,8 +127,8 @@ export const Picker: Picker = memo(
 
       useEffect(() => {
         scrollListener.current &&
-          scrollAnimatedValue.removeListener(scrollListener.current);
-        scrollListener.current = scrollAnimatedValue.addListener(
+          scrollAnimatedValue.current.removeListener(scrollListener.current);
+        scrollListener.current = scrollAnimatedValue.current.addListener(
           ({ value }) => {
             const index = Math.round(value / itemSize);
             const savedIndex = Math.round(active.current / itemSize);
@@ -141,9 +141,7 @@ export const Picker: Picker = memo(
           },
         );
 
-        return () => {
-          scrollAnimatedValue.removeAllListeners();
-        };
+        return scrollAnimatedValue.current.removeAllListeners;
       }, [itemSize]);
 
       useEffect(() => {
@@ -194,8 +192,8 @@ export const Picker: Picker = memo(
               {
                 nativeEvent: {
                   contentOffset: horizontal
-                    ? { x: scrollAnimatedValue }
-                    : { y: scrollAnimatedValue },
+                    ? { x: scrollAnimatedValue.current }
+                    : { y: scrollAnimatedValue.current },
                 },
               },
             ],
@@ -203,7 +201,7 @@ export const Picker: Picker = memo(
               useNativeDriver: true,
             },
           ),
-        [horizontal, scrollAnimatedValue],
+        [horizontal],
       );
 
       const onMomentumScrollEnd = useCallback(
@@ -246,7 +244,7 @@ export const Picker: Picker = memo(
             item={item}
             index={index}
             data={data}
-            scrollAnimatedValue={scrollAnimatedValue}
+            scrollAnimatedValue={scrollAnimatedValue.current}
             onPress={onPress}
             renderItem={_renderItem}
             animations={animations}
