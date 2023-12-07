@@ -49,7 +49,7 @@ export const PickerItem: PickerItem = memo(
                 return animationValues[offset];
               }
 
-              return animationValues[animationValues.length] ?? 1;
+              return animationValues[animationValues.length - 1] ?? 1;
             }),
           ] as string[] | number[],
         };
