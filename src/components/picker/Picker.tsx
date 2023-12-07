@@ -125,7 +125,10 @@ export const Picker: Picker = memo(
       );
 
       useEffect(() => {
-        scrollAnimatedValue.current.removeAllListeners();
+        if (scrollAnimatedValue.current.hasListeners()) {
+          scrollAnimatedValue.current.removeAllListeners();
+        }
+
         scrollAnimatedValue.current.addListener(({ value }) => {
           const index = Math.round(value / itemSize);
           const savedIndex = Math.round(active.current / itemSize);
