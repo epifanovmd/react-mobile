@@ -932,7 +932,10 @@ const s = StyleSheet.create({
     zIndex: 9998,
   },
   modalContainer: {
-    height: '100%',
+    flexGrow: 1,
+    flexShrink: 1,
+    overflow: 'hidden',
+    marginBottom: 10,
   },
   overlayContainer: {
     position: 'absolute',
