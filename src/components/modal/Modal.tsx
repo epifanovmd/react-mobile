@@ -935,7 +935,6 @@ const s = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     overflow: 'hidden',
-    marginBottom: 10,
   },
   overlayContainer: {
     position: 'absolute',
