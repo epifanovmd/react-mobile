@@ -175,6 +175,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 8,
     paddingBottom: 8,
+    flexDirection: 'row',
   },
   input: {
     flexGrow: 1,
