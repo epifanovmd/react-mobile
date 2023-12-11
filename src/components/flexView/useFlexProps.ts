@@ -7,7 +7,7 @@ export const useFlexProps = <
   OwnProps extends Object,
   TStyleSource extends ViewStyle | TextStyle | ImageStyle,
 >(
-  props: FlexProps<TStyleSource> & OwnProps,
+  { animated, ...props }: FlexProps<TStyleSource> & OwnProps,
   defaultProps?: Partial<FlexProps<TStyleSource>>,
 ) =>
   useMemo(() => {
@@ -31,7 +31,7 @@ export const useFlexProps = <
     }
 
     return {
-      animated: props.animated,
+      animated,
       style: style.style,
       flexProps,
       ownProps,
