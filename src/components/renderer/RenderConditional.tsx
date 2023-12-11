@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
 export interface RenderConditionalProps {
-  if: boolean;
-  children: React.JSX.Element;
+  if: boolean | string | number | undefined;
+  children: React.JSX.Element | null;
 }
 
 export const RenderConditional: FC<RenderConditionalProps> = ({

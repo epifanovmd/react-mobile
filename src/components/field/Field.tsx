@@ -42,7 +42,7 @@ const _Field: FC<PropsWithChildren<FieldProps & TouchableProps>> = memo(
           {leftIcon?.children}
 
           <Col flexGrow={1} flexShrink={1}>
-            <RenderConditional if={!!label?.text}>
+            <RenderConditional if={label?.text}>
               <Text
                 fontSize={14}
                 zIndex={1}
@@ -57,7 +57,7 @@ const _Field: FC<PropsWithChildren<FieldProps & TouchableProps>> = memo(
           {rightIcon?.children}
         </Row>
 
-        <RenderConditional if={!!(error?.text ?? description?.text)}>
+        <RenderConditional if={error?.text ?? description?.text}>
           <Text {...(error?.text !== undefined ? error : description)} />
         </RenderConditional>
       </Touchable>

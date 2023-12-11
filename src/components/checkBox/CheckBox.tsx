@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { ColorValue, StyleProp, View, ViewStyle } from 'react-native';
 import { Bounceable, BounceableProps } from '../bounceable';
 import { CheckBoldIcon } from '../../icons/material/CheckBold';
 
-type IconProps = { height: number; width: number };
+type IconProps = { height: number; width: number; fill: ColorValue };
 
 export interface CheckboxProps extends Omit<BounceableProps, 'onPress'> {
   size?: number;
@@ -14,7 +14,9 @@ export interface CheckboxProps extends Omit<BounceableProps, 'onPress'> {
   fillColor?: string;
   unFillColor?: string;
 
-  renderIcon?: () => JSX.Element;
+  iconColor?: ColorValue;
+
+  renderIcon?: () => React.JSX.Element;
   iconContainerStyle?: StyleProp<ViewStyle>;
   innerIconContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
@@ -29,6 +31,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   fillColor = '#ffc484',
   unFillColor = 'transparent',
+  iconColor = '#fff',
 
   renderIcon = (props: IconProps) => <CheckBoldIcon {...props} />,
   iconContainerStyle,
@@ -89,7 +92,12 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     >
       <View style={iconContainer}>
         <View style={innerIconContainer}>
-          {_checked && renderIcon({ height: size * 0.7, width: size * 0.7 })}
+          {_checked &&
+            renderIcon({
+              height: size * 0.7,
+              width: size * 0.7,
+              fill: iconColor,
+            })}
         </View>
       </View>
     </Bounceable>

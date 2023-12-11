@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { ListRenderItemInfo } from 'react-native';
+import { ListRenderItemInfo, ViewProps } from 'react-native';
 import { Col, FlexProps, Row } from '../flexView';
 import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { FlatListProps } from 'react-native/Libraries/Lists/FlatList';
@@ -29,7 +29,7 @@ export interface CarouselProps<T = any>
   onPress?: () => void;
   overflowWidth?: number;
   separateWidth?: number;
-  containerProps?: FlexProps;
+  containerProps?: FlexProps & ViewProps;
 }
 
 export interface CarouselFC<P extends any = null> {
@@ -79,11 +79,13 @@ export const Carousel: CarouselFC = memo(
 
       const onLayout = useCallback(
         (event: LayoutChangeEvent) => {
+          containerProps?.onLayout?.(event);
+
           if (!width) {
             setWidth(event.nativeEvent.layout.width);
           }
         },
-        [width],
+        [containerProps, width],
       );
 
       const EmptyHorizontalItem = useCallback(

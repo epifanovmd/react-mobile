@@ -1,11 +1,8 @@
 import React, { FC, memo, PropsWithChildren, useMemo } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FlexProps, useFlexProps } from '../flexView';
-import { View, ViewStyle } from 'react-native';
+import { View, ViewProps, ViewStyle } from 'react-native';
 
-type Keys = 'bottom' | 'left' | 'right' | 'top';
-
-export interface SafeAreaProps extends Omit<FlexProps, Keys> {
+export interface SafeAreaProps extends ViewProps {
   bottom?: boolean;
   left?: boolean;
   right?: boolean;
@@ -22,24 +19,23 @@ const withCondition = (
     : {};
 
 export const SafeArea: FC<PropsWithChildren<SafeAreaProps>> = memo(
-  ({ children, top, bottom, left, right, ...rest }) => {
-    const { style, ownProps } = useFlexProps(rest, {
-      flexGrow: 1,
-    });
-
+  ({ children, top, bottom, left, right, style, ...rest }) => {
     const { ...insets } = useSafeAreaInsets();
 
     const hasTrue =
       top === true || bottom === true || left === true || right === true;
 
     const _style = useMemo(
-      () => ({
-        ...style,
-        ...withCondition(hasTrue, top, { paddingTop: insets.top }),
-        ...withCondition(hasTrue, bottom, { paddingBottom: insets.bottom }),
-        ...withCondition(hasTrue, left, { paddingLeft: insets.left }),
-        ...withCondition(hasTrue, right, { paddingRight: insets.right }),
-      }),
+      () => [
+        {
+          flexGrow: 1,
+          ...withCondition(hasTrue, top, { paddingTop: insets.top }),
+          ...withCondition(hasTrue, bottom, { paddingBottom: insets.bottom }),
+          ...withCondition(hasTrue, left, { paddingLeft: insets.left }),
+          ...withCondition(hasTrue, right, { paddingRight: insets.right }),
+        },
+        style,
+      ],
       [
         style,
         insets.bottom,
@@ -55,7 +51,7 @@ export const SafeArea: FC<PropsWithChildren<SafeAreaProps>> = memo(
     );
 
     return (
-      <View style={_style} {...ownProps}>
+      <View {...rest} style={_style}>
         {children}
       </View>
     );

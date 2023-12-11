@@ -10,17 +10,20 @@ import React, {
 } from 'react';
 import {
   ColorValue,
+  StyleProp,
   StyleSheet,
   TextInput,
   TextInputProps,
   TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native';
-import { FlexProps, Row } from '../flexView';
 import { mergeRefs } from '../../helpers';
 import { Touchable } from '../touchable';
 import { EyeIcon } from '../../icons/material/Eye';
 import { EyeOffIcon } from '../../icons/material/EyeOff';
 import { CloseCircleIcon } from '../../icons/material/CloseCircle';
+import { RenderConditional } from '../renderer';
 
 type OmittedTextProps = Omit<
   TextInputProps,
@@ -28,9 +31,9 @@ type OmittedTextProps = Omit<
 >;
 
 export interface InputProps extends OmittedTextProps {
-  flexProps?: FlexProps;
+  containerStyle?: StyleProp<ViewStyle>;
 
-  inputStyle?: TextStyle;
+  inputStyle?: StyleProp<TextStyle>;
   inputTextColor?: ColorValue;
 
   type?: 'password' | 'text' | 'number' | 'floating';
@@ -40,9 +43,15 @@ export interface InputProps extends OmittedTextProps {
   leftSlot?: React.JSX.Element;
   rightSlot?: React.JSX.Element;
 
-  renderClearableIcon?: (fill?: ColorValue) => React.JSX.Element | null;
+  renderClearableIcon?: (
+    onClear: () => void,
+    disable?: boolean,
+    fill?: ColorValue,
+  ) => React.JSX.Element | null;
   renderSecurityIcon?: (
+    onToggle: () => void,
     visible: boolean,
+    disabled?: boolean,
     fill?: ColorValue,
   ) => React.JSX.Element | null;
 }
@@ -51,7 +60,7 @@ export const Input = memo(
   forwardRef<TextInput, InputProps>(
     (
       {
-        flexProps,
+        containerStyle,
         value,
         onChangeText,
         type = 'text',
@@ -103,7 +112,7 @@ export const Input = memo(
         [onChangeText, type],
       );
 
-      const clear = useCallback(() => {
+      const onClear = useCallback(() => {
         setHasValue(false);
         textInputRef.current?.clear();
 
@@ -124,7 +133,7 @@ export const Input = memo(
       const secureTextEntry = type === 'password' && !visiblePassword;
 
       return (
-        <Row alignItems={'center'} pv={6} {...flexProps}>
+        <View style={[s.containerStyle, containerStyle]}>
           {leftSlot}
 
           <TextInput
@@ -141,26 +150,32 @@ export const Input = memo(
             secureTextEntry={secureTextEntry}
           />
 
-          {clearable && hasValue && !disabled && (
-            <Touchable disabled={disabled} onPress={clear}>
-              {renderClearableIcon(inputTextColor)}
-            </Touchable>
-          )}
+          <RenderConditional if={clearable && hasValue && !disabled}>
+            {renderClearableIcon(onClear, disabled, inputTextColor)}
+          </RenderConditional>
 
-          {type === 'password' && (
-            <Touchable disabled={disabled} onPress={toggleVisiblePassword}>
-              {renderSecurityIcon(visiblePassword, inputTextColor)}
-            </Touchable>
-          )}
+          <RenderConditional if={type === 'password' && !disabled}>
+            {renderSecurityIcon(
+              toggleVisiblePassword,
+              visiblePassword,
+              disabled,
+              inputTextColor,
+            )}
+          </RenderConditional>
 
           {rightSlot}
-        </Row>
+        </View>
       );
     },
   ),
 );
 
 const s = StyleSheet.create({
+  containerStyle: {
+    alignItems: 'center',
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
   input: {
     flexGrow: 1,
     padding: 0,
@@ -170,13 +185,27 @@ const s = StyleSheet.create({
   },
 });
 
-const _renderClearableIcon = (fill?: ColorValue) => (
-  <CloseCircleIcon height={18} width={18} mh={4} fill={fill} />
+const _renderClearableIcon = (
+  onClear: () => void,
+  disabled?: boolean,
+  fill?: ColorValue,
+) => (
+  <Touchable disabled={disabled} onPress={onClear}>
+    <CloseCircleIcon height={18} width={18} mh={4} fill={fill} />
+  </Touchable>
 );
 
-const _renderSecurityIcon = (visible: boolean, fill?: ColorValue) =>
-  visible ? (
-    <EyeIcon height={18} width={18} mh={4} fill={fill} />
-  ) : (
-    <EyeOffIcon height={18} width={18} mh={4} fill={fill} />
-  );
+const _renderSecurityIcon = (
+  onToggle: () => void,
+  visible: boolean,
+  disabled?: boolean,
+  fill?: ColorValue,
+) => (
+  <Touchable disabled={disabled} onPress={onToggle}>
+    {visible ? (
+      <EyeIcon height={18} width={18} mh={4} fill={fill} />
+    ) : (
+      <EyeOffIcon height={18} width={18} mh={4} fill={fill} />
+    )}
+  </Touchable>
+);

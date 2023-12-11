@@ -13,7 +13,6 @@ import {
   ListRenderItemInfo,
   StyleProp,
   StyleSheet,
-  TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -23,9 +22,6 @@ import { isArray } from '@force-dev/utils';
 import { Touchable, TouchableProps } from '../touchable';
 import { Modal, ModalProps, useModal } from '../modal';
 import { SafeArea } from '../safeArea';
-import { TextButton } from '../button';
-
-const genericMemo: <T>(component: T) => T = memo;
 
 const getSelected = <T extends any>(
   selected: T,
@@ -47,16 +43,12 @@ export interface SelectProps<T extends any = any, M extends boolean = false>
 
   multiply?: M;
 
+  contentStyle?: StyleProp<ViewStyle>;
   touchableItemProps?: Omit<TouchableOpacityProps, 'onPress'>;
-  containerStyle?: StyleProp<ViewStyle>;
   listProps?: Omit<FlatListProps<T>, 'data' | 'renderItem'>;
   modalProps?: ModalProps;
-  footerStyle?: StyleProp<ViewStyle>;
-  resetTextStyle?: StyleProp<TextStyle>;
-  applyTextStyle?: StyleProp<TextStyle>;
 
   renderHeader?: (onClose: () => void) => JSX.Element | null;
-
   renderFooter?: (params: {
     onReset: () => void;
     onApply: () => void;
@@ -69,7 +61,7 @@ interface Select {
   ): React.JSX.Element | null;
 }
 
-export const Select: Select = genericMemo(
+export const Select: Select = memo(
   ({
     selected: _selected,
     data,
@@ -77,13 +69,10 @@ export const Select: Select = genericMemo(
     onPress: _onPress,
     onChange,
     multiply = false,
+    contentStyle,
     touchableItemProps,
-    containerStyle,
     listProps,
     modalProps,
-    footerStyle,
-    resetTextStyle,
-    applyTextStyle,
     renderHeader,
     renderFooter,
     children,
@@ -187,36 +176,19 @@ export const Select: Select = genericMemo(
           {...modalProps}
           onClose={handleClose}
         >
-          <View style={[s.container, containerStyle]}>
-            {renderHeader?.(onClose)}
+          {renderHeader?.(onClose)}
 
+          <View style={[s.contentStyle, contentStyle]}>
             <FlatList
               {...listProps}
               style={[s.flatList, listProps?.style]}
               data={data}
               renderItem={renderItem}
             />
-
-            <View style={[s.footerStyle, footerStyle]}>
-              {renderFooter?.({ onReset, onApply }) ?? (
-                <>
-                  <TextButton
-                    textStyle={[s.resetTextStyle, resetTextStyle]}
-                    height={32}
-                    title={'Сбросить'}
-                    onPress={onReset}
-                  />
-                  <TextButton
-                    textStyle={[s.applyTextStyle, applyTextStyle]}
-                    title={'Готово'}
-                    onPress={onApply}
-                  />
-                </>
-              )}
-            </View>
-
-            <SafeArea bottom={true} />
           </View>
+
+          {renderFooter?.({ onReset, onApply })}
+          <SafeArea bottom={true} />
         </Modal>
       </Touchable>
     );
@@ -224,8 +196,9 @@ export const Select: Select = genericMemo(
 );
 
 const s = StyleSheet.create({
-  container: {
+  contentStyle: {
     flexShrink: 1,
+    backgroundColor: 'red',
   },
   flatList: {
     paddingLeft: 16,
