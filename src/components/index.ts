@@ -10,6 +10,7 @@ export * from './modal';
 export * from './picker';
 export * from './renderer';
 export * from './safeArea';
+export * from './scrollView';
 export * from './select';
 export * from './text';
 export * from './touchable';
