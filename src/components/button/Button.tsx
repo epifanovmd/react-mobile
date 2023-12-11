@@ -26,7 +26,7 @@ export interface ButtonProps extends TouchableProps {
 
 export const Button: FC<ButtonProps> = memo(
   ({
-    loading = true,
+    loading,
     leftSlot,
     title,
     rightSlot,
@@ -49,7 +49,7 @@ export const Button: FC<ButtonProps> = memo(
         {...rest}
         disabled={rest.disabled || loading}
       >
-        <RenderConditional if={loading}>
+        <RenderConditional if={!!loading}>
           <ActivityIndicator size="small" color={color} {...indicatorProps} />
         </RenderConditional>
 
