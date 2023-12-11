@@ -18,7 +18,13 @@ import {
   TextInput,
 } from 'react-native';
 import { TextProps } from '../text';
-import { Modal, ModalHeaderProps, ModalProps, useModal } from '../modal';
+import {
+  Modal,
+  ModalHeaderProps,
+  ModalProps,
+  useModal,
+  ModalHeader as _ModalHeader,
+} from '../modal';
 import { Input, InputProps } from '../input';
 import {
   createSlot,
@@ -173,15 +179,16 @@ const _InputField: FC<
               keyboardShouldPersistTaps={'handled'}
               {...modalScrollView}
             >
-              <ModalHeader
+              <_ModalHeader
                 {...modalHeader}
+                style={{ padding: 0, marginRight: -8 }}
                 label={modalHeader?.label || label?.text}
                 textStyle={[modalLabelStyle, modalHeader?.textStyle]}
                 renderCloseIcon={closeIcon}
                 onClose={onRequestClose}
               >
                 {modalHeader?.children}
-              </ModalHeader>
+              </_ModalHeader>
 
               <InputField ref={mergedRef} onPress={handlePress}>
                 <InputField.Content {...content} />
