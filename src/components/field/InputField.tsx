@@ -14,10 +14,11 @@ import {
   ColorValue,
   GestureResponderEvent,
   ScrollView,
+  ScrollViewProps,
   TextInput,
 } from 'react-native';
-import { Text, TextProps } from '../text';
-import { Modal, ModalProps, useModal } from '../modal';
+import { TextProps } from '../text';
+import { Modal, ModalHeaderProps, ModalProps, useModal } from '../modal';
 import { Input, InputProps } from '../input';
 import {
   createSlot,
@@ -25,10 +26,10 @@ import {
   resolveStyleProp,
   useSlotProps,
 } from '../../helpers';
-import { FlexProps, Row } from '../flexView';
-import { Touchable } from '../touchable';
 import { SafeArea } from '../safeArea';
 import { CloseIcon } from '../../icons/material/Close';
+import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
+import { TextInputFocusEventData } from 'react-native/Libraries/Components/TextInput/TextInput';
 
 interface InputFieldProps extends FieldProps {}
 
@@ -38,8 +39,8 @@ type ModalPropsWithRenderClose = ModalProps & {
 
 const InputSlot = createSlot<InputProps>('Input');
 const ModalSlot = createSlot<ModalPropsWithRenderClose>('Modal');
-const ModalScrollView = createSlot<ModalProps>('ModalScrollView');
-const ModalHeader = createSlot<PropsWithChildren<FlexProps>>('ModalHeader');
+const ModalScrollView = createSlot<ScrollViewProps>('ModalScrollView');
+const ModalHeader = createSlot<ModalHeaderProps>('ModalHeader');
 const ModalLabel = createSlot<TextProps>('ModalLabel');
 
 export interface InputFieldSlots extends FieldSlots {
@@ -101,8 +102,9 @@ const _InputField: FC<
     }, [modal]);
 
     const onRequestClose = useCallback(() => {
+      modalHeader?.onClose?.();
       modalRef.current?.close();
-    }, [modalRef]);
+    }, [modalHeader, modalRef]);
 
     const mergedRef = useMemo(() => mergeRefs([ref, inputRef]), [ref]);
     const disabled = rest.disabled || input?.disabled;
@@ -120,12 +122,22 @@ const _InputField: FC<
       [modalLabel?.style],
     );
 
-    const closeIcon = useMemo(
-      () =>
-        (modal?.renderCloseIcon ?? _renderCloseIcon)(
-          resolveStyleProp([modalLabel?.style]).color ?? '#fff',
-        ),
-      [modal?.renderCloseIcon, modalLabel?.style],
+    const closeIcon = useCallback(
+      (fill?: ColorValue) =>
+        (
+          modalHeader?.renderCloseIcon ??
+          modal?.renderCloseIcon ??
+          _renderCloseIcon
+        )(fill ?? resolveStyleProp([modalLabel?.style]).color ?? '#fff'),
+      [modal?.renderCloseIcon, modalHeader?.renderCloseIcon, modalLabel?.style],
+    );
+
+    const handleBlur = useCallback(
+      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        input?.onBlur?.(e);
+        modalRef.current?.close();
+      },
+      [input, modalRef],
     );
 
     return (
@@ -161,25 +173,21 @@ const _InputField: FC<
               keyboardShouldPersistTaps={'handled'}
               {...modalScrollView}
             >
-              <Row
-                justifyContent={'space-between'}
-                alignItems={'center'}
-                mt={8}
-                mb={16}
+              <ModalHeader
                 {...modalHeader}
+                label={modalHeader?.label || label?.text}
+                textStyle={[modalLabelStyle, modalHeader?.textStyle]}
+                renderCloseIcon={closeIcon}
+                onClose={onRequestClose}
               >
-                {modalHeader?.children ?? (
-                  <Text {...modalLabel} style={modalLabelStyle}>
-                    {label?.text}
-                  </Text>
-                )}
-                <Touchable onPress={onRequestClose}>{closeIcon}</Touchable>
-              </Row>
+                {modalHeader?.children}
+              </ModalHeader>
 
               <InputField ref={mergedRef} onPress={handlePress}>
                 <InputField.Content {...content} />
                 <InputField.Input
                   {...input}
+                  onBlur={handleBlur}
                   value={modalValue}
                   onChangeText={setModalValue}
                   autoFocus={true}
