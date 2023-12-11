@@ -198,7 +198,6 @@ export const Select: Select = memo(
 const s = StyleSheet.create({
   contentStyle: {
     flexShrink: 1,
-    backgroundColor: 'red',
   },
   flatList: {
     paddingLeft: 16,
