@@ -205,19 +205,4 @@ const s = StyleSheet.create({
     marginBottom: 8,
     marginTop: 8,
   },
-  footerStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 16,
-    paddingRight: 16,
-    marginBottom: 8,
-  },
-  resetTextStyle: {
-    fontWeight: '600',
-    color: 'gray',
-  },
-  applyTextStyle: {
-    fontWeight: '600',
-    color: '#e76901',
-  },
 });
