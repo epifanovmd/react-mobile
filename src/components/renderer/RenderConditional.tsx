@@ -5,9 +5,6 @@ export interface RenderConditionalProps {
   children: React.JSX.Element | null;
 }
 
-export const RenderConditional: FC<RenderConditionalProps> = ({
-  if: _if,
-  children,
-}) => {
-  return _if ? children || null : null;
+export const RenderConditional: FC<RenderConditionalProps> = props => {
+  return props.if ? props.children || null : null;
 };

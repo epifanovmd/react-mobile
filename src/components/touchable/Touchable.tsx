@@ -9,7 +9,7 @@ import { FlexProps, useFlexProps } from '../flexView';
 export interface TouchableProps<T extends any = undefined>
   extends FlexProps,
     Omit<TouchableOpacityProps, 'style' | 'onPress'> {
-  onPress?: (value: T, event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent, value: T) => void;
   ctx?: T;
 }
 
@@ -23,7 +23,7 @@ export const Touchable: Touchable = memo(
 
     const _onPress = useCallback(
       (event: GestureResponderEvent) => {
-        onPress?.(ctx as any, event);
+        onPress?.(event, ctx as any);
       },
       [ctx, onPress],
     );
