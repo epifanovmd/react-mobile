@@ -1,5 +1,6 @@
 export * from './bounceable';
 export * from './carousel';
+export * from './collapsable';
 export * from './flexView';
 export * from './imageViewing';
 export * from './input';
