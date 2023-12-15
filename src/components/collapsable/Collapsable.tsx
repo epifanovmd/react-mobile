@@ -34,7 +34,6 @@ export interface CollapsableProps {
   duration?: number;
   align?: 'top' | 'center' | 'bottom';
   easing?: Easing[keyof Easing] | ((n: number) => number);
-  renderChildrenCollapsed?: boolean;
   opacityAnimation?: boolean;
   enablePointerEvents?: boolean;
   collapsedContent?: React.JSX.Element;
@@ -46,10 +45,9 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
   ({
     collapsed = false,
     collapsedHeight: _collapsedHeight = 0,
-    duration = 200,
+    duration = 100,
     align = 'top',
     easing = Easing.ease,
-    renderChildrenCollapsed = true,
     opacityAnimation = true,
     enablePointerEvents = true,
     collapsedContent,
@@ -59,17 +57,18 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
   }) => {
     const contentRef = useRef<View>(null);
     const insteadRef = useRef<View>(null);
-    const _animation = useRef<CompositeAnimation | null>(null);
 
-    const [collapsedHeight, setCollapsedHeight] = useState(_collapsedHeight);
+    const animation = useRef<CompositeAnimation | null>(null);
 
     const [measuring, setMeasuring] = useState<boolean>(false);
-    const [measured, setMeasured] = useState<boolean>(false);
-    const animatedHeight = useRef(new Animated.Value(collapsedHeight)).current;
+    const measured = useRef<boolean>(false);
+
     const [contentHeight, setContentHeight] = useState<number>(0);
     const insteadHeight = useRef<number>(0);
-    const [animating, setAnimating] = useState<boolean>(false);
-    const [initialized, setInitialized] = useState<boolean>(false);
+    const collapsedHeight = useRef<number>(_collapsedHeight);
+    const animatedHeight = useRef(
+      new Animated.Value(collapsedHeight.current),
+    ).current;
 
     useEffect(() => {
       measureContent(h => {
@@ -78,18 +77,12 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
         if (!collapsed) {
           animatedHeight.setValue(h);
         }
-
-        setInitialized(true);
       });
-
-      return () => {
-        setInitialized(false);
-      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (initialized) {
+      if (contentHeight) {
         _toggleCollapsed(collapsed);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,16 +90,21 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
 
     useEffect(() => {
       if (collapsedContent && !_collapsedHeight) {
-        setCollapsedValue(insteadHeight.current);
+        collapsedHeight.current = insteadHeight.current;
+        if (collapsed) {
+          _transitionToHeight(insteadHeight.current);
+        }
       } else {
-        setCollapsedValue(_collapsedHeight);
+        collapsedHeight.current = _collapsedHeight;
+        if (collapsed) {
+          _transitionToHeight(_collapsedHeight);
+        }
       }
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [_collapsedHeight]);
 
     useEffect(() => {
-      if (!collapsedContent && collapsedHeight) {
+      if (!collapsedContent && collapsedHeight.current) {
         setCollapsedValue(_collapsedHeight);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,7 +112,7 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
 
     const setCollapsedValue = useCallback(
       (value: number) => {
-        setCollapsedHeight(value);
+        collapsedHeight.current = value;
         if (collapsed) {
           animatedHeight.setValue(value);
         }
@@ -129,36 +127,33 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
         requestAnimationFrame(() => {
           if (!contentRef) {
             setMeasuring(false);
-            callback?.(collapsedHeight);
+            callback?.(collapsedHeight.current);
           } else {
             contentRef.current?.measure((x, y, width, height) => {
               setMeasuring(false);
-              setMeasured(true);
+              measured.current = true;
               callback?.(height);
             });
           }
         });
       },
-      [collapsedHeight],
+      [],
     );
 
     const _transitionToHeight = useCallback(
       (toValue: number = 0) => {
-        setAnimating(true);
-
-        if (_animation.current) {
-          _animation.current.stop();
+        if (animation.current) {
+          animation.current.stop();
         }
 
-        _animation.current = Animated.timing(animatedHeight, {
+        animation.current = Animated.timing(animatedHeight, {
           toValue,
           duration,
           easing: easing as any,
           useNativeDriver: false,
         });
 
-        _animation.current.start(() => {
-          setAnimating(false);
+        animation.current.start(() => {
           onAnimationEnd();
         });
       },
@@ -168,31 +163,12 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
     const _toggleCollapsed = useCallback(
       (_collapsed: boolean) => {
         if (_collapsed) {
-          _transitionToHeight(collapsedHeight);
+          _transitionToHeight(collapsedHeight.current);
         } else {
           _transitionToHeight(contentHeight);
         }
       },
-      [_transitionToHeight, collapsedHeight, contentHeight],
-    );
-
-    const _handleLayoutChange = useCallback(
-      (event: LayoutChangeEvent) => {
-        const _contentHeight = event.nativeEvent.layout.height;
-
-        if (
-          animating ||
-          collapsed ||
-          measuring ||
-          contentHeight === _contentHeight
-        ) {
-          return;
-        }
-
-        animatedHeight.setValue(_contentHeight);
-        setContentHeight(_contentHeight);
-      },
-      [animatedHeight, animating, collapsed, contentHeight, measuring],
+      [_transitionToHeight, contentHeight],
     );
 
     const onLayoutInsteadOf = useCallback(
@@ -204,44 +180,40 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
         }
 
         insteadHeight.current = height;
-        setCollapsedHeight(_collapsedHeight || height);
+        collapsedHeight.current = _collapsedHeight || height;
       },
       [_collapsedHeight, animatedHeight, collapsed],
     );
 
     const hasKnownHeight =
-      (!measuring && (measured || collapsed)) || initialized;
+      (!measuring && (measured.current || collapsed)) || contentHeight;
 
     const style: AnimatedProps<StyleProp<ViewStyle>> =
-      hasKnownHeight || (collapsed && (initialized || _collapsedHeight))
+      hasKnownHeight || (collapsed && (contentHeight || _collapsedHeight))
         ? {
-            overflow: 'hidden',
             height: animatedHeight,
           }
         : undefined;
 
     const contentStyle = getContentStyle({
       measuring,
-      collapsedHeight,
+      collapsedHeight: collapsedHeight.current,
       align,
       animatedHeight,
       contentHeight,
-      animating,
       collapsed,
-      initialized,
     });
-
-    const shouldRenderChildren =
-      renderChildrenCollapsed ||
-      !collapsed ||
-      (collapsed && (animating || measuring));
 
     const collapsedContentStyle = {
       zIndex: collapsed ? 2 : 1,
       opacity:
-        initialized && opacityAnimation
+        contentHeight && opacityAnimation
           ? animatedHeight.interpolate({
-              inputRange: [collapsedHeight, contentHeight / 2, contentHeight],
+              inputRange: [
+                collapsedHeight.current,
+                contentHeight / 2,
+                contentHeight,
+              ],
               outputRange: [1, 1, 0],
               extrapolate: 'clamp',
             })
@@ -251,12 +223,15 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
     };
 
     const childrenStyle = {
-      zIndex: collapsed ? 1 : 2,
       opacity: !collapsedContent
         ? 1
-        : initialized && opacityAnimation
+        : contentHeight && opacityAnimation
         ? animatedHeight.interpolate({
-            inputRange: [collapsedHeight, contentHeight / 2, contentHeight],
+            inputRange: [
+              collapsedHeight.current,
+              contentHeight / 2,
+              contentHeight,
+            ],
             outputRange: [0, 1, 1],
             extrapolate: 'clamp',
           })
@@ -265,11 +240,9 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
         : 1,
     };
 
-    console.log('render');
-
     return (
       <Animated.View
-        style={[_style, style]}
+        style={[_style, style, { overflow: 'hidden' }]}
         pointerEvents={!enablePointerEvents && collapsed ? 'none' : 'auto'}
       >
         <RenderConditional if={!!collapsedContent}>
@@ -277,21 +250,15 @@ export const Collapsible: FC<PropsWithChildren<CollapsableProps>> = memo(
             ref={insteadRef}
             onLayout={onLayoutInsteadOf}
             style={[
-              (initialized || !collapsed) && s.collapsedContentStyle,
+              (!!contentHeight || !collapsed) && s.collapsedContentStyle,
               collapsedContentStyle,
             ]}
           >
             {collapsedContent}
           </Animated.View>
         </RenderConditional>
-        <Animated.View
-          ref={contentRef}
-          style={contentStyle}
-          onLayout={_handleLayoutChange}
-        >
-          <Animated.View style={childrenStyle}>
-            {shouldRenderChildren && children}
-          </Animated.View>
+        <Animated.View ref={contentRef} style={[contentStyle, childrenStyle]}>
+          {children}
         </Animated.View>
       </Animated.View>
     );
@@ -312,15 +279,17 @@ const getContentStyle = (params: {
   align: string;
   animatedHeight: Animated.Value;
   contentHeight: number;
-  animating: boolean;
   collapsed: boolean;
-  initialized: boolean;
 }) => {
-  const contentStyle: AnimatedProps<StyleProp<ViewStyle>> = {};
+  const contentStyle: AnimatedProps<StyleProp<ViewStyle>> = {
+    zIndex: params.collapsed ? 1 : 2,
+  };
 
-  if ((params.measuring && !params.collapsedHeight) || !params.initialized) {
+  if ((params.measuring && !params.collapsedHeight) || !params.contentHeight) {
     if (params.collapsed) {
       contentStyle.position = 'absolute';
+      contentStyle.left = 0;
+      contentStyle.right = 0;
       contentStyle.opacity = 0;
     }
   } else if (params.align === 'center') {
@@ -341,9 +310,6 @@ const getContentStyle = (params: {
         }),
       },
     ];
-  }
-  if (params.animating) {
-    contentStyle.height = params.contentHeight;
   }
 
   return contentStyle;
