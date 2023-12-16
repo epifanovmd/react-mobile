@@ -46,7 +46,7 @@ export interface Collapsable {
   collapsed: boolean;
 }
 
-export const Collapsible = memo(
+export const Collapsable = memo(
   forwardRef<Collapsable, PropsWithChildren<CollapsableProps>>(
     (
       {
