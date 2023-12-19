@@ -16,17 +16,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
-import AnimatedProps = Animated.AnimatedProps;
 import { RenderConditional } from '../renderer';
-
-type EndResult = { finished: boolean };
-type EndCallback = (result: EndResult) => void;
-
-export interface CompositeAnimation {
-  start: (callback?: EndCallback) => void;
-  stop: () => void;
-  reset: () => void;
-}
+import AnimatedProps = Animated.AnimatedProps;
 
 export interface CollapsableProps {
   collapsed: boolean;
@@ -68,7 +59,6 @@ export const Collapsable = memo(
       const insteadRef = useRef<View>(null);
 
       const collapsed = useRef<boolean>(initialCollapsed);
-      const animation = useRef<CompositeAnimation | null>(null);
 
       const [measuring, setMeasuring] = useState<boolean>(false);
       const [animating, setAnimating] = useState<boolean>(false);
@@ -112,15 +102,13 @@ export const Collapsable = memo(
       useEffect(() => {
         if (collapsedContent && !_collapsedHeight) {
           collapsedHeight.current = insteadHeight.current;
-          // setCollapsedValue(collapsedHeight.current);
-          if (collapsed.current) {
-            transitionToHeight(insteadHeight.current, collapsed.current, true);
+          if (collapsed.current && !animating) {
+            animatedHeight.setValue(insteadHeight.current);
           }
         } else {
           collapsedHeight.current = _collapsedHeight;
-          // setCollapsedValue(collapsedHeight.current);
-          if (collapsed.current) {
-            transitionToHeight(_collapsedHeight, collapsed.current, true);
+          if (collapsed.current && !animating) {
+            animatedHeight.setValue(_collapsedHeight);
           }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,8 +124,8 @@ export const Collapsable = memo(
               callback?.(collapsedHeight.current);
             } else {
               contentRef.current?.measure((x, y, width, height) => {
-                setMeasuring(false);
                 measured.current = true;
+                setMeasuring(false);
                 callback?.(height);
               });
             }
@@ -154,9 +142,7 @@ export const Collapsable = memo(
         ) => {
           const startAnimation = () => {
             setAnimating(true);
-            if (animation.current) {
-              animation.current.stop();
-            }
+            collapsed.current = toCollapsed;
 
             Animated.timing(animatedOpacityContent, {
               duration,
@@ -169,14 +155,12 @@ export const Collapsable = memo(
               useNativeDriver: true,
             }).start();
 
-            animation.current = Animated.timing(animatedHeight, {
+            Animated.timing(animatedHeight, {
               toValue,
               duration,
               easing: easing as any,
               useNativeDriver: false,
-            });
-
-            animation.current.start(() => {
+            }).start(() => {
               setAnimating(false);
               onAnimationEnd();
             });
@@ -187,9 +171,8 @@ export const Collapsable = memo(
               if (height) {
                 contentHeight.current = height;
                 animatedHeight.setValue(height);
-
-                startAnimation();
               }
+              startAnimation();
             });
           } else {
             startAnimation();
@@ -207,11 +190,10 @@ export const Collapsable = memo(
 
       const _toggleCollapsed = useCallback(
         (_collapsed: boolean) => {
-          collapsed.current = _collapsed;
           if (_collapsed) {
-            transitionToHeight(collapsedHeight.current, collapsed.current);
+            transitionToHeight(collapsedHeight.current, _collapsed);
           } else {
-            transitionToHeight(contentHeight.current, collapsed.current);
+            transitionToHeight(contentHeight.current, _collapsed);
           }
         },
         [transitionToHeight],
@@ -221,7 +203,7 @@ export const Collapsable = memo(
         (e: LayoutChangeEvent) => {
           const height = e.nativeEvent.layout.height;
 
-          if (collapsed.current) {
+          if (collapsed.current && !insteadHeight.current) {
             animatedHeight.setValue(_collapsedHeight || height);
           }
 
@@ -305,7 +287,7 @@ const getCollapsedContentStyle = (
   opacityAnimation: boolean,
 ) => {
   return [
-    (!!contentHeight || !collapsed) && s.collapsedContentStyle,
+    s.collapsedContentStyle,
     {
       zIndex: collapsed ? 2 : 1,
       opacity:
