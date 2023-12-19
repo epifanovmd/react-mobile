@@ -82,13 +82,17 @@ export const Collapsable = memo(
       ).current;
 
       useEffect(() => {
-        measureContent(h => {
+        const handleId = measureContent(h => {
           contentHeight.current = h;
 
-          if (!collapsed.current) {
+          if (!collapsed.current && h !== undefined) {
             animatedHeight.setValue(h);
           }
         });
+
+        return () => {
+          cancelAnimationFrame(handleId);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
@@ -118,7 +122,7 @@ export const Collapsable = memo(
         (callback?: (height: number) => void) => {
           setMeasuring(true);
 
-          requestAnimationFrame(() => {
+          return requestAnimationFrame(() => {
             if (!contentRef) {
               setMeasuring(false);
               callback?.(collapsedHeight.current);
