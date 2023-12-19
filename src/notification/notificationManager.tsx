@@ -3,12 +3,22 @@ import { NotificationActions } from './Notification';
 class NotificationManager implements NotificationActions {
   private notificationInstance: NotificationActions | null = null;
 
-  show = this.notificationInstance?.show ?? (() => '');
-  update = this.notificationInstance?.update ?? (() => {});
-  hide = this.notificationInstance?.hide ?? ((_id: string) => {});
+  show: NotificationActions['show'] = (...args) => {
+    return this.notificationInstance?.show(...args) || '';
+  };
+  update: NotificationActions['update'] = (...args) => {
+    this.notificationInstance?.update(...args);
+  };
+  hide: NotificationActions['hide'] = (...args) => {
+    this.notificationInstance?.hide(...args);
+  };
 
-  hideAll = this.notificationInstance?.hideAll ?? (() => {});
-  isOpen = this.notificationInstance?.isOpen ?? ((_id: string) => false);
+  hideAll: NotificationActions['hideAll'] = () => {
+    this.notificationInstance?.hideAll();
+  };
+  isOpen: NotificationActions['isOpen'] = (...args) => {
+    return !!this.notificationInstance?.isOpen(...args);
+  };
 
   register(instance: NotificationActions) {
     this.notificationInstance = instance;
