@@ -33,16 +33,7 @@ interface IProps extends Omit<Props, 'children'> {
 }
 
 export const AppNavigation: FC<IProps> = memo(
-  ({
-    routes,
-    screenOptions,
-    detachInactiveScreens,
-    backBehavior,
-    tabBar,
-    sceneContainerStyle,
-    screenListeners,
-    ...rest
-  }) => {
+  ({ routes, screenOptions, ...rest }) => {
     const insets = useSafeAreaInsets();
 
     const _screenOptions = useMemo<BottomTabNavigationOptions>(
@@ -72,11 +63,6 @@ export const AppNavigation: FC<IProps> = memo(
 
     return (
       <BottomTab.Navigator
-        detachInactiveScreens={detachInactiveScreens}
-        backBehavior={backBehavior}
-        tabBar={tabBar}
-        sceneContainerStyle={sceneContainerStyle}
-        screenListeners={screenListeners}
         safeAreaInsets={insets}
         screenOptions={_screenOptions}
         {...rest}

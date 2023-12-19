@@ -13,6 +13,7 @@ import {
   MaterialBottomTabNavigationOptions,
 } from '@react-navigation/material-bottom-tabs/src/types';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MaterialBottomTab = createMaterialBottomTabNavigator<ScreenParamList>();
 
@@ -33,6 +34,7 @@ interface IProps extends Omit<Props, 'children'> {
 
 export const BottomTabNavigation: FC<IProps> = memo(
   ({ routes, screenOptions, ...rest }) => {
+    const insets = useSafeAreaInsets();
     const _screenOptions: BottomTabScreenOption = useMemo(
       () => ({ headerShown: false, ...screenOptions }),
       [screenOptions],
@@ -54,7 +56,11 @@ export const BottomTabNavigation: FC<IProps> = memo(
     );
 
     return (
-      <MaterialBottomTab.Navigator screenOptions={_screenOptions} {...rest}>
+      <MaterialBottomTab.Navigator
+        screenOptions={_screenOptions}
+        safeAreaInsets={insets}
+        {...rest}
+      >
         {renderRoutes}
       </MaterialBottomTab.Navigator>
     );
