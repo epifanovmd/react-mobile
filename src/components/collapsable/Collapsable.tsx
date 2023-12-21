@@ -216,8 +216,6 @@ export const Collapsable = memo(
         ? { height: animatedHeight }
         : undefined;
 
-      console.log('rootStyle', rootStyle?.height);
-
       const collapsedContentStyle = getCollapsedContentStyle(
         animatedOpacityCollapsedContent,
         collapsed.current,
