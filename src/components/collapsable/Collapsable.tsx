@@ -139,48 +139,30 @@ export const Collapsable = memo(
       );
 
       const transitionToHeight = useCallback(
-        (
-          toValue: number = 0,
-          toCollapsed: boolean,
-          withoutMeasuring: boolean = false,
-        ) => {
-          const startAnimation = () => {
-            setAnimating(true);
-            collapsed.current = toCollapsed;
+        (toValue: number = 0, toCollapsed: boolean) => {
+          setAnimating(true);
+          collapsed.current = toCollapsed;
 
-            Animated.timing(animatedOpacityContent, {
-              duration,
-              toValue: toCollapsed ? 0 : 1,
-              useNativeDriver: true,
-            }).start();
-            Animated.timing(animatedOpacityCollapsedContent, {
-              duration,
-              toValue: toCollapsed ? 1 : 0,
-              useNativeDriver: true,
-            }).start();
+          Animated.timing(animatedOpacityContent, {
+            duration,
+            toValue: toCollapsed ? 0 : 1,
+            useNativeDriver: true,
+          }).start();
+          Animated.timing(animatedOpacityCollapsedContent, {
+            duration,
+            toValue: toCollapsed ? 1 : 0,
+            useNativeDriver: true,
+          }).start();
 
-            Animated.timing(animatedHeight, {
-              toValue,
-              duration,
-              easing: easing as any,
-              useNativeDriver: false,
-            }).start(() => {
-              setAnimating(false);
-              onAnimationEnd();
-            });
-          };
-
-          if (toCollapsed && !withoutMeasuring) {
-            contentRef.current?.measure((x, y, width, height) => {
-              if (height) {
-                contentHeight.current = height;
-                animatedHeight.setValue(height);
-              }
-              startAnimation();
-            });
-          } else {
-            startAnimation();
-          }
+          Animated.timing(animatedHeight, {
+            toValue,
+            duration,
+            easing: easing as any,
+            useNativeDriver: false,
+          }).start(() => {
+            setAnimating(false);
+            onAnimationEnd();
+          });
         },
         [
           animatedHeight,
@@ -194,13 +176,23 @@ export const Collapsable = memo(
 
       const _toggleCollapsed = useCallback(
         (_collapsed: boolean) => {
-          if (_collapsed) {
-            transitionToHeight(collapsedHeight.current, _collapsed);
-          } else {
-            transitionToHeight(contentHeight.current, _collapsed);
-          }
+          requestAnimationFrame(() => {
+            contentRef.current?.measure((x, y, width, height) => {
+              if (height) {
+                contentHeight.current = height;
+                if (_collapsed && !collapsed.current) {
+                  animatedHeight.setValue(height);
+                }
+              }
+              if (_collapsed) {
+                transitionToHeight(collapsedHeight.current, _collapsed);
+              } else {
+                transitionToHeight(contentHeight.current, _collapsed);
+              }
+            });
+          });
         },
-        [transitionToHeight],
+        [animatedHeight, transitionToHeight],
       );
 
       const onLayoutInsteadOf = useCallback(
@@ -223,6 +215,8 @@ export const Collapsable = memo(
       const rootStyle: AnimatedProps<StyleProp<ViewStyle>> = needHeight
         ? { height: animatedHeight }
         : undefined;
+
+      console.log('rootStyle', rootStyle?.height);
 
       const collapsedContentStyle = getCollapsedContentStyle(
         animatedOpacityCollapsedContent,
