@@ -1,1 +1,2 @@
-export * from './Picker';
+export * from './CustomPicker';
+export * from '@force-dev/rn-wheel-picker';

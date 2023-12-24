@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Animated } from 'react-native';
-import { PickerAnimations } from './Picker';
+import { CustomPickerAnimations } from './CustomPicker';
 import { Col } from '../flexView';
 import { Bounceable } from '../bounceable';
 
-export interface PickerItemProps<T> {
+export interface CustomPickerItemProps<T> {
   data: T[];
   index: number;
   item: T;
@@ -14,14 +14,14 @@ export interface PickerItemProps<T> {
   visibleItems: number;
   isHorizontal?: boolean;
   scrollAnimatedValue: Animated.Value;
-  animations?: PickerAnimations;
+  animations?: CustomPickerAnimations;
 }
 
-interface PickerItem {
-  <T>(props: PickerItemProps<T>): React.JSX.Element | null;
+interface CustomPickerItem {
+  <T>(props: CustomPickerItemProps<T>): React.JSX.Element | null;
 }
 
-export const PickerItem: PickerItem = memo(
+export const CustomPickerItem: CustomPickerItem = memo(
   ({
     data,
     index,
@@ -66,10 +66,10 @@ export const PickerItem: PickerItem = memo(
       const s = scrollAnimatedValue.interpolate(animated([1.8, 0.9, 0.8, 0.5]));
       const tx = scrollAnimatedValue.interpolate(animated([1, 3, 9, 12]));
 
-      const map: PickerAnimations = { ...animations };
+      const map: CustomPickerAnimations = { ...animations };
 
       const rest = Object.keys(map).reduce<any>((acc, key) => {
-        const values = map[key as keyof PickerAnimations];
+        const values = map[key as keyof CustomPickerAnimations];
 
         if (values) {
           acc[key] = scrollAnimatedValue.interpolate(animated(values));

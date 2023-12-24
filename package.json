@@ -34,6 +34,7 @@
     "check-packages-updates": "yarn outdated"
   },
   "dependencies": {
+    "@force-dev/rn-wheel-picker": "^0.0.3",
     "@force-dev/utils": "^1.1.27",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/material-bottom-tabs": "^6.2.19",

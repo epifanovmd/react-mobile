@@ -19,7 +19,7 @@ import {
   ViewStyle,
   VirtualizedList,
 } from 'react-native';
-import { PickerItem } from './PickerItem';
+import { CustomPickerItem } from './CustomPickerItem';
 import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { mergeRefs } from '../../helpers';
 import createAnimatedComponent = Animated.createAnimatedComponent;
@@ -58,14 +58,14 @@ type OmitKeys =
   | 'ListFooterComponentStyle'
   | 'ListHeaderComponentStyle';
 
-export type PickerAnimations = {
+export type CustomPickerAnimations = {
   rotate?: string[];
   scale?: number[];
   translateX?: number[];
   translateY?: number[];
 };
 
-export interface PickerProps<T> extends ViewProps {
+export interface CustomPickerProps<T> extends ViewProps {
   currentIndex?: number;
   data: T[];
   onChange?: (item: T, index: number) => void;
@@ -74,19 +74,19 @@ export interface PickerProps<T> extends ViewProps {
   horizontal?: boolean;
   visibleItems?: number;
   height?: number;
-  animations?: PickerAnimations;
+  animations?: CustomPickerAnimations;
 
   listProps?: Omit<FlatListProps<T>, OmitKeys>;
 }
 
-export interface Picker {
+export interface CustomPicker {
   <T extends any>(
-    props: PickerProps<T> & { ref?: React.Ref<VirtualizedList<T>> },
+    props: CustomPickerProps<T> & { ref?: React.Ref<VirtualizedList<T>> },
   ): React.JSX.Element | null;
 }
 
-export const Picker: Picker = memo(
-  forwardRef<any, PickerProps<any>>(
+export const CustomPicker: CustomPicker = memo(
+  forwardRef<any, CustomPickerProps<any>>(
     (
       {
         currentIndex,
@@ -252,7 +252,7 @@ export const Picker: Picker = memo(
 
       const renderItem = useCallback(
         ({ item, index }: any) => (
-          <PickerItem
+          <CustomPickerItem
             itemSize={itemSize}
             visibleItems={visibleItems}
             isHorizontal={horizontal}
