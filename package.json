@@ -4,8 +4,22 @@
   "description": "React Native components library",
   "main": "src/index.ts",
   "files": [
-    "src/",
-    "README.md"
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "*.podspec",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
   ],
   "sideEffects": false,
   "license": "MIT",
@@ -34,7 +48,6 @@
     "check-packages-updates": "yarn outdated"
   },
   "dependencies": {
-    "@force-dev/rn-wheel-picker": "^0.0.5",
     "@force-dev/utils": "^1.1.27",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/material-bottom-tabs": "^6.2.19",
