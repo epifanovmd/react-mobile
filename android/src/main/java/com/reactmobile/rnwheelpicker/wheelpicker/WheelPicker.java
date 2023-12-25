@@ -1,4 +1,4 @@
-package com.rnwheelpicker;
+package com.reactmobile.rnwheelpicker;
 
 import android.content.Context;
 import android.content.res.TypedArray;

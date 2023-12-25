@@ -1,4 +1,4 @@
-package com.rnwheelpicker.events;
+package com.reactmobile.rnwheelpicker.events;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;

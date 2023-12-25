@@ -1,4 +1,4 @@
-package com.rnwheelpicker;
+package com.reactmobile.rnwheelpicker;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

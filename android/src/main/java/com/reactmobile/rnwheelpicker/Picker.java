@@ -1,10 +1,10 @@
-package com.rnwheelpicker;
+package com.reactmobile.rnwheelpicker;
 
-import com.rnwheelpicker.WheelPicker;
+import com.reactmobile.rnwheelpicker.WheelPicker;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.events.EventDispatcher;
-import com.rnwheelpicker.events.ItemSelectedEvent;
+import com.reactmobile.rnwheelpicker.events.ItemSelectedEvent;
 
 import java.util.List;
 

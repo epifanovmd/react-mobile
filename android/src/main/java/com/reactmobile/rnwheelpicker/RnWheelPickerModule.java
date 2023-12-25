@@ -1,10 +1,10 @@
-package com.rnwheelpicker;
+package com.reactmobile.rnwheelpicker;
 
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
-import com.rnwheelpicker.WheelPicker;
+import com.reactmobile.rnwheelpicker.WheelPicker;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableType;
@@ -13,7 +13,7 @@ import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.rnwheelpicker.events.ItemSelectedEvent;
+import com.reactmobile.rnwheelpicker.events.ItemSelectedEvent;
 
 import java.util.ArrayList;
 import java.util.Map;
