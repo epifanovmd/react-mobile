@@ -1,5 +1,6 @@
 import React, {
   Children,
+  memo,
   ReactElement,
   useCallback,
   useMemo,
@@ -38,104 +39,109 @@ export interface PickerProps {
   testID?: string;
 }
 
-export const Picker = ({
-  curtainColor = 'hsla(0, 0%, 0%, 0.1)',
-  hasCurtain = true,
-  hasIndicator = true,
-  indicatorColor = 'hsla(0, 0%, 0%, 0.1)',
-  indicatorSize = 1,
-  itemSpace = 12,
-  textColor = '#000000',
-  textSize = 20,
-  loop,
-  numberOfLines = 1,
-  onChange,
-  style,
-  children,
-  testID,
-}: PickerProps) => {
-  const { width: windowWidth } = useWindowDimensions();
-  const [viewWidth, setViewWidth] = useState(windowWidth);
-  const { data, columnWidths, selectedIndexes } = useNativePickerColumns({
+export const Picker = memo(
+  ({
+    curtainColor = 'hsla(0, 0%, 0%, 0.1)',
+    hasCurtain = true,
+    hasIndicator = true,
+    indicatorColor = 'hsla(0, 0%, 0%, 0.1)',
+    indicatorSize = 1,
+    itemSpace = 12,
+    textColor = '#000000',
+    textSize = 20,
+    loop,
+    numberOfLines = 1,
+    onChange,
+    style,
     children,
-    textColor,
-    viewWidth,
-  });
+    testID,
+  }: PickerProps) => {
+    const { width: windowWidth } = useWindowDimensions();
+    const [viewWidth, setViewWidth] = useState(windowWidth);
+    const { data, columnWidths, selectedIndexes } = useNativePickerColumns({
+      children,
+      textColor,
+      viewWidth,
+    });
 
-  const handleOnChange: NativeOnChange = useCallback(
-    ({ nativeEvent }) => {
-      if (onChange) {
-        onChange(nativeEvent);
-      }
-
-      Children.forEach(children, (columnChild, index) => {
-        if (index === nativeEvent.column && columnChild.props.onChange) {
-          columnChild.props.onChange(nativeEvent);
+    const handleOnChange: NativeOnChange = useCallback(
+      ({ nativeEvent }) => {
+        if (onChange) {
+          onChange(nativeEvent);
         }
-      });
-    },
-    [onChange, children],
-  );
 
-  const handleOnLayout = useCallback(
-    ({
-      nativeEvent: {
-        layout: { width },
+        Children.forEach(children, (columnChild, index) => {
+          if (index === nativeEvent.column && columnChild.props.onChange) {
+            columnChild.props.onChange(nativeEvent);
+          }
+        });
       },
-    }: LayoutChangeEvent) => setViewWidth(width),
-    [],
-  );
-
-  if (Platform.OS === 'ios') {
-    return (
-      <View onLayout={handleOnLayout} style={[{ flexGrow: 1 }, style]}>
-        <NativePicker
-          selectedIndexes={selectedIndexes}
-          onChange={handleOnChange}
-          numberOfLines={numberOfLines}
-          data={data}
-          columnWidths={columnWidths}
-          loop={loop}
-          style={styles.picker}
-          testID={testID}
-        />
-      </View>
+      [onChange, children],
     );
-  }
 
-  if (Platform.OS === 'android') {
-    return (
-      <View onLayout={handleOnLayout} style={[styles.androidContainer, style]}>
-        {data.map((componentData, index) => (
-          <View
-            key={`picker-component-${index}`}
-            style={{ width: columnWidths[index] + LABEL_INSET_SPACE }}
-          >
-            <NativePicker
-              column={index}
-              data={componentData}
-              loop={loop}
-              onChange={handleOnChange}
-              curtainColor={processColor(curtainColor)}
-              hasCurtain={hasCurtain}
-              hasIndicator={hasIndicator}
-              indicatorColor={processColor(indicatorColor)}
-              indicatorSize={indicatorSize}
-              itemSpace={itemSpace}
-              textColor={processColor(textColor)}
-              textSize={textSize}
-              selectedIndex={selectedIndexes[index]}
-              style={styles.picker}
-              testID={testID}
-            />
-          </View>
-        ))}
-      </View>
+    const handleOnLayout = useCallback(
+      ({
+        nativeEvent: {
+          layout: { width },
+        },
+      }: LayoutChangeEvent) => setViewWidth(width),
+      [],
     );
-  }
 
-  return null;
-};
+    if (Platform.OS === 'ios') {
+      return (
+        <View onLayout={handleOnLayout} style={[{ flexGrow: 1 }, style]}>
+          <NativePicker
+            selectedIndexes={selectedIndexes}
+            onChange={handleOnChange}
+            numberOfLines={numberOfLines}
+            data={data}
+            columnWidths={columnWidths}
+            loop={loop}
+            style={styles.picker}
+            testID={testID}
+          />
+        </View>
+      );
+    }
+
+    if (Platform.OS === 'android') {
+      return (
+        <View
+          onLayout={handleOnLayout}
+          style={[styles.androidContainer, style]}
+        >
+          {data.map((componentData, index) => (
+            <View
+              key={`picker-component-${index}`}
+              style={{ width: columnWidths[index] + LABEL_INSET_SPACE }}
+            >
+              <NativePicker
+                column={index}
+                data={componentData}
+                loop={loop}
+                onChange={handleOnChange}
+                curtainColor={processColor(curtainColor)}
+                hasCurtain={hasCurtain}
+                hasIndicator={hasIndicator}
+                indicatorColor={processColor(indicatorColor)}
+                indicatorSize={indicatorSize}
+                itemSpace={itemSpace}
+                textColor={processColor(textColor)}
+                textSize={textSize}
+                selectedIndex={selectedIndexes[index]}
+                style={styles.picker}
+                testID={testID}
+              />
+            </View>
+          ))}
+        </View>
+      );
+    }
+
+    return null;
+  },
+);
 
 const useNativePickerColumns = ({
   viewWidth,
