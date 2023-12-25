@@ -1,6 +1,6 @@
 {
   "name": "@force-dev/react-mobile",
-  "version": "0.0.79",
+  "version": "0.0.80",
   "description": "React Native components library",
   "main": "src/index.ts",
   "files": [
