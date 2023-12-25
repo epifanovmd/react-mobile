@@ -1,6 +1,6 @@
 {
   "name": "@force-dev/react-mobile",
-  "version": "0.0.78",
+  "version": "0.0.79",
   "description": "React Native components library",
   "main": "src/index.ts",
   "files": [
@@ -34,7 +34,7 @@
     "check-packages-updates": "yarn outdated"
   },
   "dependencies": {
-    "@force-dev/rn-wheel-picker": "^0.0.4",
+    "@force-dev/rn-wheel-picker": "^0.0.5",
     "@force-dev/utils": "^1.1.27",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/material-bottom-tabs": "^6.2.19",
