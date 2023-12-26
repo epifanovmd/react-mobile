@@ -27,7 +27,7 @@ import { RenderConditional } from '../renderer';
 
 type OmittedTextProps = Omit<
   TextInputProps,
-  'editable' | 'textContentType' | 'secureTextEntry' | 'cursorColor'
+  'editable' | 'textContentType' | 'secureTextEntry' | 'cursorColor' | 'style'
 >;
 
 export interface InputProps extends OmittedTextProps {

@@ -86,7 +86,7 @@ export const Select: Select = memo(
     }>({});
 
     useEffect(() => {
-      if (allowRest) {
+      if (allowRest.current) {
         setSelected(
           getSelected(_selected ?? []).reduce<{
             [key: number]: boolean | undefined;
