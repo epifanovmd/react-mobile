@@ -21,6 +21,7 @@ export interface ModalHeaderProps extends ViewProps {
   touchableProps?: TouchableOpacityProps;
   onClose?: () => void;
   iconColor?: ColorValue;
+  color?: ColorValue;
   renderCloseIcon?: (fill?: ColorValue) => React.JSX.Element | null;
 }
 
@@ -31,19 +32,24 @@ export const ModalHeader: FC<PropsWithChildren<ModalHeaderProps>> = ({
   touchableProps,
   onClose,
   iconColor,
+  color,
   renderCloseIcon = (fill?: ColorValue) => <CloseIcon fill={fill} />,
   children,
   ...rest
 }) => {
   return (
     <View style={[s.viewStyle, rest.style]}>
-      {children ?? <Text style={[s.textStyle, textStyle]}>{label}</Text>}
+      {children ?? (
+        <Text style={[s.textStyle, { color }, textStyle]}>{label}</Text>
+      )}
       <TouchableOpacity
         {...touchableProps}
         style={[s.touchableStyle, touchableStyle, touchableProps?.style]}
         onPress={onClose}
       >
-        {renderCloseIcon(iconColor ?? resolveStyleProp(textStyle)?.color)}
+        {renderCloseIcon(
+          color ?? iconColor ?? resolveStyleProp(textStyle)?.color,
+        )}
       </TouchableOpacity>
     </View>
   );
