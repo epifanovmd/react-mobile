@@ -39,9 +39,10 @@ export interface SelectProps<T extends any = any, M extends boolean = false>
     index: number,
   ) => React.JSX.Element | null;
   onPress?: (item: T, active: boolean, index: number) => void;
-  onChange?: (selected: M extends true ? number[] : number | undefined) => void;
+  onChange?: (selected: M extends true ? number[] : number) => void;
 
   multiply?: M;
+  closeOnChange?: boolean;
 
   contentStyle?: StyleProp<ViewStyle>;
   touchableItemProps?: Omit<TouchableOpacityProps, 'onPress'>;
@@ -69,6 +70,7 @@ export const Select: Select = memo(
     onPress: _onPress,
     onChange,
     multiply = false,
+    closeOnChange = false,
     contentStyle,
     touchableItemProps,
     listProps,
@@ -133,6 +135,11 @@ export const Select: Select = memo(
         const onPressItem = () => {
           toggleSelect(!selected[index], index);
           _onPress?.(item, !!selected[index], index);
+
+          if (closeOnChange && !selected[index] && !multiply) {
+            onChange?.(index as any);
+            modalRef.current?.close();
+          }
         };
 
         return (
@@ -149,13 +156,25 @@ export const Select: Select = memo(
           </TouchableOpacity>
         );
       },
-      [_renderItem, selected, toggleSelect, _onPress, touchableItemProps],
+      [
+        touchableItemProps,
+        _renderItem,
+        selected,
+        toggleSelect,
+        _onPress,
+        closeOnChange,
+        multiply,
+        onChange,
+        modalRef,
+      ],
     );
 
     const handleClose = useCallback(() => {
       modalProps?.onClose?.();
-      handleChange();
-    }, [handleChange, modalProps]);
+      if (!closeOnChange || multiply) {
+        handleChange();
+      }
+    }, [closeOnChange, handleChange, modalProps, multiply]);
 
     const onClose = useCallback(() => {
       modalRef.current?.close();
