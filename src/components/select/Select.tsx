@@ -112,7 +112,10 @@ export const Select: Select = memo(
       const items = Object.keys(selected)
         .map(key => Number(key))
         .filter(key => selected[key]);
-      onChange?.((multiply ? items : items[0]) as any);
+      const changeValue = (multiply ? items : items[0]) as any;
+      if (changeValue) {
+        onChange?.(changeValue);
+      }
     }, [multiply, onChange, selected]);
 
     const toggleSelect = useCallback(
@@ -136,7 +139,7 @@ export const Select: Select = memo(
           toggleSelect(!selected[index], index);
           _onPress?.(item, !!selected[index], index);
 
-          if (closeOnChange && !selected[index] && !multiply) {
+          if (closeOnChange && !selected[index] && !multiply && index) {
             onChange?.(index as any);
             modalRef.current?.close();
           }
