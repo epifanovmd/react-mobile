@@ -43,7 +43,7 @@ export const ModalHeader: FC<PropsWithChildren<ModalHeaderProps>> = ({
         style={[s.touchableStyle, touchableStyle, touchableProps?.style]}
         onPress={onClose}
       >
-        {renderCloseIcon(iconColor ?? resolveStyleProp(textStyle).color)}
+        {renderCloseIcon(iconColor ?? resolveStyleProp(textStyle)?.color)}
       </TouchableOpacity>
     </View>
   );
