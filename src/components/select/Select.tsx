@@ -144,7 +144,7 @@ export const Select: Select = memo(
           toggleSelect(!selected[index], index);
           _onPress?.(item, !!selected[index], index);
 
-          if (closeOnChange && !selected[index] && !multiply && index) {
+          if (closeOnChange && !selected[index] && !multiply) {
             onChange?.(index as any);
             modalRef.current?.close();
           }
