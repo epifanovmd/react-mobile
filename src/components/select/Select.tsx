@@ -39,7 +39,7 @@ export interface SelectProps<T extends any = any, M extends boolean = false>
     index: number,
   ) => React.JSX.Element | null;
   onPress?: (item: T, active: boolean, index: number) => void;
-  onChange?: (selected: M extends true ? number[] : number) => void;
+  onChange?: (selected?: M extends true ? number[] : number) => void;
 
   onOpen?: () => void;
 
@@ -117,9 +117,7 @@ export const Select: Select = memo(
         .filter(key => selected[key]);
 
       const changeValue = (multiply ? items : items[0]) as any;
-      if (changeValue !== undefined) {
-        onChange?.(changeValue);
-      }
+      onChange?.(changeValue);
     }, [multiply, onChange, selected]);
 
     const toggleSelect = useCallback(
