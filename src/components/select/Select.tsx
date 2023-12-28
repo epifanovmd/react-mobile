@@ -41,6 +41,8 @@ export interface SelectProps<T extends any = any, M extends boolean = false>
   onPress?: (item: T, active: boolean, index: number) => void;
   onChange?: (selected: M extends true ? number[] : number) => void;
 
+  onOpen?: () => void;
+
   multiply?: M;
   closeOnChange?: boolean;
 
@@ -69,6 +71,7 @@ export const Select: Select = memo(
     renderItem: _renderItem,
     onPress: _onPress,
     onChange,
+    onOpen,
     multiply = false,
     closeOnChange = false,
     contentStyle,
@@ -130,8 +133,9 @@ export const Select: Select = memo(
     );
 
     const onPress = useCallback(() => {
+      onOpen?.();
       modalRef.current?.open();
-    }, [modalRef]);
+    }, [onOpen, modalRef]);
 
     const renderItem = useCallback(
       ({ item, index }: ListRenderItemInfo<any>) => {
