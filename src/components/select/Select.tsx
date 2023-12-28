@@ -115,8 +115,9 @@ export const Select: Select = memo(
       const items = Object.keys(selected)
         .map(key => Number(key))
         .filter(key => selected[key]);
+
       const changeValue = (multiply ? items : items[0]) as any;
-      if (changeValue) {
+      if (changeValue !== undefined) {
         onChange?.(changeValue);
       }
     }, [multiply, onChange, selected]);
