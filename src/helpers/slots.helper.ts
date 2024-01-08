@@ -26,14 +26,7 @@ interface RestChildren {
   $children?: React.ReactNode[];
 }
 
-interface RendererProps<P> {
-  childs: React.ReactNode;
-  children?: ((props: P) => React.JSX.Element) | React.JSX.Element;
-}
-
-export interface SlotType<P> extends FC<PropsWithChildren<P>> {
-  Renderer: React.FC<RendererProps<P>>;
-}
+export interface SlotType<P> extends FC<PropsWithChildren<P>> {}
 
 const keyIsSlot = (key: string) => key[0] === key[0].toUpperCase();
 
@@ -43,34 +36,6 @@ export const createSlot = <P extends {}>(name: string): SlotType<P> => {
   }) as SlotType<P>;
 
   Slot.displayName = name;
-
-  Slot.Renderer = ({ childs, children }) => {
-    const slotted = React.Children.toArray(childs).find(child => {
-      const valid = React.isValidElement(child) && child.type;
-
-      if (valid) {
-        const displayName = (child.type as FC)?.displayName;
-
-        return child.type === Slot || displayName === Slot.displayName;
-      }
-
-      return false;
-    });
-
-    if (!slotted || !React.isValidElement(slotted)) {
-      return null;
-    }
-
-    if (slotted.props.children) {
-      return slotted;
-    }
-
-    if (typeof children === 'function') {
-      return children(slotted.props) ?? null;
-    }
-
-    return children ?? null;
-  };
 
   return Slot;
 };
