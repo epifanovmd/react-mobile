@@ -19,27 +19,28 @@ import {
   ViewStyle,
 } from 'react-native';
 import { isArray } from '@force-dev/utils';
+import { isEqual } from 'lodash';
 import { Touchable, TouchableProps } from '../touchable';
 import { Modal, ModalProps, useModal } from '../modal';
 import { SafeArea } from '../safeArea';
 
-const getSelected = <T extends any>(
+const toArraySelected = <T extends any>(
   selected: T,
 ): (T extends Array<infer R> ? R : T)[] => {
   return isArray(selected) ? selected : ([selected] as any);
 };
 
-export interface SelectProps<T extends any = any, M extends boolean = false>
+export interface SelectProps<D extends any = any, M extends boolean = false>
   extends Omit<TouchableProps, 'onPress'> {
-  selected?: M extends true ? number[] : number | undefined;
-  data: T[];
+  selected?: M extends true ? D[] : D | undefined;
+  data: D[];
   renderItem: (
-    item: T,
+    item: D,
     active: boolean,
     index: number,
   ) => React.JSX.Element | null;
-  onPress?: (item: T, active: boolean, index: number) => void;
-  onChange?: (selected?: M extends true ? number[] : number) => void;
+  onPress?: (item: D, active: boolean, index: number) => void;
+  onChange?: (selected: M extends true ? D[] : D) => void;
 
   onOpen?: () => void;
 
@@ -48,7 +49,7 @@ export interface SelectProps<T extends any = any, M extends boolean = false>
 
   contentStyle?: StyleProp<ViewStyle>;
   touchableItemProps?: Omit<TouchableOpacityProps, 'onPress'>;
-  listProps?: Omit<FlatListProps<T>, 'data' | 'renderItem'>;
+  listProps?: Omit<FlatListProps<D>, 'data' | 'renderItem'>;
   modalProps?: ModalProps;
 
   renderHeader?: (onClose: () => void) => JSX.Element | null;
@@ -58,167 +59,170 @@ export interface SelectProps<T extends any = any, M extends boolean = false>
   }) => JSX.Element | null;
 }
 
-interface Select {
-  <T extends any = any, M extends boolean = false>(
-    props: PropsWithChildren<SelectProps<T, M>>,
-  ): React.JSX.Element | null;
-}
+const _Select = <D extends any = any, M extends boolean = false>({
+  selected: _selected,
+  data,
+  renderItem: _renderItem,
+  onPress: _onPress,
+  onChange,
+  onOpen,
+  multiply,
+  closeOnChange = false,
+  contentStyle,
+  touchableItemProps,
+  listProps,
+  modalProps,
+  renderHeader,
+  renderFooter,
+  children,
+  ...rest
+}: PropsWithChildren<SelectProps<D, M>>) => {
+  const { ref: modalRef } = useModal();
+  const allowUpdateSelected = useRef(true);
 
-export const Select: Select = memo(
-  ({
-    selected: _selected,
-    data,
-    renderItem: _renderItem,
-    onPress: _onPress,
-    onChange,
-    onOpen,
-    multiply = false,
-    closeOnChange = false,
-    contentStyle,
-    touchableItemProps,
-    listProps,
-    modalProps,
-    renderHeader,
-    renderFooter,
-    children,
-    ...rest
-  }) => {
-    const { ref: modalRef } = useModal();
-    const allowRest = useRef(true);
+  const [selected, setSelected] = useState<{ [key in number]: D }>({});
 
-    const [selected, setSelected] = useState<{
-      [key: number]: boolean | undefined;
-    }>({});
+  useEffect(() => {
+    if (allowUpdateSelected.current && _selected) {
+      const s = toArraySelected(_selected);
 
-    useEffect(() => {
-      if (allowRest.current) {
-        setSelected(
-          getSelected(_selected ?? []).reduce<{
-            [key: number]: boolean | undefined;
-          }>((acc, key) => {
-            acc[key] = true;
+      setSelected(
+        s.reduce<{ [key in number]: D }>((acc, item) => {
+          const index = data.findIndex(value => isEqual(item as D, value));
 
-            return acc;
-          }, {}),
-        );
-      }
-
-      allowRest.current = true;
-    }, [_selected]);
-
-    const onReset = useCallback(() => {
-      setSelected({});
-    }, []);
-
-    const handleChange = useCallback(() => {
-      allowRest.current = false;
-      const items = Object.keys(selected)
-        .map(key => Number(key))
-        .filter(key => selected[key]);
-
-      const changeValue = (multiply ? items : items[0]) as any;
-      onChange?.(changeValue);
-    }, [multiply, onChange, selected]);
-
-    const toggleSelect = useCallback(
-      (active: boolean, index: number) => {
-        if (multiply) {
-          setSelected({ ...selected, [index]: active });
-        } else {
-          setSelected({ [index]: active });
-        }
-      },
-      [multiply, selected],
-    );
-
-    const onPress = useCallback(() => {
-      onOpen?.();
-      modalRef.current?.open();
-    }, [onOpen, modalRef]);
-
-    const renderItem = useCallback(
-      ({ item, index }: ListRenderItemInfo<any>) => {
-        const onPressItem = () => {
-          toggleSelect(!selected[index], index);
-          _onPress?.(item, !!selected[index], index);
-
-          if (closeOnChange && !selected[index] && !multiply) {
-            onChange?.(index as any);
-            modalRef.current?.close();
+          if (index !== -1) {
+            acc[index] = item as D;
           }
-        };
 
-        return (
-          <TouchableOpacity
-            delayPressIn={200}
-            {...touchableItemProps}
-            onPress={onPressItem}
-          >
-            {_renderItem(
-              item,
-              selected[index] !== undefined && !!selected[index],
-              index,
-            )}
-          </TouchableOpacity>
-        );
-      },
-      [
-        touchableItemProps,
-        _renderItem,
-        selected,
-        toggleSelect,
-        _onPress,
-        closeOnChange,
-        multiply,
-        onChange,
-        modalRef,
-      ],
-    );
+          return acc;
+        }, {}),
+      );
+    }
 
-    const handleClose = useCallback(() => {
-      modalProps?.onClose?.();
-      if (!closeOnChange || multiply) {
-        handleChange();
+    allowUpdateSelected.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_selected]);
+
+  const onReset = useCallback(() => {
+    setSelected({});
+  }, []);
+
+  const handleChange = useCallback(() => {
+    allowUpdateSelected.current = false;
+
+    const values = Object.values(selected);
+    const value = (multiply ? values : values[0]) as M extends true ? D[] : D;
+
+    onChange?.(value);
+  }, [multiply, onChange, selected]);
+
+  const toggleSelect = useCallback(
+    (item: D, active: boolean, index: number) => {
+      if (multiply) {
+        if (active) {
+          setSelected({ ...selected, [index]: item });
+        } else {
+          const newValue = { ...selected };
+          delete newValue[index];
+
+          setSelected(newValue);
+        }
+      } else {
+        setSelected({ [index]: item });
       }
-    }, [closeOnChange, handleChange, modalProps, multiply]);
+    },
+    [multiply, selected],
+  );
 
-    const onClose = useCallback(() => {
-      modalRef.current?.close();
-    }, [modalRef]);
+  const onPress = useCallback(() => {
+    onOpen?.();
+    modalRef.current?.open();
+  }, [onOpen, modalRef]);
 
-    const onApply = useCallback(() => {
-      onClose();
-    }, [onClose]);
+  const renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<D>) => {
+      const onPressItem = () => {
+        toggleSelect(item, !selected[index], index);
+        _onPress?.(item, !!selected[index], index);
 
-    return (
-      <Touchable onPress={onPress} {...rest}>
-        {children}
+        if (closeOnChange && !selected[index] && !multiply) {
+          onChange?.(item as any);
+          modalRef.current?.close();
+        }
+      };
 
-        <Modal
-          ref={modalRef}
-          adjustToContentHeight={true}
-          childrenPanGestureEnabled={false}
-          {...modalProps}
-          onClose={handleClose}
+      return (
+        <TouchableOpacity
+          delayPressIn={200}
+          {...touchableItemProps}
+          onPress={onPressItem}
         >
-          {renderHeader?.(onClose)}
+          {_renderItem(
+            item,
+            selected[index] !== undefined && !!selected[index],
+            index,
+          )}
+        </TouchableOpacity>
+      );
+    },
+    [
+      touchableItemProps,
+      _renderItem,
+      selected,
+      toggleSelect,
+      _onPress,
+      closeOnChange,
+      multiply,
+      onChange,
+      modalRef,
+    ],
+  );
 
-          <View style={[s.contentStyle, contentStyle]}>
-            <FlatList
-              {...listProps}
-              style={[s.flatList, listProps?.style]}
-              data={data}
-              renderItem={renderItem}
-            />
-          </View>
+  const handleClose = useCallback(() => {
+    modalProps?.onClose?.();
+    if (!closeOnChange || multiply) {
+      handleChange();
+    }
+  }, [closeOnChange, handleChange, modalProps, multiply]);
 
-          {renderFooter?.({ onReset, onApply })}
-          <SafeArea bottom={true} />
-        </Modal>
-      </Touchable>
-    );
-  },
-);
+  const onClose = useCallback(() => {
+    modalRef.current?.close();
+  }, [modalRef]);
+
+  const onApply = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
+  return (
+    <Touchable onPress={onPress} {...rest}>
+      {children}
+
+      <Modal
+        ref={modalRef}
+        adjustToContentHeight={true}
+        childrenPanGestureEnabled={false}
+        {...modalProps}
+        onClose={handleClose}
+      >
+        {renderHeader?.(onClose)}
+
+        <View style={[s.contentStyle, contentStyle]}>
+          <FlatList
+            {...listProps}
+            style={[s.flatList, listProps?.style]}
+            data={data}
+            renderItem={renderItem}
+          />
+        </View>
+
+        {renderFooter?.({ onReset, onApply })}
+        <SafeArea bottom={true} />
+      </Modal>
+    </Touchable>
+  );
+};
+
+export const Select = memo(_Select) as typeof _Select;
 
 const s = StyleSheet.create({
   contentStyle: {
