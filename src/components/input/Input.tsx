@@ -81,7 +81,6 @@ export const Input = memo(
       ref,
     ) => {
       const textInputRef = useRef<TextInput>(null);
-
       const [visiblePassword, setVisiblePassword] = useState(false);
       const [hasValue, setHasValue] = useState(!!value);
 
@@ -183,6 +182,7 @@ const s = StyleSheet.create({
     flexShrink: 1,
     fontSize: 16,
     marginVertical: 2,
+    width: '100%',
   },
 });
 
