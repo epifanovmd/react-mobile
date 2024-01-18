@@ -18,8 +18,8 @@ import useImageDimensions from '../../hooks/useImageDimensions';
 import { getImageStyles, getImageTransform } from '../../utils';
 import { ImageLoading } from './ImageLoading';
 
-const SWIPE_CLOSE_OFFSET = 75;
-const SWIPE_CLOSE_VELOCITY = 1.55;
+const SWIPE_CLOSE_OFFSET = 130;
+const SWIPE_CLOSE_VELOCITY = 1.75;
 const SCREEN = Dimensions.get('screen');
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
@@ -32,6 +32,8 @@ type Props = {
   delayLongPress: number;
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
+  swipeCloseOffset?: number;
+  swipeCloseVelocity?: number;
 };
 
 const ImageItem = memo(
@@ -43,6 +45,8 @@ const ImageItem = memo(
     delayLongPress,
     swipeToCloseEnabled = true,
     doubleTapToZoomEnabled = true,
+    swipeCloseOffset = SWIPE_CLOSE_OFFSET,
+    swipeCloseVelocity = SWIPE_CLOSE_VELOCITY,
   }: Props) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const [loaded, setLoaded] = useState(false);
@@ -70,20 +74,29 @@ const ImageItem = memo(
     const onScrollEndDrag = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
         const velocityY = nativeEvent?.velocity?.y ?? 0;
+        const offsetY = nativeEvent?.contentOffset?.y ?? 0;
         const _scaled = nativeEvent?.zoomScale > 1;
 
         onZoom(_scaled);
         setScaled(_scaled);
 
         if (
-          !_scaled &&
-          swipeToCloseEnabled &&
-          Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
+          (!_scaled &&
+            swipeToCloseEnabled &&
+            Math.abs(velocityY) > swipeCloseVelocity) ||
+          Math.abs(offsetY - SCREEN_HEIGHT) > swipeCloseOffset ||
+          Math.abs(offsetY - SCREEN_HEIGHT) > SCREEN_HEIGHT / 2
         ) {
           onRequestClose();
         }
       },
-      [onRequestClose, onZoom, swipeToCloseEnabled],
+      [
+        onRequestClose,
+        onZoom,
+        swipeCloseOffset,
+        swipeCloseVelocity,
+        swipeToCloseEnabled,
+      ],
     );
 
     const onScroll = ({
