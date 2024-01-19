@@ -43,7 +43,9 @@ export interface ImageViewingProps {
   doubleTapToZoomEnabled?: boolean;
   delayLongPress?: number;
   HeaderComponent?: ComponentType<{ imageIndex: number; onClose?: () => void }>;
-  FooterComponent?: ComponentType<{ imageIndex: number }>;
+  FooterComponent?: ComponentType<{ imageIndex: number; onClose?: () => void }>;
+  swipeCloseOffset?: number;
+  swipeCloseVelocity?: number;
 }
 
 export const ImageViewing: FC<ImageViewingProps> = ({
@@ -61,6 +63,8 @@ export const ImageViewing: FC<ImageViewingProps> = ({
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
   HeaderComponent,
   FooterComponent,
+  swipeCloseOffset,
+  swipeCloseVelocity,
 }) => {
   const imageList = useRef<VirtualizedList<ImageURISource>>(null);
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
@@ -118,6 +122,8 @@ export const ImageViewing: FC<ImageViewingProps> = ({
         delayLongPress={delayLongPress}
         swipeToCloseEnabled={swipeToCloseEnabled}
         doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+        swipeCloseOffset={swipeCloseOffset}
+        swipeCloseVelocity={swipeCloseVelocity}
       />
     ),
     [
@@ -126,6 +132,8 @@ export const ImageViewing: FC<ImageViewingProps> = ({
       onLongPress,
       onRequestCloseEnhanced,
       onZoom,
+      swipeCloseOffset,
+      swipeCloseVelocity,
       swipeToCloseEnabled,
     ],
   );
@@ -176,6 +184,7 @@ export const ImageViewing: FC<ImageViewingProps> = ({
           <Animated.View style={[s.footer, { transform: footerTransform }]}>
             {React.createElement(FooterComponent, {
               imageIndex: currentImageIndex,
+              onClose: onRequestCloseEnhanced,
             })}
           </Animated.View>
         )}

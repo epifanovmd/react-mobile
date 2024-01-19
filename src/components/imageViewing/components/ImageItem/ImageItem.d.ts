@@ -9,6 +9,8 @@ declare type Props = {
   delayLongPress: number;
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
+  swipeCloseOffset?: number;
+  swipeCloseVelocity?: number;
 };
 
 declare const _default: React.MemoExoticComponent<
@@ -19,6 +21,8 @@ declare const _default: React.MemoExoticComponent<
     onLongPress,
     delayLongPress,
     swipeToCloseEnabled,
+    swipeCloseOffset,
+    swipeCloseVelocity,
   }: Props) => JSX.Element
 >;
 
