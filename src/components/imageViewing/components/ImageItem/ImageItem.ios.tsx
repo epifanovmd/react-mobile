@@ -81,11 +81,10 @@ const ImageItem = memo(
         setScaled(_scaled);
 
         if (
-          (!_scaled &&
-            swipeToCloseEnabled &&
-            Math.abs(velocityY) > swipeCloseVelocity) ||
-          Math.abs(offsetY) > swipeCloseOffset ||
-          Math.abs(offsetY) > SCREEN_HEIGHT / 2
+          !_scaled &&
+          ((swipeToCloseEnabled && Math.abs(velocityY) > swipeCloseVelocity) ||
+            Math.abs(offsetY) > swipeCloseOffset ||
+            Math.abs(offsetY) > SCREEN_HEIGHT / 2)
         ) {
           onRequestClose();
         }
