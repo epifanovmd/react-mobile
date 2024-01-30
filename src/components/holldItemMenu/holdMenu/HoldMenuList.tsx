@@ -29,15 +29,15 @@ import {
 import { deepEqual } from '../utils/validations';
 import { leftOrRight } from './calculations';
 
-import { MenuItems } from './MenuItems';
-import { HoldMenuItem } from './types';
+import { HoldMenuItems } from './HoldMenuItems';
+import { HoldMenuItemProp } from './types';
 
 const AnimatedView = Animated.createAnimatedComponent(BlurView);
 
-export const MenuList = memo(() => {
+export const HoldMenuList = memo(() => {
   const { state, theme, menuProps } = useHoldItemContext();
 
-  const [itemList, setItemList] = React.useState<HoldMenuItem[]>([]);
+  const [itemList, setItemList] = React.useState<HoldMenuItemProp[]>([]);
 
   const menuHeight = useDerivedValue(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
@@ -48,7 +48,7 @@ export const MenuList = memo(() => {
       itemsWithSeparator.length,
     );
   }, [menuProps]);
-  const prevList = useSharedValue<HoldMenuItem[]>([]);
+  const prevList = useSharedValue<HoldMenuItemProp[]>([]);
 
   const messageStyles = useAnimatedStyle(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
@@ -105,7 +105,7 @@ export const MenuList = memo(() => {
     };
   }, [theme]);
 
-  const setter = (items: HoldMenuItem[]) => {
+  const setter = (items: HoldMenuItemProp[]) => {
     setItemList(items);
     prevList.value = items;
   };
@@ -129,7 +129,7 @@ export const MenuList = memo(() => {
           animatedInnerContainerStyle,
         ]}
       >
-        <MenuItems items={itemList} />
+        <HoldMenuItems items={itemList} />
       </Animated.View>
     </AnimatedView>
   );

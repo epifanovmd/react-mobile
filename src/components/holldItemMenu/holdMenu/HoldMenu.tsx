@@ -13,9 +13,9 @@ import {
 } from '../utils/constants';
 import { useHoldItemContext } from '../hooks';
 
-import { MenuList } from './MenuList';
+import { HoldMenuList } from './HoldMenuList';
 
-export const Menu = memo(() => {
+export const HoldMenu = memo(() => {
   const { state, menuProps } = useHoldItemContext();
 
   const wrapperStyles = useAnimatedStyle(() => {
@@ -46,7 +46,7 @@ export const Menu = memo(() => {
 
   return (
     <Animated.View style={[styles.menuWrapper, wrapperStyles]}>
-      <MenuList />
+      <HoldMenuList />
     </Animated.View>
   );
 });

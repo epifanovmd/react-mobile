@@ -1,17 +1,17 @@
 import React from 'react';
 import { TransformOriginAnchorPosition } from '../utils/calculations';
 
-export type HoldMenuItem = {
+export interface HoldMenuItemProp {
   text: string;
   icon?: () => React.ReactElement;
   onPress?: () => void;
   isTitle?: boolean;
   isDestructive?: boolean;
   withSeparator?: boolean;
-};
+}
 
-export type HoldMenuContextProps = {
-  items: HoldMenuItem[];
+export interface HoldMenuContext {
+  items: HoldMenuItemProp[];
   itemHeight: number;
   itemWidth: number;
   itemY: number;
@@ -19,4 +19,4 @@ export type HoldMenuContextProps = {
   anchorPosition: TransformOriginAnchorPosition;
   menuHeight: number;
   transformValue: number;
-};
+}

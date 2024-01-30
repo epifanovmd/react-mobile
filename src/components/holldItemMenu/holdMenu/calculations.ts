@@ -8,10 +8,10 @@ import {
   MENU_TEXT_LIGHT_COLOR,
   MENU_TITLE_COLOR,
 } from './constants';
-import type { HoldMenuContextProps } from './types';
+import type { HoldMenuContext } from './types';
 
 export const leftOrRight = (
-  menuProps: Animated.SharedValue<HoldMenuContextProps>,
+  menuProps: Animated.SharedValue<HoldMenuContext>,
 ) => {
   'worklet';
 

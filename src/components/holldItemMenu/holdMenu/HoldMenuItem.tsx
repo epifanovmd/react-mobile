@@ -10,16 +10,16 @@ import { BORDER_DARK_COLOR, BORDER_LIGHT_COLOR } from './constants';
 
 import { Separator } from './Separator';
 
-import { HoldMenuItem } from './types';
+import { HoldMenuItemProp } from './types';
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
-type MenuItemComponentProps = {
-  item: HoldMenuItem;
+export interface HoldMenuItemProps {
+  item: HoldMenuItemProp;
   isLast?: boolean;
-};
+}
 
-export const MenuItem = memo(({ item, isLast }: MenuItemComponentProps) => {
+export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
   const { state, theme } = useHoldItemContext();
 
   const borderStyles = useAnimatedStyle(() => {

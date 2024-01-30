@@ -1,9 +1,9 @@
-import { HoldMenuItem } from '../menu/types';
+import { HoldMenuItemProp } from '../holdMenu/types';
 
-function fieldAreSame(obj1: HoldMenuItem, obj2: HoldMenuItem) {
+function fieldAreSame(obj1: HoldMenuItemProp, obj2: HoldMenuItemProp) {
   'worklet';
 
-  const keys = Object.keys(obj1) as (keyof HoldMenuItem)[];
+  const keys = Object.keys(obj1) as (keyof HoldMenuItemProp)[];
 
   return keys.every(key => {
     const val1 = obj1[key];
@@ -20,14 +20,14 @@ function fieldAreSame(obj1: HoldMenuItem, obj2: HoldMenuItem) {
   });
 }
 
-function deepEqual(array1: HoldMenuItem[], array2: HoldMenuItem[]) {
+function deepEqual(array1: HoldMenuItemProp[], array2: HoldMenuItemProp[]) {
   'worklet';
 
   const areArrays = Array.isArray(array1) && Array.isArray(array2);
   const areSameLength = areArrays && array2 && array1.length === array2.length;
 
   if (areArrays && areSameLength && array2) {
-    return array1.every((menuItem: HoldMenuItem, index) => {
+    return array1.every((menuItem: HoldMenuItemProp, index) => {
       const obj1 = menuItem;
       const obj2 = array2[index];
 

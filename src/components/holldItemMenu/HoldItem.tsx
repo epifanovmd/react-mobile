@@ -34,7 +34,7 @@ import {
   WINDOW_WIDTH,
 } from './utils/constants';
 import { useDeviceOrientation, useHoldItemContext } from './hooks';
-import { HoldMenuItem } from './menu/types';
+import { HoldMenuItemProp } from './holdMenu/types';
 import { styleGuide } from './utils/styleGuide';
 import {
   calculateMenuHeight,
@@ -42,8 +42,8 @@ import {
   TransformOriginAnchorPosition,
 } from './utils/calculations';
 
-export type HoldItemMenuProps = {
-  items: HoldMenuItem[];
+export type HoldItemProps = {
+  items: HoldMenuItemProp[];
 
   disableMove?: boolean;
   style?: StyleProp<ViewStyle>;
@@ -59,7 +59,7 @@ type GestureHandlerProps = {
 
 type Context = { didMeasureLayout: boolean };
 
-export const HoldItemMenu: FC<PropsWithChildren<HoldItemMenuProps>> = memo(
+export const HoldItem: FC<PropsWithChildren<HoldItemProps>> = memo(
   ({
     items,
     bottom,
