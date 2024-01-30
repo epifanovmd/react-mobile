@@ -48,7 +48,9 @@
     "check-packages-updates": "yarn outdated"
   },
   "dependencies": {
-    "@force-dev/utils": "^1.1.32",
+    "@force-dev/utils": "^1.1.33",
+    "@gorhom/portal": "^1.0.14",
+    "@react-native-community/blur": "^4.4.0",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/material-bottom-tabs": "^6.2.19",
     "@react-navigation/material-top-tabs": "^6.6.5",
@@ -58,7 +60,8 @@
     "mobx": "^6.10.2",
     "moment": "^2.29.4",
     "react-native-haptic-feedback": "^2.2.0",
-    "react-native-iphone-x-helper": "^1.3.1"
+    "react-native-iphone-x-helper": "^1.3.1",
+    "react-native-reanimated": "^3.6.2"
   },
   "peerDependencies": {
     "react": "^18.2.0",

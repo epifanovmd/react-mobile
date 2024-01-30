@@ -90,7 +90,7 @@ export const Picker = memo(
 
     if (Platform.OS === 'ios') {
       return (
-        <View onLayout={handleOnLayout} style={[{ flexGrow: 1 }, style]}>
+        <View onLayout={handleOnLayout} style={[styles.pickerWrap, style]}>
           <NativePicker
             selectedIndexes={selectedIndexes}
             onChange={handleOnChange}
@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
+  pickerWrap: { flexGrow: 1 },
   picker: {
     height: 216,
   },
