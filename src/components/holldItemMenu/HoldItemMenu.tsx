@@ -34,7 +34,7 @@ import {
   WINDOW_WIDTH,
 } from './utils/constants';
 import { useDeviceOrientation, useHoldItemContext } from './hooks';
-import { MenuItemProps } from './menu/types';
+import { HoldMenuItem } from './menu/types';
 import { styleGuide } from './utils/styleGuide';
 import {
   calculateMenuHeight,
@@ -43,7 +43,7 @@ import {
 } from './utils/calculations';
 
 export type HoldItemMenuProps = {
-  items: MenuItemProps[];
+  items: HoldMenuItem[];
 
   disableMove?: boolean;
   style?: StyleProp<ViewStyle>;

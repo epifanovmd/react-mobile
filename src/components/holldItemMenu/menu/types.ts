@@ -1,7 +1,7 @@
 import React from 'react';
 import { TransformOriginAnchorPosition } from '../utils/calculations';
 
-export type MenuItemProps = {
+export type HoldMenuItem = {
   text: string;
   icon?: () => React.ReactElement;
   onPress?: () => void;
@@ -10,8 +10,8 @@ export type MenuItemProps = {
   withSeparator?: boolean;
 };
 
-export type MenuInternalProps = {
-  items: MenuItemProps[];
+export type HoldMenuContextProps = {
+  items: HoldMenuItem[];
   itemHeight: number;
   itemWidth: number;
   itemY: number;

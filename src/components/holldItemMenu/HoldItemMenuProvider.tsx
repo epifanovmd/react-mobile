@@ -12,7 +12,7 @@ import { Backdrop } from './backdrop';
 import { HoldItemContext } from './HoldItemContext';
 
 import { Menu } from './menu';
-import { MenuInternalProps } from './menu/types';
+import { HoldMenuContextProps } from './menu/types';
 import { CONTEXT_MENU_STATE } from './utils/constants';
 
 export interface HoldItemMenuProviderProps {
@@ -36,7 +36,7 @@ export const HoldItemMenuProvider: FC<
       CONTEXT_MENU_STATE.PENDING,
     );
     const theme = useSharedValue<'light' | 'dark'>(selectedTheme || 'light');
-    const menuProps = useSharedValue<MenuInternalProps>({
+    const menuProps = useSharedValue<HoldMenuContextProps>({
       itemHeight: 0,
       itemWidth: 0,
       itemX: 0,

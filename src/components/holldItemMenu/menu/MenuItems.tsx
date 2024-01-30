@@ -2,12 +2,12 @@ import { isEqual } from 'lodash';
 import React, { memo } from 'react';
 
 import { MenuItem } from './MenuItem';
-import { MenuItemProps } from './types';
+import { HoldMenuItem } from './types';
 
-export const MenuItems = memo(({ items }: { items: MenuItemProps[] }) => {
+export const MenuItems = memo(({ items }: { items: HoldMenuItem[] }) => {
   return (
     <>
-      {items.map((item: MenuItemProps, index: number) => {
+      {items.map((item: HoldMenuItem, index: number) => {
         return (
           <MenuItem
             key={index}

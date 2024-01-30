@@ -1,12 +1,12 @@
 import { createContext } from 'react';
 import { SharedValue } from 'react-native-reanimated';
-import { MenuInternalProps } from './menu/types';
+import { HoldMenuContextProps } from './menu/types';
 import type { CONTEXT_MENU_STATE } from './utils/constants';
 
 export interface HoldItemContext {
   state: SharedValue<CONTEXT_MENU_STATE>;
   theme: SharedValue<'light' | 'dark'>;
-  menuProps: SharedValue<MenuInternalProps>;
+  menuProps: SharedValue<HoldMenuContextProps>;
   safeAreaInsets?: {
     top: number;
     right: number;

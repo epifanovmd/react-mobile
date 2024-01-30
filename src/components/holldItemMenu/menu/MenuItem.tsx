@@ -10,12 +10,12 @@ import { BORDER_DARK_COLOR, BORDER_LIGHT_COLOR } from './constants';
 
 import { Separator } from './Separator';
 
-import { MenuItemProps } from './types';
+import { HoldMenuItem } from './types';
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 type MenuItemComponentProps = {
-  item: MenuItemProps;
+  item: HoldMenuItem;
   isLast?: boolean;
 };
 

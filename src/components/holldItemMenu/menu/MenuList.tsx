@@ -30,14 +30,14 @@ import { deepEqual } from '../utils/validations';
 import { leftOrRight } from './calculations';
 
 import { MenuItems } from './MenuItems';
-import { MenuItemProps } from './types';
+import { HoldMenuItem } from './types';
 
 const AnimatedView = Animated.createAnimatedComponent(BlurView);
 
 export const MenuList = memo(() => {
   const { state, theme, menuProps } = useHoldItemContext();
 
-  const [itemList, setItemList] = React.useState<MenuItemProps[]>([]);
+  const [itemList, setItemList] = React.useState<HoldMenuItem[]>([]);
 
   const menuHeight = useDerivedValue(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
@@ -48,7 +48,7 @@ export const MenuList = memo(() => {
       itemsWithSeparator.length,
     );
   }, [menuProps]);
-  const prevList = useSharedValue<MenuItemProps[]>([]);
+  const prevList = useSharedValue<HoldMenuItem[]>([]);
 
   const messageStyles = useAnimatedStyle(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
@@ -105,7 +105,7 @@ export const MenuList = memo(() => {
     };
   }, [theme]);
 
-  const setter = (items: MenuItemProps[]) => {
+  const setter = (items: HoldMenuItem[]) => {
     setItemList(items);
     prevList.value = items;
   };
