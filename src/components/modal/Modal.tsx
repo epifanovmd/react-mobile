@@ -11,6 +11,7 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {
@@ -23,7 +24,6 @@ import {
 } from 'react-native-gesture-handler';
 
 import { ModalProps, TClose, TOpen, TPosition, TStyle } from './types';
-import { useDimensions } from '../../hooks';
 import { getSpringConfig } from './utils/get-spring-config';
 import { invariant } from './utils/invariant';
 import { ModalPortal } from './ModalPortal';
@@ -112,7 +112,7 @@ export const Modal = memo(
       }: ModalProps,
       ref: React.Ref<Modal>,
     ) => {
-      const { height: screenHeight } = useDimensions();
+      const { height: screenHeight } = useWindowDimensions();
       const isHandleOutside = handlePosition === 'outside';
       const handleHeight = withHandle ? 20 : isHandleOutside ? 35 : 20;
       const fullHeight = screenHeight - modalTopOffset;

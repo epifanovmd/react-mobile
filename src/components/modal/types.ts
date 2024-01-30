@@ -250,28 +250,7 @@ export interface ModalProps {
   onLayout?(event: LayoutChangeEvent): void;
 }
 
-export interface IModalConsumerProps {
-  children: React.ReactNode;
-  manager: IModalProvider | null;
-}
-
 export interface IModalHostProps {
   children: React.ReactNode;
   style?: ViewStyle;
-}
-
-export interface IModalProvider {
-  mount(children: React.ReactNode): string;
-
-  update(key?: string, children?: React.ReactNode): void;
-
-  unmount(key?: string): void;
-}
-
-export interface IModalManagerHandles {
-  mount(key: string, children: React.ReactNode): void;
-
-  update(key?: string, children?: React.ReactNode): void;
-
-  unmount(key?: string): void;
 }
