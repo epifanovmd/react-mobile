@@ -391,12 +391,7 @@ export const HoldItem: HoldItem = memo(
           ? 0
           : isActive.value
           ? withSpring(transformValue.value, SPRING_CONFIGURATION)
-          : withTiming(-0.1, { duration: HOLD_ITEM_TRANSFORM_DURATION });
-
-      const scaleAnimation = () =>
-        isActive.value
-          ? withTiming(1, { duration: HOLD_ITEM_TRANSFORM_DURATION })
-          : itemScale.value;
+          : withTiming(0, { duration: HOLD_ITEM_TRANSFORM_DURATION });
 
       return {
         zIndex: 10,
@@ -409,9 +404,6 @@ export const HoldItem: HoldItem = memo(
         transform: [
           {
             translateY: transformAnimation(),
-          },
-          {
-            scale: scaleAnimation(),
           },
         ],
       };

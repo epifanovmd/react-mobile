@@ -11,6 +11,12 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { useHoldItemContext } from '../hooks';
+
+import {
+  calculateMenuHeight,
+  menuAnimationAnchor,
+} from '../utils/calculations';
 
 import {
   CONTEXT_MENU_STATE,
@@ -19,13 +25,7 @@ import {
   MENU_WIDTH,
   SPRING_CONFIGURATION_MENU,
 } from '../utils/constants';
-import { useHoldItemContext } from '../hooks';
 import { styleGuide } from '../utils/styleGuide';
-
-import {
-  calculateMenuHeight,
-  menuAnimationAnchor,
-} from '../utils/calculations';
 import { deepEqual } from '../utils/validations';
 import { leftOrRight } from './calculations';
 
@@ -43,11 +43,8 @@ export const HoldMenuList = memo(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
       item => item.withSeparator,
     );
-    return calculateMenuHeight(
-      menuProps.value.items.length,
-      itemsWithSeparator.length,
-    );
-  }, [menuProps]);
+    return calculateMenuHeight(itemList.length, itemsWithSeparator.length);
+  }, [menuProps, itemList]);
   const prevList = useSharedValue<HoldMenuItemProp[]>([]);
 
   const messageStyles = useAnimatedStyle(() => {
@@ -78,7 +75,7 @@ export const HoldMenuList = memo(() => {
 
     return {
       left: _leftPosition,
-      height: menuHeight.value,
+      height: withTiming(menuHeight.value, { duration: 150 }),
       opacity: opacityAnimation(),
       transform: [
         { translateX: translate.beginningTransformations.translateX },
@@ -106,8 +103,32 @@ export const HoldMenuList = memo(() => {
   }, [theme]);
 
   const setter = (items: HoldMenuItemProp[]) => {
-    setItemList(items);
-    prevList.value = items;
+    const newItems = items.map((item, index) =>
+      item.isDestructive
+        ? {
+            ...item,
+            onPress: () => {
+              const text = item.confirmText ?? item.text;
+              const onPress = (data: any) => item.onPress?.(data);
+
+              const _items = [
+                {
+                  ...items.find((_, ind) => index === ind),
+                  text,
+                  onPress,
+                },
+              ];
+
+              setItemList(_items);
+
+              prevList.value = _items;
+            },
+          }
+        : item,
+    );
+
+    setItemList(newItems);
+    prevList.value = newItems;
   };
 
   useAnimatedReaction(

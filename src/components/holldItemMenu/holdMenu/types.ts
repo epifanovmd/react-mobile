@@ -3,6 +3,7 @@ import { TransformOriginAnchorPosition } from '../utils/calculations';
 
 export interface HoldMenuItemProp<T = any> {
   text: string;
+  confirmText?: string;
   icon?: () => React.ReactElement;
   onPress?: (data: T) => void;
   isTitle?: boolean;

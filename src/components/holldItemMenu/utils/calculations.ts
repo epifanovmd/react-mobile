@@ -18,11 +18,11 @@ export const calculateMenuHeight = (
   separatorCount: number,
 ) => {
   'worklet';
-  return (
-    menuItemHeight() * itemLength +
-    (itemLength - 1) +
-    separatorCount * styleGuide.spacing
-  );
+  return itemLength < 2
+    ? menuItemHeight() * itemLength
+    : menuItemHeight() * itemLength +
+        (itemLength - 1) +
+        separatorCount * styleGuide.spacing;
 };
 
 export type TransformOriginAnchorPosition =

@@ -41,7 +41,12 @@ export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
       if (item.onPress) {
         item.onPress(menuProps.value.data);
       }
-      state.value = CONTEXT_MENU_STATE.END;
+      if (
+        (item.confirmText && item.text === item.confirmText) ||
+        !item.confirmText
+      ) {
+        state.value = CONTEXT_MENU_STATE.END;
+      }
     }
   }, [item, state, menuProps.value.data]);
 
