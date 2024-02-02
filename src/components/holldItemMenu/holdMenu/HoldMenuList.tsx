@@ -103,25 +103,17 @@ export const HoldMenuList = memo(() => {
   }, [theme]);
 
   const setter = (items: HoldMenuItemProp[]) => {
-    const newItems = items.map((item, index) =>
+    const newItems = items.map(item =>
       item.isDestructive
         ? {
             ...item,
-            onPress: () => {
-              const text = item.confirmText ?? item.text;
-              const onPress = (data: any) => item.onPress?.(data);
+            onPress: (data: any) => {
+              item.onPress?.(data);
 
-              const _items = [
-                {
-                  ...items.find((_, ind) => index === ind),
-                  text,
-                  onPress,
-                },
-              ];
-
-              setItemList(_items);
-
-              prevList.value = _items;
+              if (item.variants) {
+                setItemList(item.variants);
+                prevList.value = item.variants;
+              }
             },
           }
         : item,

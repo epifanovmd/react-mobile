@@ -3,12 +3,12 @@ import { TransformOriginAnchorPosition } from '../utils/calculations';
 
 export interface HoldMenuItemProp<T = any> {
   text: string;
-  confirmText?: string;
   icon?: () => React.ReactElement;
   onPress?: (data: T) => void;
   isTitle?: boolean;
   isDestructive?: boolean;
   withSeparator?: boolean;
+  variants?: HoldMenuItemProp<T>[];
 }
 
 export interface HoldMenuContext<T = any> {
