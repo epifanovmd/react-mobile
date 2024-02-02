@@ -20,7 +20,7 @@ export interface HoldMenuItemProps {
 }
 
 export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
-  const { state, theme } = useHoldItemContext();
+  const { state, theme, menuProps } = useHoldItemContext();
 
   const borderStyles = useAnimatedStyle(() => {
     const borderBottomColor =
@@ -39,11 +39,11 @@ export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
   const handleOnPress = useCallback(() => {
     if (!item.isTitle) {
       if (item.onPress) {
-        item.onPress();
+        item.onPress(menuProps.value.data);
       }
       state.value = CONTEXT_MENU_STATE.END;
     }
-  }, [state, item]);
+  }, [item, state, menuProps.value.data]);
 
   return (
     <>

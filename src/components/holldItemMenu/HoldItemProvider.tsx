@@ -7,6 +7,7 @@ import {
   useAnimatedReaction,
   useSharedValue,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Backdrop } from './backdrop';
 import { HoldItemContext } from './HoldItemContext';
@@ -34,6 +35,8 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
       const state = useSharedValue<CONTEXT_MENU_STATE>(
         CONTEXT_MENU_STATE.PENDING,
       );
+      const insets = useSafeAreaInsets();
+
       const theme = useSharedValue<'light' | 'dark'>(selectedTheme || 'light');
       const menuProps = useSharedValue<HoldMenuContext>({
         itemHeight: 0,
@@ -41,6 +44,7 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
         itemX: 0,
         itemY: 0,
         items: [],
+        data: undefined,
         anchorPosition: 'top-center',
         menuHeight: 0,
         transformValue: 0,
@@ -77,14 +81,15 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
           state,
           theme,
           menuProps,
-          safeAreaInsets: safeAreaInsets || {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-          },
+          safeAreaInsets: insets ||
+            safeAreaInsets || {
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+            },
         }),
-        [state, theme, menuProps, safeAreaInsets],
+        [state, theme, menuProps, insets, safeAreaInsets],
       );
 
       return (
