@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { isArray, isFunction, SupportInitialize } from '@force-dev/utils';
 
 export const useInitializeVM = <D, T, Data extends D = D>(
-  vm: T & SupportInitialize<D> & { dispose?: () => void },
+  vm: T & SupportInitialize<D>,
   data: Data,
 ) => {
   const isInitialized = useRef(false);
