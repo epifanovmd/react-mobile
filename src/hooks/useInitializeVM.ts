@@ -1,5 +1,20 @@
+import {
+  InitializeDispose,
+  isArray,
+  isFunction,
+  SupportInitialize,
+} from '@force-dev/utils';
 import { useEffect, useRef } from 'react';
-import { isArray, isFunction, SupportInitialize } from '@force-dev/utils';
+
+const disposer = (dispose: Exclude<InitializeDispose, Promise<any>>) => {
+  if (isArray(dispose)) {
+    dispose.forEach(disposer);
+  }
+
+  if (isFunction(dispose)) {
+    dispose();
+  }
+};
 
 export const useInitializeVM = <D, T, Data extends D = D>(
   vm: T & SupportInitialize<D>,
@@ -10,26 +25,35 @@ export const useInitializeVM = <D, T, Data extends D = D>(
 
   useEffect(() => {
     isInitialized.current = true;
+    const disposes: (() => void)[] = [];
 
     if (initialize) {
       const dispose = initialize(data);
 
-      if (isArray(dispose)) {
-        return () => {
-          dispose.forEach(d => {
-            if (isFunction(d)) {
-              d();
+      if (dispose instanceof Promise) {
+        dispose
+          .then(disposable => {
+            if (isFunction(disposable)) {
+              disposes.push(disposable);
             }
-          });
-        };
-      }
 
-      if (isFunction(dispose)) {
-        return dispose;
+            if (isArray(disposable)) {
+              disposable.forEach(d => {
+                disposes.push(d);
+              });
+            }
+          })
+          .catch(() => {});
+      } else {
+        return () => {
+          disposer(dispose);
+        };
       }
     }
 
-    return () => {};
+    return () => {
+      disposer(disposes);
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
