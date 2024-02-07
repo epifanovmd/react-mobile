@@ -338,10 +338,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@force-dev/utils@^1.1.37":
-  version "1.1.37"
-  resolved "https://registry.yarnpkg.com/@force-dev/utils/-/utils-1.1.37.tgz#11f8f94d0a43dd5d33dbdcecf6c122e355d1c356"
-  integrity sha512-GNhHORovfLm+bLu2PcPDurvqi9vlPNhgMroblAPuvm1ALTdhWHO19V5os+XzmDXwrh9BOv0723lN6nd98ykqBw==
+"@force-dev/utils@^1.1.38":
+  version "1.1.38"
+  resolved "https://registry.yarnpkg.com/@force-dev/utils/-/utils-1.1.38.tgz#53b575f90eace5ec7754aef796a34f9552f3150b"
+  integrity sha512-bA40GexgRz3oINLkxuEJBq5Q4ZlJrni1CLc1FKMsHmdmRuAo7Xfr57vVH6Vo7jaoxgG7h/PUepc5aqwRGodEeQ==
   dependencies:
     "@types/luxon" "^3.1.0"
     inversify "^6.0.1"

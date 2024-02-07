@@ -16,9 +16,9 @@ const disposer = (dispose: Exclude<InitializeDispose, Promise<any>>) => {
   }
 };
 
-export const useInitializeVM = <D, T, Data extends D = D>(
+export const useInitializeVM = <D, T>(
   vm: T & SupportInitialize<D>,
-  data: Data,
+  ...rest: SupportInitialize<D> extends SupportInitialize ? never : [D]
 ) => {
   const isInitialized = useRef(false);
   const { initialize } = vm;
@@ -28,7 +28,7 @@ export const useInitializeVM = <D, T, Data extends D = D>(
     const disposes: (() => void)[] = [];
 
     if (initialize) {
-      const dispose = initialize(data);
+      const dispose = initialize(rest?.[0]);
 
       if (dispose instanceof Promise) {
         dispose
