@@ -1,7 +1,21 @@
 import { Portal } from '@gorhom/portal';
+import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid/non-secure';
-import React, { memo, PropsWithChildren, useCallback, useMemo } from 'react';
-import { StyleProp, StyleSheet, ViewProps, ViewStyle } from 'react-native';
+import React, {
+  memo,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 
 import {
   LongPressGestureHandler,
@@ -42,7 +56,7 @@ import {
   WINDOW_WIDTH,
 } from './utils/constants';
 
-export type HoldItemProps<T> = {
+export interface HoldItemProps<T> extends TouchableOpacityProps {
   data?: T;
   items: HoldMenuItemProp<T>[];
 
@@ -52,7 +66,7 @@ export type HoldItemProps<T> = {
   activateOn?: 'tap' | 'double-tap' | 'hold';
   closeOnTap?: boolean;
   longPressMinDurationMs?: number;
-};
+}
 
 type GestureHandlerProps = {
   children: React.ReactElement | React.ReactElement[];
@@ -77,14 +91,15 @@ export const HoldItem: HoldItem = memo(
     closeOnTap,
     longPressMinDurationMs = 150,
     children,
+    ...rest
   }) => {
     const { state, menuProps, safeAreaInsets } = useHoldItemContext();
     const deviceOrientation = useDeviceOrientation();
+    const [showPortal, setShowPortal] = useState(false);
 
     const isActive = useSharedValue(false);
     const isAnimationStarted = useSharedValue(false);
 
-    // const tYPortalItem = useSharedValue<number>(0);
     const itemRectY = useSharedValue<number>(0);
     const itemRectX = useSharedValue<number>(0);
     const itemRectWidth = useSharedValue<number>(0);
@@ -321,6 +336,9 @@ export const HoldItem: HoldItem = memo(
       LongPressGestureHandlerGestureEvent | TapGestureHandlerGestureEvent,
       Context
     >({
+      onStart: () => {
+        runOnJS(setShowPortal)(true);
+      },
       onActive: (_, context) => {
         if (canCallActivateFunctions()) {
           if (!context.didMeasureLayout) {
@@ -378,8 +396,8 @@ export const HoldItem: HoldItem = memo(
     });
 
     const containerStyle = React.useMemo(
-      () => [{ flexShrink: 1 }, style, animatedContainerStyle],
-      [style, animatedContainerStyle],
+      () => [{ flexShrink: 1 }, animatedContainerStyle],
+      [animatedContainerStyle],
     );
 
     const animatedPortalStyle = useAnimatedStyle(() => {
@@ -407,7 +425,7 @@ export const HoldItem: HoldItem = memo(
           },
         ],
       };
-    }, []);
+    });
 
     const portalContainerStyle = useMemo(
       () => [
@@ -476,28 +494,38 @@ export const HoldItem: HoldItem = memo(
 
     return (
       <>
-        <GestureHandler>
-          <Animated.View ref={containerRef} style={containerStyle}>
-            {children}
-          </Animated.View>
-        </GestureHandler>
+        <TouchableOpacity
+          style={[styles.touchable, style]}
+          activeOpacity={0.8}
+          {...rest}
+        >
+          <GestureHandler>
+            <Animated.View ref={containerRef} style={containerStyle}>
+              {children}
+            </Animated.View>
+          </GestureHandler>
+        </TouchableOpacity>
 
-        <Portal key={key} name={key}>
-          <Animated.ScrollView
-            key={key}
-            style={portalContainerStyle}
-            animatedProps={animatedPortalProps}
-          >
-            <PortalOverlay />
-            {children}
-          </Animated.ScrollView>
-        </Portal>
+        {showPortal && (
+          <Portal key={key} name={key}>
+            <Animated.ScrollView
+              key={key}
+              style={portalContainerStyle}
+              animatedProps={animatedPortalProps}
+            >
+              <PortalOverlay />
+              {children}
+            </Animated.ScrollView>
+          </Portal>
+        )}
       </>
     );
   },
+  isEqual,
 );
 
 const styles = StyleSheet.create({
+  touchable: { flexShrink: 1 },
   holdItem: {
     zIndex: 10,
     position: 'absolute',
