@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import {
+  FC,
+  memo,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   Animated,
   BackHandler,
@@ -68,6 +75,7 @@ export const Modal = memo(
         adjustToContentHeight = false,
 
         // Options
+        withoutPortal,
         handlePosition = 'outside',
         avoidKeyboardLikeIOS = Platform.select({
           ios: true,
@@ -901,7 +909,7 @@ export const Modal = memo(
       }
 
       return (
-        <ModalPortal>
+        <Wrap withoutPortal={withoutPortal}>
           <View
             style={_rootStyle}
             pointerEvents={alwaysOpen || !withOverlay ? 'box-none' : 'auto'}
@@ -924,11 +932,22 @@ export const Modal = memo(
               </View>
             </TapGestureHandler>
           </View>
-        </ModalPortal>
+        </Wrap>
       );
     },
   ),
 );
+
+const Wrap: FC<PropsWithChildren<{ withoutPortal?: boolean }>> = ({
+  withoutPortal,
+  children,
+}) => {
+  if (withoutPortal) {
+    return <>{children}</>;
+  }
+
+  return <ModalPortal>{children}</ModalPortal>;
+};
 
 const s = StyleSheet.create({
   root: {

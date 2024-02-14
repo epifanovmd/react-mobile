@@ -90,6 +90,7 @@ export interface ModalProps {
    */
   adjustToContentHeight?: boolean;
 
+  withoutPortal?: boolean;
   /**
    * Define where the handle on top of the modal should be positioned.
    * @default 'outside'
