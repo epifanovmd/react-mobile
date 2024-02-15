@@ -16,7 +16,7 @@ const disposer = (dispose: Exclude<InitializeDispose, Promise<any>>) => {
   }
 };
 
-export const useInitializeVM = <D, T>(
+export const useInitialize = <D, T>(
   vm: T & SupportInitialize<D>,
   ...rest: SupportInitialize<D> extends SupportInitialize ? never : [D]
 ) => {
