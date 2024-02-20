@@ -48,7 +48,7 @@
     "check-packages-updates": "yarn outdated"
   },
   "dependencies": {
-    "@force-dev/utils": "^1.1.43",
+    "@force-dev/utils": "^1.1.44",
     "@gorhom/portal": "^1.0.14",
     "@react-native-community/blur": "^4.4.0",
     "lodash": "^4.17.21",
