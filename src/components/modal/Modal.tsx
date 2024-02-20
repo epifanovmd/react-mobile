@@ -379,6 +379,8 @@ export const Modal = memo(
             newPosition = 'top';
           }
 
+          dragY.setValue(0);
+
           Animated.parallel([
             Animated.timing(overlay, {
               toValue: alwaysOpenValue && dest === 'default' ? 0 : 1,
@@ -421,6 +423,7 @@ export const Modal = memo(
           });
         },
         [
+          dragY,
           handleBackPress,
           modalHeightValue,
           onOpened,
