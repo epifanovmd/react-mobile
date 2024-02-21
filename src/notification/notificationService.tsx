@@ -1,6 +1,6 @@
 import { NotificationActions } from './Notification';
 
-class NotificationManager implements NotificationActions {
+class NotificationService implements NotificationActions {
   private notificationInstance: NotificationActions | null = null;
 
   show: NotificationActions['show'] = (...args) => {
@@ -9,15 +9,9 @@ class NotificationManager implements NotificationActions {
   update: NotificationActions['update'] = (...args) => {
     this.notificationInstance?.update(...args);
   };
-  hide: NotificationActions['hide'] = (...args) => {
-    this.notificationInstance?.hide(...args);
-  };
 
-  hideAll: NotificationActions['hideAll'] = () => {
-    this.notificationInstance?.hideAll();
-  };
-  isOpen: NotificationActions['isOpen'] = (...args) => {
-    return !!this.notificationInstance?.isOpen(...args);
+  hide: NotificationActions['hide'] = () => {
+    return this.notificationInstance?.hide() ?? Promise.resolve();
   };
 
   register(instance: NotificationActions) {
@@ -29,4 +23,4 @@ class NotificationManager implements NotificationActions {
   }
 }
 
-export const notificationManager = new NotificationManager();
+export const notificationService = new NotificationService();

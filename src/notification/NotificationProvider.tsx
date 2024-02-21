@@ -4,7 +4,7 @@ import {
   NotificationActions,
   NotificationProps,
 } from './Notification';
-import { notificationManager } from './notificationManager';
+import { notificationService } from './notificationService';
 
 type PropsWithChildren = NotificationProps & {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export const NotificationProvider: FC<PropsWithChildren> = memo(
     useEffect(() => {
       if (toastRef.current) {
         setRefState(toastRef.current);
-        notificationManager.register(toastRef.current);
+        notificationService.register(toastRef.current);
       }
     }, []);
 

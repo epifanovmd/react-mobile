@@ -1,32 +1,35 @@
-import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
-  KeyboardAvoidingView,
-  Platform,
   SafeAreaView,
   StyleSheet,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   NotificationToast,
   NotificationToastOptions,
   NotificationToastProps,
+  NotificationToastRef,
 } from './NotificationToast';
-import { useDimensions } from '../hooks';
 
 export interface NotificationActions {
   show: (
     message: string | React.JSX.Element,
     toastOptions?: NotificationToastOptions,
-  ) => string;
+  ) => void;
   update: (
-    id: string,
     message: string | React.JSX.Element,
     toastOptions?: NotificationToastOptions,
   ) => void;
-  hide: (id: string) => void;
-  hideAll: () => void;
-  isOpen: (id: string) => boolean;
+  hide: () => Promise<void>;
 }
 
 export interface NotificationProps extends NotificationToastOptions {
@@ -35,7 +38,6 @@ export interface NotificationProps extends NotificationToastOptions {
   };
   offset?: number;
   offsetTop?: number;
-  offsetBottom?: number;
   swipeEnabled?: boolean;
   safeArea?: boolean;
 
@@ -45,87 +47,73 @@ export interface NotificationProps extends NotificationToastOptions {
 export const Notification = forwardRef<NotificationActions, NotificationProps>(
   (props, ref) => {
     const {
-      offset = 10,
+      offset = 0,
       offsetTop,
-      offsetBottom,
       swipeEnabled = true,
-      safeArea = true,
+      safeArea = false,
     } = props;
-    const [toasts, setToasts] = useState<NotificationToastProps[]>([]);
-    const { height, width } = useDimensions();
+    const toastRef = useRef<NotificationToastRef | null>(null);
+    const [toast, setToast] = useState<NotificationToastProps | null>(null);
+    const { width } = useWindowDimensions();
+    const { top } = useSafeAreaInsets();
 
-    const update = useCallback(
-      (
-        id: string,
-        message: string | React.JSX.Element,
-        toastOptions?: NotificationToastOptions,
-      ) => {
-        setToasts(items =>
-          items.map(toast =>
-            toast.id === id ? { ...toast, message, ...toastOptions } : toast,
-          ),
-        );
-      },
-      [],
-    );
-
-    const hide = useCallback((id: string) => {
-      setToasts(items =>
-        items.map(toast =>
-          toast.id === id ? { ...toast, open: false } : toast,
-        ),
-      );
+    const hide = useCallback(() => {
+      return toastRef.current?.hide() || Promise.resolve();
     }, []);
 
     const show = useCallback(
-      (
+      async (
         message: string | React.JSX.Element,
         toastOptions?: NotificationToastOptions,
       ) => {
-        let id = toastOptions?.id || Math.random().toString();
+        await toastRef.current?.hide();
+
         const onDestroy = () => {
-          toastOptions?.onClose && toastOptions?.onClose();
-          setToasts(items => items.filter(toast => toast.id !== id));
+          setToast(null);
+          toastRef.current = null;
         };
 
-        requestAnimationFrame(() => {
-          setToasts(items => [
-            {
-              id,
-              onDestroy,
-              message,
-              open: true,
-              onHide: () => hide(id),
-              swipeEnabled,
-              ...props,
-              ...toastOptions,
-            },
-            ...items.filter(toast => toast.open),
-          ]);
+        setToast({
+          onDestroy,
+          message,
+          hide,
+          swipeEnabled,
+          ...props,
+          ...toastOptions,
+          onClose: () => {
+            props.onClose?.();
+            toastOptions?.onClose?.();
+          },
+          onPress: () => {
+            props.onPress?.();
+            toastOptions?.onPress?.();
+          },
         });
-
-        return id;
       },
       [hide, props, swipeEnabled],
     );
 
-    const hideAll = useCallback(() => {
-      setToasts(items => items.map(toast => ({ ...toast, open: false })));
-    }, []);
-
-    const isOpen = useCallback(
-      (id: string) => {
-        return toasts.some(toast => toast.id === id && toast.open);
+    const update = useCallback(
+      (
+        message: string | React.JSX.Element,
+        toastOptions?: NotificationToastOptions,
+      ) => {
+        setToast(state => {
+          if (state) {
+            return { ...state, message, ...toastOptions };
+          } else {
+            show(message, toastOptions).then();
+            return null;
+          }
+        });
       },
-      [toasts],
+      [show],
     );
 
     React.useImperativeHandle(ref, () => ({
       show,
       update,
       hide,
-      hideAll,
-      isOpen,
     }));
 
     const SafeAreOrView = useMemo(
@@ -133,93 +121,36 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
       [safeArea],
     );
 
-    const renderBottomToasts = useCallback(() => {
-      const style: ViewStyle = {
-        bottom: offsetBottom || offset,
-        width: width,
-        justifyContent: 'flex-end',
-        flexDirection: 'column',
-      };
-
-      return (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'position' : undefined}
-          style={[styles.container, style]}
-          pointerEvents="box-none"
-        >
-          <SafeAreOrView>
-            {toasts
-              .filter(t => !t.placement || t.placement === 'bottom')
-              .map(toast => (
-                <NotificationToast key={toast.id} {...toast} />
-              ))}
-          </SafeAreOrView>
-        </KeyboardAvoidingView>
-      );
-    }, [SafeAreOrView, offset, offsetBottom, toasts, width]);
-
-    const renderTopToasts = useCallback(() => {
-      const style: ViewStyle = {
+    const style: ViewStyle = useMemo(
+      () => ({
         top: offsetTop || offset,
         width: width,
         justifyContent: 'flex-start',
         flexDirection: 'column-reverse',
-      };
+      }),
+      [offset, offsetTop, width],
+    );
 
-      return (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'position' : undefined}
-          style={[styles.container, style]}
-          pointerEvents="box-none"
-        >
-          <SafeAreOrView>
-            {toasts
-              .filter(t => t.placement === 'top')
-              .map(toast => (
-                <NotificationToast key={toast.id} {...toast} />
-              ))}
-          </SafeAreOrView>
-        </KeyboardAvoidingView>
-      );
-    }, [SafeAreOrView, offset, offsetTop, toasts, width]);
-
-    const renderCenterToasts = useCallback(() => {
-      const style: ViewStyle = {
-        top: offsetTop || offset,
-        height: height,
-        width: width,
-        justifyContent: 'center',
-        flexDirection: 'column-reverse',
-      };
-
-      const data = toasts.filter(t => t.placement === 'center');
-      const foundToast = data.length > 0;
-
-      if (!foundToast) {
-        return null;
-      }
-
-      return (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'position' : undefined}
-          style={[styles.container, style]}
-          pointerEvents="box-none"
-        >
-          {toasts
-            .filter(t => t.placement === 'center')
-            .map(toast => (
-              <NotificationToast key={toast.id} {...toast} />
-            ))}
-        </KeyboardAvoidingView>
-      );
-    }, [height, offset, offsetTop, toasts, width]);
+    const notificationStyle = useCallback(
+      (t: NotificationToastProps) => [
+        t.style,
+        safeArea ? undefined : { paddingTop: top },
+      ],
+      [safeArea, top],
+    );
 
     return (
-      <>
-        {renderTopToasts()}
-        {renderBottomToasts()}
-        {renderCenterToasts()}
-      </>
+      <View style={[styles.container, style]}>
+        <SafeAreOrView>
+          {!!toast && (
+            <NotificationToast
+              ref={toastRef}
+              {...toast}
+              style={notificationStyle(toast)}
+            />
+          )}
+        </SafeAreOrView>
+      </View>
     );
   },
 );
