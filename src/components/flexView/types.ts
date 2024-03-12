@@ -11,29 +11,6 @@ import {
 type AnimatedProps<T> = Animated.AnimatedProps<T>;
 type WithAnimatedValue<T> = Animated.WithAnimatedValue<T>;
 
-export type NumericSpacesType =
-  | 2
-  | 4
-  | 6
-  | 8
-  | 10
-  | 12
-  | 14
-  | 16
-  | 18
-  | 20
-  | 22
-  | 24
-  | 26
-  | 28
-  | 30
-  | 32
-  | 36
-  | 38
-  | 40
-  | 44
-  | number;
-
 export type JustifyContentType =
   | 'flex-start'
   | 'flex-end'
@@ -75,36 +52,36 @@ type MarginProps = {
 
 type PaddingGridProps = {
   // paddingLeft
-  pl?: NumericSpacesType;
+  pl?: number;
   // paddingRight
-  pr?: NumericSpacesType;
+  pr?: number;
   // paddingTop
-  pt?: NumericSpacesType;
+  pt?: number;
   // paddingBottom
-  pb?: NumericSpacesType;
+  pb?: number;
   // paddingVertical
-  pv?: NumericSpacesType;
+  pv?: number;
   // paddingHorizontal
-  ph?: NumericSpacesType;
+  ph?: number;
   // padding
-  pa?: NumericSpacesType;
+  pa?: number;
 };
 
 type MargingGridProps = {
   // marginLeft
-  ml?: NumericSpacesType;
+  ml?: number;
   // marginRight
-  mr?: NumericSpacesType;
+  mr?: number;
   // marginTop
-  mt?: NumericSpacesType;
+  mt?: number;
   // marginBottom
-  mb?: NumericSpacesType;
+  mb?: number;
   // marginVertical
-  mv?: NumericSpacesType;
+  mv?: number;
   // marginHorizontal
-  mh?: NumericSpacesType;
+  mh?: number;
   // margin
-  ma?: NumericSpacesType;
+  ma?: number;
 };
 
 type SideProps = {

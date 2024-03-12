@@ -1,17 +1,20 @@
-import { Platform } from 'react-native';
+import { Platform, ShadowStyleIOS } from 'react-native';
 import { FlexProps } from './types';
 
-export function shadowStyle(elevation: FlexProps['elevation'] = 0): any {
+export const shadowStyle = (
+  elevation: FlexProps['elevation'] = 0,
+): ShadowStyleIOS & { elevation: number } => {
   return Platform.select({
     ios: {
-      shadowRadius: elevation * 2,
+      shadowRadius: elevation * 1.5,
       shadowOffset: {
         height: 0,
         width: 0,
       },
       shadowColor: elevation === 0 ? 'transparent' : 'black',
-      shadowOpacity: elevation || 0.14,
+      shadowOpacity: Math.min(0.3, elevation * 0.05),
+      elevation,
     },
-    android: { elevation },
+    default: { elevation },
   });
-}
+};

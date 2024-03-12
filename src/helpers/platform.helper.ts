@@ -12,11 +12,13 @@ const PAD_WIDTH = 768;
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
 
 const isAndroid = Platform.OS === 'android';
+const isIos = Platform.OS === 'ios';
+const isWeb = Platform.OS === 'web';
 
 const isIPhoneX = isIphoneX();
 
 const isIPad = (() => {
-  if (Platform.OS !== 'ios' || isIPhoneX) {
+  if (!isIos || isIPhoneX) {
     return false;
   }
 
@@ -67,6 +69,8 @@ export {
   D_HEIGHT,
   D_WIDTH,
   isAndroid,
+  isIos,
+  isWeb,
   isIPhoneX,
   isIPad,
   useIsLandscape,

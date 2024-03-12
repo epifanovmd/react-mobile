@@ -13,13 +13,14 @@ import {
   StyleProp,
   StyleSheet,
   View,
+  ViewProps,
   ViewStyle,
 } from 'react-native';
 import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { RenderConditional } from '../renderer';
 import AnimatedProps = Animated.AnimatedProps;
 
-export interface CollapsableProps {
+export interface CollapsableProps extends ViewProps {
   collapsed: boolean;
   collapsedHeight?: number;
   duration?: number;
@@ -52,6 +53,7 @@ export const Collapsable = memo(
         style,
         onAnimationEnd = () => null,
         children,
+        ...rest
       },
       ref,
     ) => {
@@ -248,6 +250,7 @@ export const Collapsable = memo(
           pointerEvents={
             !enablePointerEvents && collapsed.current ? 'none' : 'auto'
           }
+          {...rest}
         >
           <RenderConditional if={!!collapsedContent}>
             <Animated.View
