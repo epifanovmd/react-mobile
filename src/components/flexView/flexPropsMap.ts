@@ -81,7 +81,7 @@ export const flexPropsMap = {
   ...tSmg('translateY'),
   ...tSmg('scale'),
 
-  elevation: shadowStyle,
+  elevation: shadowStyle as any,
 
   ...smg(['debug'], ['backgroundColor'], 'red'),
   ...smg(['bg'], ['backgroundColor']),

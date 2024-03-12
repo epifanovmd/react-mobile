@@ -10,9 +10,8 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import { resolveStyleProp } from '../../helpers';
-import { CloseIcon } from '../../icons/material/Close';
 import { Text } from '../text';
+import Svg, { Path } from 'react-native-svg';
 
 export interface ModalHeaderProps extends ViewProps {
   label?: string;
@@ -33,7 +32,11 @@ export const ModalHeader: FC<PropsWithChildren<ModalHeaderProps>> = ({
   onClose,
   iconColor,
   color,
-  renderCloseIcon = (fill?: ColorValue) => <CloseIcon fill={fill} />,
+  renderCloseIcon = (fill?: ColorValue) => (
+    <Svg viewBox="0 0 24 24" fill={fill}>
+      <Path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" />
+    </Svg>
+  ),
   children,
   ...rest
 }) => {
@@ -48,7 +51,7 @@ export const ModalHeader: FC<PropsWithChildren<ModalHeaderProps>> = ({
         onPress={onClose}
       >
         {renderCloseIcon(
-          color ?? iconColor ?? resolveStyleProp(textStyle)?.color,
+          color ?? iconColor ?? StyleSheet.flatten(textStyle)?.color,
         )}
       </TouchableOpacity>
     </View>
