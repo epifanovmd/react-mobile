@@ -20,7 +20,6 @@ import {
 } from 'react-native';
 import { isArray } from '@force-dev/utils';
 import { isEqual } from 'lodash';
-import { Touchable, TouchableProps } from '../touchable';
 import { Modal, ModalProps, useModal } from '../modal';
 import { SafeArea } from '../safeArea';
 
@@ -31,7 +30,7 @@ const toArraySelected = <T extends any>(
 };
 
 export interface SelectProps<D extends any = any, M extends boolean = false>
-  extends Omit<TouchableProps, 'onPress'> {
+  extends Omit<TouchableOpacityProps, 'onPress'> {
   selected?: M extends true ? D[] : D | undefined;
   data: D[];
   renderItem: (
@@ -194,7 +193,7 @@ const _Select = <D extends any = any, M extends boolean = false>({
   }, [onClose]);
 
   return (
-    <Touchable onPress={onPress} {...rest}>
+    <TouchableOpacity onPress={onPress} {...rest}>
       {children}
 
       <Modal
@@ -218,7 +217,7 @@ const _Select = <D extends any = any, M extends boolean = false>({
         {renderFooter?.({ onReset, onApply })}
         <SafeArea bottom={true} />
       </Modal>
-    </Touchable>
+    </TouchableOpacity>
   );
 };
 

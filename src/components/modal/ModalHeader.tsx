@@ -3,6 +3,7 @@ import {
   ColorValue,
   StyleProp,
   StyleSheet,
+  Text,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -10,7 +11,6 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import { Text } from '../text';
 import Svg, { Path } from 'react-native-svg';
 
 export interface ModalHeaderProps extends ViewProps {

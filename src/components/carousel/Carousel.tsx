@@ -7,11 +7,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { ListRenderItemInfo, ViewProps } from 'react-native';
+import { ListRenderItemInfo, TouchableOpacity, ViewProps } from 'react-native';
 import { Col, FlexProps, Row } from '../flexView';
 import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { FlatListProps } from 'react-native/Libraries/Lists/FlatList';
-import { Touchable } from '../touchable';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { mergeRefs } from '../../helpers';
 
@@ -69,9 +68,12 @@ export const Carousel: CarouselFC = memo(
             width={itemLength - separateWidth * 2}
             height={'auto'}
           >
-            <Touchable flexShrink={1} overflow={'hidden'} onPress={onPress}>
+            <TouchableOpacity
+              style={{ flexShrink: 1, overflow: 'hidden' }}
+              onPress={onPress}
+            >
               {renderItem?.(item)}
-            </Touchable>
+            </TouchableOpacity>
           </Col>
         ),
         [itemLength, separateWidth, onPress, renderItem],
