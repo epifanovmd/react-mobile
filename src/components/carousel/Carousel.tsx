@@ -1,3 +1,4 @@
+import { mergeRefs } from "@force-dev/react";
 import React, {
   FC,
   forwardRef,
@@ -12,7 +13,6 @@ import { FlatListProps } from "react-native/Libraries/Lists/FlatList";
 import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { mergeRefs } from "../../helpers";
 import { Col, FlexProps, Row } from "../flexView";
 
 export interface CarouselProps<T = any>

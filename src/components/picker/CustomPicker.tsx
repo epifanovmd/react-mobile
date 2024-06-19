@@ -21,9 +21,9 @@ import {
 } from "react-native";
 import RNReactNativeHapticFeedback from "react-native-haptic-feedback";
 
-import { mergeRefs } from "../../helpers";
 import { CustomPickerItem } from "./CustomPickerItem";
 import createAnimatedComponent = Animated.createAnimatedComponent;
+import { mergeRefs } from "@force-dev/react";
 
 const AnimatedList = createAnimatedComponent(VirtualizedList<any>);
 

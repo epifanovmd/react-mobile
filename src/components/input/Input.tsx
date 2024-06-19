@@ -1,3 +1,4 @@
+import { mergeRefs } from "@force-dev/react";
 import { replaceInputString } from "@force-dev/utils";
 import React, {
   forwardRef,
@@ -21,7 +22,6 @@ import {
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
-import { mergeRefs } from "../../helpers";
 import { RenderConditional } from "../renderer";
 
 type OmittedTextProps = Omit<
