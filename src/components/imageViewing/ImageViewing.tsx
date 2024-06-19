@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-} from 'react';
+} from "react";
 import {
   Animated,
   Dimensions,
@@ -15,18 +15,18 @@ import {
   StyleSheet,
   View,
   VirtualizedList,
-} from 'react-native';
+} from "react-native";
 
-import { useRequestClose } from './hooks/useRequestClose';
-import { useImageIndexChange } from './hooks/useImageIndexChange';
-import { useAnimatedComponents } from './hooks/useAnimatedComponents';
-import { ImageDefaultHeader } from './components/ImageDefaultHeader';
-import ImageItem from './components/ImageItem/ImageItem';
+import { ImageDefaultHeader } from "./components/ImageDefaultHeader";
+import ImageItem from "./components/ImageItem/ImageItem";
+import { useAnimatedComponents } from "./hooks/useAnimatedComponents";
+import { useImageIndexChange } from "./hooks/useImageIndexChange";
+import { useRequestClose } from "./hooks/useRequestClose";
 
-const DEFAULT_ANIMATION_TYPE = 'fade';
-const DEFAULT_BG_COLOR = '#000';
+const DEFAULT_ANIMATION_TYPE = "fade";
+const DEFAULT_BG_COLOR = "#000";
 const DEFAULT_DELAY_LONG_PRESS = 800;
-const SCREEN = Dimensions.get('screen');
+const SCREEN = Dimensions.get("screen");
 const SCREEN_WIDTH = SCREEN.width;
 
 export interface ImageViewingProps {
@@ -37,7 +37,7 @@ export interface ImageViewingProps {
   onRequestClose: () => void;
   onLongPress?: (image: ImageURISource) => void;
   onImageIndexChange?: (imageIndex: number) => void;
-  animationType?: ModalProps['animationType'];
+  animationType?: ModalProps["animationType"];
   backgroundColor?: string;
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
@@ -145,15 +145,15 @@ export const ImageViewing: FC<ImageViewingProps> = ({
   return (
     <Modal
       visible={visible}
-      presentationStyle={'fullScreen'}
+      presentationStyle={"fullScreen"}
       animationType={animationType}
       onRequestClose={onRequestCloseEnhanced}
-      supportedOrientations={['portrait']}
+      supportedOrientations={["portrait"]}
       hardwareAccelerated
     >
       <View style={[s.container, { opacity, backgroundColor }]}>
         <Animated.View style={[s.header, { transform: headerTransform }]}>
-          {typeof HeaderComponent !== 'undefined' ? (
+          {typeof HeaderComponent !== "undefined" ? (
             React.createElement(HeaderComponent, {
               imageIndex: currentImageIndex,
               onClose: onRequestCloseEnhanced,
@@ -180,7 +180,7 @@ export const ImageViewing: FC<ImageViewingProps> = ({
           onMomentumScrollEnd={onScroll}
           keyExtractor={_keyExtractor}
         />
-        {typeof FooterComponent !== 'undefined' && (
+        {typeof FooterComponent !== "undefined" && (
           <Animated.View style={[s.footer, { transform: footerTransform }]}>
             {React.createElement(FooterComponent, {
               imageIndex: currentImageIndex,
@@ -196,17 +196,17 @@ export const ImageViewing: FC<ImageViewingProps> = ({
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
   },
   header: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     zIndex: 1,
     top: 0,
   },
   footer: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     zIndex: 1,
     bottom: 0,
   },

@@ -1,8 +1,9 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import { Animated } from 'react-native';
-import { CustomPickerAnimations } from './CustomPicker';
-import { Col } from '../flexView';
-import { Bounceable } from '../bounceable';
+import React, { memo, useCallback, useMemo } from "react";
+import { Animated } from "react-native";
+
+import { Bounceable } from "../bounceable";
+import { Col } from "../flexView";
+import { CustomPickerAnimations } from "./CustomPicker";
 
 export interface CustomPickerItemProps<T> {
   data: T[];
@@ -99,8 +100,8 @@ export const CustomPickerItem: CustomPickerItem = memo(
       <Bounceable onPress={onPress}>
         <Col
           animated={true}
-          alignItems={'center'}
-          justifyContent={'center'}
+          alignItems={"center"}
+          justifyContent={"center"}
           height={isHorizontal ? undefined : itemSize}
           width={isHorizontal ? itemSize : undefined}
           {...animatedProps}

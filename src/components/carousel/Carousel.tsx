@@ -6,21 +6,22 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import { ListRenderItemInfo, TouchableOpacity, ViewProps } from 'react-native';
-import { Col, FlexProps, Row } from '../flexView';
-import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
-import { FlatListProps } from 'react-native/Libraries/Lists/FlatList';
-import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { mergeRefs } from '../../helpers';
+} from "react";
+import { ListRenderItemInfo, TouchableOpacity, ViewProps } from "react-native";
+import { FlatListProps } from "react-native/Libraries/Lists/FlatList";
+import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
+
+import { mergeRefs } from "../../helpers";
+import { Col, FlexProps, Row } from "../flexView";
 
 export interface CarouselProps<T = any>
   extends Omit<
     FlatListProps<T>,
-    | 'ListEmptyComponent'
-    | 'ListFooterComponent'
-    | 'ListHeaderComponent'
-    | 'renderItem'
+    | "ListEmptyComponent"
+    | "ListFooterComponent"
+    | "ListHeaderComponent"
+    | "renderItem"
   > {
   renderItem?: (info: ListRenderItemInfo<T>) => React.ReactElement | null;
   width?: number;
@@ -66,10 +67,10 @@ export const Carousel: CarouselFC = memo(
           <Col
             mh={separateWidth}
             width={itemLength - separateWidth * 2}
-            height={'auto'}
+            height={"auto"}
           >
             <TouchableOpacity
-              style={{ flexShrink: 1, overflow: 'hidden' }}
+              style={{ flexShrink: 1, overflow: "hidden" }}
               onPress={onPress}
             >
               {renderItem?.(item)}

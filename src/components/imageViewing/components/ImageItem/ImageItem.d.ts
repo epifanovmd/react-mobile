@@ -1,5 +1,6 @@
-import React from 'react';
-import { ImageSource } from '../../@types/types';
+import React from "react";
+
+import { ImageSource } from "../../@types/types";
 
 declare type Props = {
   imageSrc: ImageSource;

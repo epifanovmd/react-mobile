@@ -1,4 +1,4 @@
-const genericMessage = 'Invariant Violation modal';
+const genericMessage = "Invariant Violation modal";
 
 const {
   setPrototypeOf = (obj: any, proto: any): any => {

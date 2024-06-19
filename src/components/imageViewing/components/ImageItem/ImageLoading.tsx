@@ -1,8 +1,7 @@
-import React from 'react';
+import React from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 
-import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
-
-const SCREEN = Dimensions.get('screen');
+const SCREEN = Dimensions.get("screen");
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 
@@ -20,8 +19,8 @@ const styles = StyleSheet.create({
   loading: {
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   imageScrollContainer: {
     height: SCREEN_HEIGHT,

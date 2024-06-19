@@ -1,4 +1,4 @@
-import { replaceInputString } from '@force-dev/utils';
+import { replaceInputString } from "@force-dev/utils";
 import React, {
   forwardRef,
   memo,
@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   ColorValue,
   StyleProp,
@@ -18,14 +18,15 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
-} from 'react-native';
-import { mergeRefs } from '../../helpers';
-import { RenderConditional } from '../renderer';
-import Svg, { Path } from 'react-native-svg';
+} from "react-native";
+import Svg, { Path } from "react-native-svg";
+
+import { mergeRefs } from "../../helpers";
+import { RenderConditional } from "../renderer";
 
 type OmittedTextProps = Omit<
   TextInputProps,
-  'editable' | 'textContentType' | 'secureTextEntry' | 'cursorColor' | 'style'
+  "editable" | "textContentType" | "secureTextEntry" | "cursorColor" | "style"
 >;
 
 export interface InputProps extends OmittedTextProps {
@@ -34,7 +35,7 @@ export interface InputProps extends OmittedTextProps {
   inputStyle?: StyleProp<TextStyle>;
   inputTextColor?: ColorValue;
 
-  type?: 'password' | 'text' | 'number' | 'floating';
+  type?: "password" | "text" | "number" | "floating";
   clearable?: boolean;
   disabled?: boolean;
 
@@ -61,13 +62,13 @@ export const Input = memo(
         containerStyle,
         value,
         onChangeText,
-        type = 'text',
+        type = "text",
         clearable,
         disabled,
         keyboardType,
 
-        inputTextColor = '#ffffff',
-        placeholderTextColor = '#ffffff90',
+        inputTextColor = "#ffffff",
+        placeholderTextColor = "#ffffff90",
 
         leftSlot,
         rightSlot,
@@ -96,10 +97,10 @@ export const Input = memo(
       const _onChangeText = useCallback(
         (text: string) => {
           const supportType =
-            type === 'text' || type === 'number' || type === 'floating';
+            type === "text" || type === "number" || type === "floating";
 
           const _value: string = replaceInputString(text, {
-            type: supportType ? type : 'text',
+            type: supportType ? type : "text",
           });
 
           setHasValue(!!_value);
@@ -113,7 +114,7 @@ export const Input = memo(
         setHasValue(false);
         textInputRef.current?.clear();
 
-        onChangeText && onChangeText('');
+        onChangeText && onChangeText("");
       }, [onChangeText]);
 
       const style = useMemo(
@@ -121,13 +122,13 @@ export const Input = memo(
         [inputTextColor, rest.inputStyle],
       );
 
-      const numberType = type === 'number' || type === 'floating';
+      const numberType = type === "number" || type === "floating";
       const _keyboardType =
-        keyboardType ?? (numberType ? 'decimal-pad' : undefined);
+        keyboardType ?? (numberType ? "decimal-pad" : undefined);
 
       const editable = !disabled;
-      const textContentType = type === 'password' ? 'password' : 'none';
-      const secureTextEntry = type === 'password' && !visiblePassword;
+      const textContentType = type === "password" ? "password" : "none";
+      const secureTextEntry = type === "password" && !visiblePassword;
 
       return (
         <View style={[s.containerStyle, containerStyle]}>
@@ -151,7 +152,7 @@ export const Input = memo(
             {renderClearableIcon(onClear, disabled, inputTextColor)}
           </RenderConditional>
 
-          <RenderConditional if={type === 'password' && !disabled}>
+          <RenderConditional if={type === "password" && !disabled}>
             {renderSecurityIcon(
               toggleVisiblePassword,
               visiblePassword,
@@ -169,10 +170,10 @@ export const Input = memo(
 
 const s = StyleSheet.create({
   containerStyle: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 8,
     paddingBottom: 8,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   input: {
     flexGrow: 1,
@@ -180,7 +181,7 @@ const s = StyleSheet.create({
     flexShrink: 1,
     fontSize: 16,
     marginVertical: 2,
-    width: '100%',
+    width: "100%",
   },
 });
 

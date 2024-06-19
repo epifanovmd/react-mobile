@@ -1,22 +1,21 @@
-import { PortalProvider } from '@gorhom/portal';
-import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PortalProvider } from "@gorhom/portal";
+import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from "react";
+import { StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   runOnJS,
   useAnimatedReaction,
   useSharedValue,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import { Backdrop } from './backdrop';
-import { HoldItemContext } from './HoldItemContext';
-
-import { HoldMenu } from './holdMenu';
-import { HoldMenuContext } from './holdMenu/types';
-import { CONTEXT_MENU_STATE } from './utils/constants';
+import { Backdrop } from "./backdrop";
+import { HoldItemContext } from "./HoldItemContext";
+import { HoldMenu } from "./holdMenu";
+import { HoldMenuContext } from "./holdMenu/types";
+import { CONTEXT_MENU_STATE } from "./utils/constants";
 
 export interface HoldItemProviderProps {
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   safeAreaInsets: {
     top: number;
     right: number;
@@ -35,7 +34,7 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
         CONTEXT_MENU_STATE.PENDING,
       );
 
-      const theme = useSharedValue<'light' | 'dark'>(selectedTheme || 'light');
+      const theme = useSharedValue<"light" | "dark">(selectedTheme || "light");
       const menuProps = useSharedValue<HoldMenuContext>({
         itemHeight: 0,
         itemWidth: 0,
@@ -43,13 +42,13 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
         itemY: 0,
         items: [],
         data: undefined,
-        anchorPosition: 'top-center',
+        anchorPosition: "top-center",
         menuHeight: 0,
         transformValue: 0,
       });
 
       useEffect(() => {
-        theme.value = selectedTheme || 'light';
+        theme.value = selectedTheme || "light";
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [selectedTheme]);
 

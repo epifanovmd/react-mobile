@@ -1,5 +1,5 @@
-import { ISpringProps } from '../types';
-import { invariant } from './invariant';
+import { ISpringProps } from "../types";
+import { invariant } from "./invariant";
 
 export const getSpringConfig = (
   config: ISpringProps,
@@ -10,7 +10,7 @@ export const getSpringConfig = (
   if (stiffness || damping || mass) {
     invariant(
       bounciness || speed || tension || friction,
-      'You can define one of bounciness/speed, tension/friction, or stiffness/damping/mass, but not more than one',
+      "You can define one of bounciness/speed, tension/friction, or stiffness/damping/mass, but not more than one",
     );
 
     return {
@@ -21,7 +21,7 @@ export const getSpringConfig = (
   } else if (bounciness || speed) {
     invariant(
       tension || friction || stiffness || damping || mass,
-      'You can define one of bounciness/speed, tension/friction, or stiffness/damping/mass, but not more than one',
+      "You can define one of bounciness/speed, tension/friction, or stiffness/damping/mass, but not more than one",
     );
 
     return {

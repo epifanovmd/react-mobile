@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   Animated,
   Easing,
@@ -15,16 +15,17 @@ import {
   View,
   ViewProps,
   ViewStyle,
-} from 'react-native';
-import { LayoutChangeEvent } from 'react-native/Libraries/Types/CoreEventTypes';
-import { RenderConditional } from '../renderer';
+} from "react-native";
+import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
+
+import { RenderConditional } from "../renderer";
 import AnimatedProps = Animated.AnimatedProps;
 
 export interface CollapsableProps extends ViewProps {
   collapsed: boolean;
   collapsedHeight?: number;
   duration?: number;
-  align?: 'top' | 'center' | 'bottom';
+  align?: "top" | "center" | "bottom";
   easing?: Easing[keyof Easing] | ((n: number) => number);
   opacityAnimation?: boolean;
   enablePointerEvents?: boolean;
@@ -45,7 +46,7 @@ export const Collapsable = memo(
         collapsed: initialCollapsed = false,
         collapsedHeight: _collapsedHeight = 0,
         duration = 100,
-        align = 'top',
+        align = "top",
         easing = Easing.ease,
         opacityAnimation = true,
         enablePointerEvents = true,
@@ -248,7 +249,7 @@ export const Collapsable = memo(
         <Animated.View
           style={[s.root, style, rootStyle]}
           pointerEvents={
-            !enablePointerEvents && collapsed.current ? 'none' : 'auto'
+            !enablePointerEvents && collapsed.current ? "none" : "auto"
           }
           {...rest}
         >
@@ -271,9 +272,9 @@ export const Collapsable = memo(
 );
 
 const s = StyleSheet.create({
-  root: { overflow: 'hidden' },
+  root: { overflow: "hidden" },
   collapsedContentStyle: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
   },
@@ -323,12 +324,12 @@ const getContentStyle = (
 
   if ((measuring && !collapsedHeight) || !contentHeight) {
     if (collapsed) {
-      contentStyle.position = 'absolute';
+      contentStyle.position = "absolute";
       contentStyle.left = 0;
       contentStyle.right = 0;
       contentStyle.opacity = 0;
     }
-  } else if (align === 'center') {
+  } else if (align === "center") {
     contentStyle.transform = [
       {
         translateY: animatedHeight.interpolate({
@@ -337,7 +338,7 @@ const getContentStyle = (
         }),
       },
     ];
-  } else if (align === 'bottom') {
+  } else if (align === "bottom") {
     contentStyle.transform = [
       {
         translateY: animatedHeight.interpolate({

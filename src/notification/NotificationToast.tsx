@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   Animated,
   PanResponder,
@@ -20,16 +20,16 @@ import {
   useWindowDimensions,
   View,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
 export interface NotificationToastOptions {
   icon?: React.JSX.Element;
-  type?: 'normal' | 'success' | 'danger' | 'warning' | string;
+  type?: "normal" | "success" | "danger" | "warning" | string;
   duration?: number;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   animationDuration?: number;
-  animationType?: 'slide-in' | 'zoom-in';
+  animationType?: "slide-in" | "zoom-in";
   successIcon?: React.JSX.Element;
   dangerIcon?: React.JSX.Element;
   warningIcon?: React.JSX.Element;
@@ -63,13 +63,13 @@ export const NotificationToast = memo(
       onDestroy,
       onClose,
       icon,
-      type = 'normal',
+      type = "normal",
       message,
       duration = 5000,
       style,
       textStyle,
       animationDuration = 250,
-      animationType = 'slide-in',
+      animationType = "slide-in",
       successIcon,
       dangerIcon,
       warningIcon,
@@ -95,7 +95,7 @@ export const NotificationToast = memo(
     useEffect(() => {
       Animated.timing(animation, {
         toValue: 1,
-        useNativeDriver: Platform.OS !== 'web',
+        useNativeDriver: Platform.OS !== "web",
         duration: animationDuration,
       }).start();
       if (duration !== 0) {
@@ -140,7 +140,7 @@ export const NotificationToast = memo(
     );
 
     const getPanResponder = useMemo(() => {
-      const swipeThreshold = Platform.OS === 'android' ? 10 : 0;
+      const swipeThreshold = Platform.OS === "android" ? 10 : 0;
 
       return PanResponder.create({
         onMoveShouldSetPanResponder: (_, gestureState) => {
@@ -161,7 +161,7 @@ export const NotificationToast = memo(
           } else {
             Animated.spring(panResponderAnimation, {
               toValue: { x: 0, y: 0 },
-              useNativeDriver: Platform.OS !== 'web',
+              useNativeDriver: Platform.OS !== "web",
             }).start();
           }
         },
@@ -170,20 +170,20 @@ export const NotificationToast = memo(
 
     if (icon === undefined) {
       switch (type) {
-        case 'success': {
+        case "success": {
           if (successIcon) {
             icon = successIcon;
           }
           break;
         }
 
-        case 'danger': {
+        case "danger": {
           if (dangerIcon) {
             icon = dangerIcon;
           }
           break;
         }
-        case 'warning': {
+        case "warning": {
           if (warningIcon) {
             icon = warningIcon;
           }
@@ -192,16 +192,17 @@ export const NotificationToast = memo(
       }
     }
 
-    let backgroundColor = normalColor || '#333';
+    let backgroundColor = normalColor || "#333";
+
     switch (type) {
-      case 'success':
-        backgroundColor = successColor || 'rgb(46, 125, 50)';
+      case "success":
+        backgroundColor = successColor || "rgb(46, 125, 50)";
         break;
-      case 'danger':
-        backgroundColor = dangerColor || 'rgb(211, 47, 47)';
+      case "danger":
+        backgroundColor = dangerColor || "rgb(211, 47, 47)";
         break;
-      case 'warning':
-        backgroundColor = warningColor || 'rgb(237, 108, 2)';
+      case "warning":
+        backgroundColor = warningColor || "rgb(237, 108, 2)";
         break;
       default:
         break;
@@ -214,7 +215,7 @@ export const NotificationToast = memo(
           ...(swipeEnabled
             ? [panResponderAnimation.getTranslateTransform()[1]]
             : []),
-          ...(animationType === 'zoom-in'
+          ...(animationType === "zoom-in"
             ? [
                 {
                   scale: animation.interpolate({
@@ -239,7 +240,7 @@ export const NotificationToast = memo(
 
     return (
       <Animated.View
-        pointerEvents={'box-none'}
+        pointerEvents={"box-none"}
         ref={containerRef}
         {...(swipeEnabled ? getPanResponder.panHandlers : null)}
         style={[styles.container, animationStyle]}
@@ -266,18 +267,18 @@ export const NotificationToast = memo(
 );
 
 const styles = StyleSheet.create({
-  container: { width: '100%', alignItems: 'center' },
+  container: { width: "100%", alignItems: "center" },
   toastContainer: {
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
   },
   message: {
-    color: '#fff',
-    fontWeight: '500',
+    color: "#fff",
+    fontWeight: "500",
   },
   iconContainer: {
     marginRight: 5,

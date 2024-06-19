@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 import {
   Animated,
   Dimensions,
@@ -6,17 +6,17 @@ import {
   GestureResponderHandlers,
   NativeTouchEvent,
   PanResponderGestureState,
-} from 'react-native';
+} from "react-native";
 
-import { Position } from '../types';
+import { Position } from "../types";
 import {
   createPanResponder,
   getDistanceBetweenTouches,
   getImageDimensionsByTranslate,
   getImageTranslate,
-} from '../utils';
+} from "../utils";
 
-const SCREEN = Dimensions.get('window');
+const SCREEN = Dimensions.get("window");
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 const MIN_DIMENSION = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -104,7 +104,7 @@ const usePanResponder = ({
 
   useEffect(() => {
     scaleValue.addListener(({ value }) => {
-      if (typeof onZoom === 'function') {
+      if (typeof onZoom === "function") {
         onZoom(value !== initialScale);
       }
     });

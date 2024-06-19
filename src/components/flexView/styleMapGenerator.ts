@@ -1,7 +1,7 @@
-import { FlexProps, FlexStyle } from './types';
+import { FlexProps, FlexStyle } from "./types";
 
 const isBoolean = <U>(term: boolean | U): term is boolean =>
-  typeof term === 'boolean';
+  typeof term === "boolean";
 
 type HasTrueType<T, R> = T extends true ? R : never;
 

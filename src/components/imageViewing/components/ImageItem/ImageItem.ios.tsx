@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useRef, useState } from 'react';
-
+import React, { memo, useCallback, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -10,17 +9,16 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
+} from "react-native";
 
-import useDoubleTapToZoom from '../../hooks/useDoubleTapToZoom';
-import useImageDimensions from '../../hooks/useImageDimensions';
-
-import { getImageStyles, getImageTransform } from '../../utils';
-import { ImageLoading } from './ImageLoading';
+import useDoubleTapToZoom from "../../hooks/useDoubleTapToZoom";
+import useImageDimensions from "../../hooks/useImageDimensions";
+import { getImageStyles, getImageTransform } from "../../utils";
+import { ImageLoading } from "./ImageLoading";
 
 const SWIPE_CLOSE_OFFSET = 130;
 const SWIPE_CLOSE_VELOCITY = 1.75;
-const SCREEN = Dimensions.get('screen');
+const SCREEN = Dimensions.get("screen");
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 

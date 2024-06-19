@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform } from "react-native";
 
 const HOLD_ITEM_TRANSFORM_DURATION = 150;
 const HOLD_ITEM_SCALE_DOWN_VALUE = 0.95;
@@ -26,27 +26,27 @@ enum CONTEXT_MENU_STATE {
   END,
 }
 
-const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = Dimensions.get('screen');
+const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = Dimensions.get("screen");
 
 const MENU_WIDTH = WINDOW_WIDTH * 0.6;
 
 const MENU_TRANSFORM_ORIGIN_TOLERENCE = 10;
 
-const IS_IOS = Platform.OS === 'ios';
+const IS_IOS = Platform.OS === "ios";
 
-const FONT_SCALE = Dimensions.get('screen').fontScale;
+const FONT_SCALE = Dimensions.get("screen").fontScale;
 
 export {
   CONTEXT_MENU_STATE,
-  WINDOW_HEIGHT,
-  WINDOW_WIDTH,
-  MENU_WIDTH,
-  HOLD_ITEM_TRANSFORM_DURATION,
-  HOLD_ITEM_SCALE_DOWN_VALUE,
+  FONT_SCALE,
   HOLD_ITEM_SCALE_DOWN_DURATION,
+  HOLD_ITEM_SCALE_DOWN_VALUE,
+  HOLD_ITEM_TRANSFORM_DURATION,
+  IS_IOS,
+  MENU_TRANSFORM_ORIGIN_TOLERENCE,
+  MENU_WIDTH,
   SPRING_CONFIGURATION,
   SPRING_CONFIGURATION_MENU,
-  MENU_TRANSFORM_ORIGIN_TOLERENCE,
-  IS_IOS,
-  FONT_SCALE,
+  WINDOW_HEIGHT,
+  WINDOW_WIDTH,
 };

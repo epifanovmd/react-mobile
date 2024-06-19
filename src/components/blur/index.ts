@@ -1,1 +1,1 @@
-export { BlurView, VibrancyView } from '@react-native-community/blur';
+export { BlurView, VibrancyView } from "@react-native-community/blur";

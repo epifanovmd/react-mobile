@@ -1,28 +1,27 @@
-import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
-
+import React, { memo } from "react";
+import { StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
+
+import { useHoldItemContext } from "../hooks";
 import {
   CONTEXT_MENU_STATE,
   HOLD_ITEM_TRANSFORM_DURATION,
   SPRING_CONFIGURATION,
-} from '../utils/constants';
-import { useHoldItemContext } from '../hooks';
-
-import { HoldMenuList } from './HoldMenuList';
+} from "../utils/constants";
+import { HoldMenuList } from "./HoldMenuList";
 
 export const HoldMenu = memo(() => {
   const { state, menuProps } = useHoldItemContext();
 
   const wrapperStyles = useAnimatedStyle(() => {
-    const anchorPositionVertical = menuProps.value.anchorPosition.split('-')[0];
+    const anchorPositionVertical = menuProps.value.anchorPosition.split("-")[0];
 
     const top =
-      anchorPositionVertical === 'top'
+      anchorPositionVertical === "top"
         ? menuProps.value.itemHeight + menuProps.value.itemY + 8
         : menuProps.value.itemY - 8;
     const left = menuProps.value.itemX;
@@ -53,7 +52,7 @@ export const HoldMenu = memo(() => {
 
 const styles = StyleSheet.create({
   menuWrapper: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     zIndex: 10,
   },

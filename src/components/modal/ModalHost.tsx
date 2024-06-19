@@ -1,8 +1,9 @@
-import { PortalProvider } from '@gorhom/portal';
-import * as React from 'react';
-import { memo, useMemo } from 'react';
-import { View } from 'react-native';
-import { IModalHostProps } from './types';
+import { PortalProvider } from "@gorhom/portal";
+import * as React from "react";
+import { memo, useMemo } from "react";
+import { View } from "react-native";
+
+import { IModalHostProps } from "./types";
 
 export const ModalHost = memo(({ children, style }: IModalHostProps) => {
   const _style = useMemo(() => [{ flex: 1 }, style], [style]);

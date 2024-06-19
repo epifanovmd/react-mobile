@@ -2,11 +2,12 @@ import {
   FONT_SCALE,
   MENU_TRANSFORM_ORIGIN_TOLERENCE,
   MENU_WIDTH,
-} from './constants';
-import { styleGuide } from './styleGuide';
+} from "./constants";
+import { styleGuide } from "./styleGuide";
 
 export const menuItemHeight = () => {
-  'worklet';
+  "worklet";
+
   return (
     styleGuide.typography.callout.lineHeight * FONT_SCALE +
     styleGuide.spacing * 2.5
@@ -17,7 +18,8 @@ export const calculateMenuHeight = (
   itemLength: number,
   separatorCount: number,
 ) => {
-  'worklet';
+  "worklet";
+
   return itemLength < 2
     ? menuItemHeight() * itemLength
     : menuItemHeight() * itemLength +
@@ -26,12 +28,12 @@ export const calculateMenuHeight = (
 };
 
 export type TransformOriginAnchorPosition =
-  | 'top-right'
-  | 'top-left'
-  | 'top-center'
-  | 'bottom-right'
-  | 'bottom-left'
-  | 'bottom-center';
+  | "top-right"
+  | "top-left"
+  | "top-center"
+  | "bottom-right"
+  | "bottom-left"
+  | "bottom-center";
 
 export const menuAnimationAnchor = (
   anchorPoint: TransformOriginAnchorPosition,
@@ -39,9 +41,9 @@ export const menuAnimationAnchor = (
   itemLength: number,
   itemsWithSeparatorLength: number,
 ) => {
-  'worklet';
+  "worklet";
   const MenuHeight = calculateMenuHeight(itemLength, itemsWithSeparatorLength);
-  const splittetAnchorName: string[] = anchorPoint.split('-');
+  const splittetAnchorName: string[] = anchorPoint.split("-");
 
   const Center1 = itemWidth;
   const Center2 = 0;
@@ -55,29 +57,29 @@ export const menuAnimationAnchor = (
   return {
     beginningTransformations: {
       translateX:
-        splittetAnchorName[1] === 'right'
+        splittetAnchorName[1] === "right"
           ? -TxLeft1
-          : splittetAnchorName[1] === 'left'
+          : splittetAnchorName[1] === "left"
           ? TxLeft1
           : Center1,
       translateY:
-        splittetAnchorName[0] === 'top'
+        splittetAnchorName[0] === "top"
           ? TyTop1
-          : splittetAnchorName[0] === 'bottom'
+          : splittetAnchorName[0] === "bottom"
           ? TyTop1
           : Center2,
     },
     endingTransformations: {
       translateX:
-        splittetAnchorName[1] === 'right'
+        splittetAnchorName[1] === "right"
           ? -TxLeft2
-          : splittetAnchorName[1] === 'left'
+          : splittetAnchorName[1] === "left"
           ? TxLeft2
           : Center2,
       translateY:
-        splittetAnchorName[0] === 'top'
+        splittetAnchorName[0] === "top"
           ? TyTop2
-          : splittetAnchorName[0] === 'bottom'
+          : splittetAnchorName[0] === "bottom"
           ? -TyTop2
           : Center2,
     },
@@ -90,20 +92,20 @@ export const getTransformOrigin = (
   windowWidth: number,
   bottom?: boolean,
 ): TransformOriginAnchorPosition => {
-  'worklet';
+  "worklet";
   const distanceToLeft = Math.round(posX + itemWidth / 2);
   const distanceToRight = Math.round(windowWidth - distanceToLeft);
 
   let position: TransformOriginAnchorPosition = bottom
-    ? 'bottom-right'
-    : 'top-right';
+    ? "bottom-right"
+    : "top-right";
 
   const majority = Math.abs(distanceToLeft - distanceToRight);
 
   if (majority < MENU_TRANSFORM_ORIGIN_TOLERENCE) {
-    position = bottom ? 'bottom-center' : 'top-center';
+    position = bottom ? "bottom-center" : "top-center";
   } else if (distanceToLeft < distanceToRight) {
-    position = bottom ? 'bottom-left' : 'top-left';
+    position = bottom ? "bottom-left" : "top-left";
   }
 
   return position;

@@ -1,7 +1,8 @@
-import { requireNativeComponent, StyleProp, ViewStyle } from 'react-native';
-import type { NativeColorType, NativeOnChange, PickerItem } from './types';
+import { requireNativeComponent, StyleProp, ViewStyle } from "react-native";
 
-const ComponentName = 'RnWheelPicker';
+import type { NativeColorType, NativeOnChange, PickerItem } from "./types";
+
+const ComponentName = "RnWheelPicker";
 
 type NativeIOSData = PickerItem[][];
 type NativeAndroidData = PickerItem[];

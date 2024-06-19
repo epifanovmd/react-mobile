@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -8,17 +7,16 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
-} from 'react-native';
+} from "react-native";
 
-import useImageDimensions from '../../hooks/useImageDimensions';
-import usePanResponder from '../../hooks/usePanResponder';
-
-import { getImageStyles, getImageTransform } from '../../utils';
-import { ImageLoading } from './ImageLoading';
+import useImageDimensions from "../../hooks/useImageDimensions";
+import usePanResponder from "../../hooks/usePanResponder";
+import { getImageStyles, getImageTransform } from "../../utils";
+import { ImageLoading } from "./ImageLoading";
 
 const SWIPE_CLOSE_OFFSET = 130;
 const SWIPE_CLOSE_VELOCITY = 1.75;
-const SCREEN = Dimensions.get('window');
+const SCREEN = Dimensions.get("window");
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 

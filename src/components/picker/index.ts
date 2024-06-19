@@ -1,10 +1,8 @@
-export * from './CustomPicker';
-
-export { Picker } from './Picker';
-export { PickerColumn } from './PickerColumn';
-export { PickerItem } from './PickerItem';
-
-export type { PickerProps } from './Picker';
-export type { PickerColumnProps } from './PickerColumn';
-export type { PickerItemProps } from './PickerItem';
-export type { PickerChangeItem } from './types';
+export * from "./CustomPicker";
+export type { PickerProps } from "./Picker";
+export { Picker } from "./Picker";
+export type { PickerColumnProps } from "./PickerColumn";
+export { PickerColumn } from "./PickerColumn";
+export type { PickerItemProps } from "./PickerItem";
+export { PickerItem } from "./PickerItem";
+export type { PickerChangeItem } from "./types";

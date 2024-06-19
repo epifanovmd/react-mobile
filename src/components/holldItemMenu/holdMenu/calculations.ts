@@ -1,27 +1,28 @@
-import Animated from 'react-native-reanimated';
+import Animated from "react-native-reanimated";
 
-import { MENU_WIDTH } from '../utils/constants';
+import { MENU_WIDTH } from "../utils/constants";
 import {
   MENU_TEXT_DARK_COLOR,
   MENU_TEXT_DESTRUCTIVE_COLOR_DARK,
   MENU_TEXT_DESTRUCTIVE_COLOR_LIGHT,
   MENU_TEXT_LIGHT_COLOR,
   MENU_TITLE_COLOR,
-} from './constants';
-import type { HoldMenuContext } from './types';
+} from "./constants";
+import type { HoldMenuContext } from "./types";
 
 export const leftOrRight = (
   menuProps: Animated.SharedValue<HoldMenuContext>,
 ) => {
-  'worklet';
+  "worklet";
 
-  const anchorPositionHorizontal = menuProps.value.anchorPosition.split('-')[1];
+  const anchorPositionHorizontal = menuProps.value.anchorPosition.split("-")[1];
   const itemWidth = menuProps.value.itemWidth;
 
   let leftPosition = 0;
-  anchorPositionHorizontal === 'right'
+
+  anchorPositionHorizontal === "right"
     ? (leftPosition = -MENU_WIDTH + itemWidth)
-    : anchorPositionHorizontal === 'left'
+    : anchorPositionHorizontal === "left"
     ? (leftPosition = 0)
     : (leftPosition =
         -menuProps.value.itemWidth -
@@ -34,16 +35,17 @@ export const leftOrRight = (
 export const getColor = (
   isTitle: boolean | undefined,
   isDestructive: boolean | undefined,
-  themeValue: 'light' | 'dark',
+  themeValue: "light" | "dark",
 ) => {
-  'worklet';
+  "worklet";
+
   return isTitle
     ? MENU_TITLE_COLOR
     : isDestructive
-    ? themeValue === 'dark'
+    ? themeValue === "dark"
       ? MENU_TEXT_DESTRUCTIVE_COLOR_DARK
       : MENU_TEXT_DESTRUCTIVE_COLOR_LIGHT
-    : themeValue === 'dark'
+    : themeValue === "dark"
     ? MENU_TEXT_DARK_COLOR
     : MENU_TEXT_LIGHT_COLOR;
 };

@@ -1,1 +1,1 @@
-export { HapticFeedbackTypes, trigger } from 'react-native-haptic-feedback';
+export { HapticFeedbackTypes, trigger } from "react-native-haptic-feedback";

@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useMemo,
   useState,
-} from 'react';
+} from "react";
 import {
   LayoutChangeEvent,
   Platform,
@@ -15,10 +15,11 @@ import {
   useWindowDimensions,
   View,
   ViewStyle,
-} from 'react-native';
-import { NativePicker } from './NativePicker';
-import type { PickerColumnProps } from './PickerColumn';
-import type { NativeOnChange, PickerChangeItem, PickerItem } from './types';
+} from "react-native";
+
+import { NativePicker } from "./NativePicker";
+import type { PickerColumnProps } from "./PickerColumn";
+import type { NativeOnChange, PickerChangeItem, PickerItem } from "./types";
 
 type PickerChild = ReactElement<PickerColumnProps>;
 
@@ -41,13 +42,13 @@ export interface PickerProps {
 
 export const Picker = memo(
   ({
-    curtainColor = 'hsla(0, 0%, 0%, 0.1)',
+    curtainColor = "hsla(0, 0%, 0%, 0.1)",
     hasCurtain = true,
     hasIndicator = true,
-    indicatorColor = 'hsla(0, 0%, 0%, 0.1)',
+    indicatorColor = "hsla(0, 0%, 0%, 0.1)",
     indicatorSize = 1,
     itemSpace = 12,
-    textColor = '#000000',
+    textColor = "#000000",
     textSize = 20,
     loop,
     numberOfLines = 1,
@@ -88,7 +89,7 @@ export const Picker = memo(
       [],
     );
 
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       return (
         <View onLayout={handleOnLayout} style={[styles.pickerWrap, style]}>
           <NativePicker
@@ -105,7 +106,7 @@ export const Picker = memo(
       );
     }
 
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       return (
         <View
           onLayout={handleOnLayout}
@@ -147,7 +148,7 @@ const useNativePickerColumns = ({
   viewWidth,
   children,
   textColor,
-}: Required<Pick<PickerProps, 'children' | 'textColor'>> & {
+}: Required<Pick<PickerProps, "children" | "textColor">> & {
   viewWidth: number;
 }) =>
   useMemo(() => {
@@ -184,7 +185,7 @@ const useNativePickerColumns = ({
         selectedIndexes.push(0);
       }
 
-      if (typeof columnChild.props.width === 'number') {
+      if (typeof columnChild.props.width === "number") {
         const w = Math.max(columnChild.props.width - LABEL_INSET_SPACE, 0);
 
         availableSpace -= columnChild.props.width;
@@ -199,6 +200,7 @@ const useNativePickerColumns = ({
 
     // Automatically set width for remaining columns to the available space
     const columnsWithoutWidth = columnWidths.filter(w => w < 0);
+
     if (columnsWithoutWidth.length) {
       columnWidths = columnWidths.map(w =>
         w < 0
@@ -217,7 +219,7 @@ const LABEL_INSET_SPACE = 8;
 
 const styles = StyleSheet.create({
   androidContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginLeft: 8,
     marginRight: 8,
   },

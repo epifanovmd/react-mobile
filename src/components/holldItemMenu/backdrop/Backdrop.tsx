@@ -1,22 +1,23 @@
-import { BlurView } from '@react-native-community/blur';
-import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
+import { BlurView } from "@react-native-community/blur";
+import React, { memo } from "react";
+import { StyleSheet } from "react-native";
 import {
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+} from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   withDelay,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
+
+import { useHoldItemContext } from "../hooks";
 import {
   CONTEXT_MENU_STATE,
   HOLD_ITEM_TRANSFORM_DURATION,
   WINDOW_HEIGHT,
-} from '../utils/constants';
-import { useHoldItemContext } from '../hooks';
+} from "../utils/constants";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 

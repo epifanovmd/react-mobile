@@ -1,7 +1,8 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
-import { FlexProps } from './types';
-import { useMemo } from 'react';
-import { flexPropsConverter } from './flexPropsConverter';
+import { useMemo } from "react";
+import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
+
+import { flexPropsConverter } from "./flexPropsConverter";
+import { FlexProps } from "./types";
 
 export const useFlexProps = <
   OwnProps extends Object,
@@ -11,7 +12,7 @@ export const useFlexProps = <
   defaultProps?: Partial<FlexProps<TStyleSource>>,
 ) =>
   useMemo(() => {
-    const flexProps = {} as Omit<FlexProps, 'style'>;
+    const flexProps = {} as Omit<FlexProps, "style">;
     const ownProps = {} as Omit<
       FlexProps<TStyleSource> & OwnProps,
       keyof FlexProps<TStyleSource>
@@ -26,7 +27,7 @@ export const useFlexProps = <
     );
     const style = StyleSheet.create({ style: styleSource });
 
-    if (typeof props.debug === 'string') {
+    if (typeof props.debug === "string") {
       console.log(`FlexView::render ${props.debug}`); // 🐞 ✅
     }
 

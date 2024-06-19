@@ -1,10 +1,11 @@
-import React, { FC, memo, useEffect, useRef, useState } from 'react';
+import React, { FC, memo, useEffect, useRef, useState } from "react";
+
 import {
   Notification,
   NotificationActions,
   NotificationProps,
-} from './Notification';
-import { notificationService } from './notificationService';
+} from "./Notification";
+import { notificationService } from "./notificationService";
 
 type PropsWithChildren = NotificationProps & {
   children: React.ReactNode;

@@ -1,3 +1,5 @@
+import { isArray } from "@force-dev/utils";
+import { isEqual } from "lodash";
 import React, {
   JSX,
   memo,
@@ -6,7 +8,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   FlatList,
   FlatListProps,
@@ -17,11 +19,10 @@ import {
   TouchableOpacityProps,
   View,
   ViewStyle,
-} from 'react-native';
-import { isArray } from '@force-dev/utils';
-import { isEqual } from 'lodash';
-import { Modal, ModalProps, useModal } from '../modal';
-import { SafeArea } from '../safeArea';
+} from "react-native";
+
+import { Modal, ModalProps, useModal } from "../modal";
+import { SafeArea } from "../safeArea";
 
 const toArraySelected = <T extends any>(
   selected: T,
@@ -30,7 +31,7 @@ const toArraySelected = <T extends any>(
 };
 
 export interface SelectProps<D extends any = any, M extends boolean = false>
-  extends Omit<TouchableOpacityProps, 'onPress'> {
+  extends Omit<TouchableOpacityProps, "onPress"> {
   selected?: M extends true ? D[] : D | undefined;
   data: D[];
   renderItem: (
@@ -47,8 +48,8 @@ export interface SelectProps<D extends any = any, M extends boolean = false>
   closeOnChange?: boolean;
 
   contentStyle?: StyleProp<ViewStyle>;
-  touchableItemProps?: Omit<TouchableOpacityProps, 'onPress'>;
-  listProps?: Omit<FlatListProps<D>, 'data' | 'renderItem'>;
+  touchableItemProps?: Omit<TouchableOpacityProps, "onPress">;
+  listProps?: Omit<FlatListProps<D>, "data" | "renderItem">;
   modalProps?: ModalProps;
 
   renderHeader?: (onClose: () => void) => JSX.Element | null;
@@ -122,6 +123,7 @@ const _Select = <D extends any = any, M extends boolean = false>({
           setSelected({ ...selected, [index]: item });
         } else {
           const newValue = { ...selected };
+
           delete newValue[index];
 
           setSelected(newValue);

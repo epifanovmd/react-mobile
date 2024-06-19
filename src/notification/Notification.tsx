@@ -4,21 +4,22 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   SafeAreaView,
   StyleSheet,
   useWindowDimensions,
   View,
   ViewStyle,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   NotificationToast,
   NotificationToastOptions,
   NotificationToastProps,
   NotificationToastRef,
-} from './NotificationToast';
+} from "./NotificationToast";
 
 export interface NotificationActions {
   show: (
@@ -103,6 +104,7 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
             return { ...state, message, ...toastOptions };
           } else {
             show(message, toastOptions).then();
+
             return null;
           }
         });
@@ -125,8 +127,8 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
       () => ({
         top: offsetTop || offset,
         width: width,
-        justifyContent: 'flex-start',
-        flexDirection: 'column-reverse',
+        justifyContent: "flex-start",
+        flexDirection: "column-reverse",
       }),
       [offset, offsetTop, width],
     );
@@ -158,13 +160,13 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
 const styles = StyleSheet.create({
   container: {
     flex: 0,
-    position: 'absolute',
-    maxWidth: '100%',
+    position: "absolute",
+    maxWidth: "100%",
     zIndex: 999999,
     elevation: 999999,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   message: {
-    color: '#333',
+    color: "#333",
   },
 });

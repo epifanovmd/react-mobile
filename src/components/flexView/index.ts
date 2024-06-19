@@ -1,3 +1,3 @@
-export * from './FlexView';
-export * from './useFlexProps';
-export * from './types';
+export * from "./FlexView";
+export * from "./types";
+export * from "./useFlexProps";

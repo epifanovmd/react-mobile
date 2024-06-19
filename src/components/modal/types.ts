@@ -1,15 +1,15 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Animated,
   EasingFunction,
   LayoutChangeEvent,
   StyleProp,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
-export type TOpen = 'default' | 'top';
-export type TClose = 'default' | 'alwaysOpen';
-export type TPosition = 'initial' | 'top';
+export type TOpen = "default" | "top";
+export type TClose = "default" | "alwaysOpen";
+export type TPosition = "initial" | "top";
 export type TStyle = StyleProp<ViewStyle>;
 
 export interface ITimingProps {
@@ -95,7 +95,7 @@ export interface ModalProps {
    * Define where the handle on top of the modal should be positioned.
    * @default 'outside'
    */
-  handlePosition?: 'outside' | 'inside';
+  handlePosition?: "outside" | "inside";
 
   /**
    * Define keyboard's Android behavior like iOS's one.
@@ -107,7 +107,7 @@ export interface ModalProps {
    * Define the behavior of the keyboard when having inputs inside the modal.
    * @default padding
    */
-  keyboardAvoidingBehavior?: 'height' | 'position' | 'padding';
+  keyboardAvoidingBehavior?: "height" | "position" | "padding";
 
   /**
    * Define an offset to the KeyboardAvoidingView component wrapping the ScrollView.
@@ -238,7 +238,7 @@ export interface ModalProps {
    * i.e. completely opened to modal/screen height, or is at the initial
    * point (snapPoint or alwaysOpened height).
    */
-  onPositionChange?: (position: 'top' | 'initial') => void;
+  onPositionChange?: (position: "top" | "initial") => void;
 
   /**
    * Callback used when you press the overlay.

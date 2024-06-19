@@ -1,19 +1,19 @@
-import { Dimensions, EmitterSubscription, Platform } from 'react-native';
+import { useEffect, useRef, useState } from "react";
+import { Dimensions, EmitterSubscription, Platform } from "react-native";
 import {
-  isIphoneX,
+  getBottomSpace,
   getStatusBarHeight,
   ifIphoneX,
-  getBottomSpace,
-} from 'react-native-iphone-x-helper';
-import { useEffect, useRef, useState } from 'react';
+  isIphoneX,
+} from "react-native-iphone-x-helper";
 
 const PAD_WIDTH = 768;
 
-const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
+const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get("window");
 
-const isAndroid = Platform.OS === 'android';
-const isIos = Platform.OS === 'ios';
-const isWeb = Platform.OS === 'web';
+const isAndroid = Platform.OS === "android";
+const isIos = Platform.OS === "ios";
+const isWeb = Platform.OS === "web";
 
 const isIPhoneX = isIphoneX();
 
@@ -36,7 +36,7 @@ const useIsLandscape = () => {
   const dimensionsSubscription = useRef<EmitterSubscription | null>(null);
 
   const [landscape, setIsLandscape] = useState(
-    isLandscape(Dimensions.get('window')),
+    isLandscape(Dimensions.get("window")),
   );
 
   const handleOrientationChange = ({ window }: any) => {
@@ -47,7 +47,7 @@ const useIsLandscape = () => {
 
   useEffect(() => {
     dimensionsSubscription.current = Dimensions.addEventListener(
-      'change',
+      "change",
       handleOrientationChange,
     );
 
@@ -62,16 +62,16 @@ const useIsLandscape = () => {
 };
 
 export {
-  getStatusBarHeight,
-  ifIphoneX,
-  getBottomSpace,
-  PAD_WIDTH,
   D_HEIGHT,
   D_WIDTH,
+  getBottomSpace,
+  getStatusBarHeight,
+  ifIphoneX,
   isAndroid,
   isIos,
-  isWeb,
-  isIPhoneX,
   isIPad,
+  isIPhoneX,
+  isWeb,
+  PAD_WIDTH,
   useIsLandscape,
 };

@@ -1,3 +1,3 @@
-export * from './HoldItem';
-export * from './holdMenu/types';
-export * from './HoldItemProvider';
+export * from "./HoldItem";
+export * from "./HoldItemProvider";
+export * from "./holdMenu/types";

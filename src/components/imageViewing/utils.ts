@@ -5,8 +5,9 @@ import {
   PanResponder,
   PanResponderGestureState,
   PanResponderInstance,
-} from 'react-native';
-import { Dimensions, Position } from './types';
+} from "react-native";
+
+import { Dimensions, Position } from "./types";
 
 type CacheStorageItem = { key: string; value: any };
 
@@ -86,16 +87,16 @@ export const getImageTranslate = (
   image: Dimensions,
   screen: Dimensions,
 ): Position => {
-  const getTranslateForAxis = (axis: 'x' | 'y'): number => {
-    const imageSize = axis === 'x' ? image.width : image.height;
-    const screenSize = axis === 'x' ? screen.width : screen.height;
+  const getTranslateForAxis = (axis: "x" | "y"): number => {
+    const imageSize = axis === "x" ? image.width : image.height;
+    const screenSize = axis === "x" ? screen.width : screen.height;
 
     return (screenSize - imageSize) / 2;
   };
 
   return {
-    x: getTranslateForAxis('x'),
-    y: getTranslateForAxis('y'),
+    x: getTranslateForAxis("x"),
+    y: getTranslateForAxis("y"),
   };
 };
 

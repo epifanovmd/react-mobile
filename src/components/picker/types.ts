@@ -1,4 +1,4 @@
-import type { NativeSyntheticEvent, processColor } from 'react-native';
+import type { NativeSyntheticEvent, processColor } from "react-native";
 
 export type NativeColorType = ReturnType<typeof processColor>;
 

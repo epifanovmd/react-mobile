@@ -1,5 +1,6 @@
-import React from 'react';
-import { TransformOriginAnchorPosition } from '../utils/calculations';
+import React from "react";
+
+import { TransformOriginAnchorPosition } from "../utils/calculations";
 
 export interface HoldMenuItemProp<T = any> {
   text: string;

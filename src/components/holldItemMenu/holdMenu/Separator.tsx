@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useHoldItemContext } from '../hooks';
+import React, { memo } from "react";
+import { StyleSheet } from "react-native";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
-import { BORDER_DARK_COLOR, BORDER_LIGHT_COLOR } from './constants';
+import { useHoldItemContext } from "../hooks";
+import { BORDER_DARK_COLOR, BORDER_LIGHT_COLOR } from "./constants";
 
 export const Separator = memo(() => {
   const { theme } = useHoldItemContext();
@@ -11,7 +11,7 @@ export const Separator = memo(() => {
   const separatorStyles = useAnimatedStyle(() => {
     return {
       backgroundColor:
-        theme.value === 'dark' ? BORDER_DARK_COLOR : BORDER_LIGHT_COLOR,
+        theme.value === "dark" ? BORDER_DARK_COLOR : BORDER_LIGHT_COLOR,
     };
   }, [theme]);
 
@@ -20,7 +20,7 @@ export const Separator = memo(() => {
 
 const styles = StyleSheet.create({
   separator: {
-    width: '100%',
+    width: "100%",
     height: 8,
   },
 });

@@ -1,13 +1,13 @@
-import { Portal } from '@gorhom/portal';
-import { isEqual } from 'lodash';
-import { nanoid } from 'nanoid/non-secure';
+import { Portal } from "@gorhom/portal";
+import { isEqual } from "lodash";
+import { nanoid } from "nanoid/non-secure";
 import React, {
   memo,
   PropsWithChildren,
   useCallback,
   useMemo,
   useState,
-} from 'react';
+} from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -15,15 +15,14 @@ import {
   TouchableOpacityProps,
   ViewProps,
   ViewStyle,
-} from 'react-native';
-
+} from "react-native";
 import {
   LongPressGestureHandler,
   LongPressGestureHandlerGestureEvent,
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
-import { HapticFeedbackTypes, trigger } from 'react-native-haptic-feedback';
+} from "react-native-gesture-handler";
+import { HapticFeedbackTypes, trigger } from "react-native-haptic-feedback";
 import Animated, {
   measure,
   runOnJS,
@@ -37,14 +36,15 @@ import Animated, {
   withSequence,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
-import { HoldMenuItemProp } from './holdMenu/types';
-import { useDeviceOrientation, useHoldItemContext } from './hooks';
+} from "react-native-reanimated";
+
+import { HoldMenuItemProp } from "./holdMenu/types";
+import { useDeviceOrientation, useHoldItemContext } from "./hooks";
 import {
   calculateMenuHeight,
   getTransformOrigin,
   TransformOriginAnchorPosition,
-} from './utils/calculations';
+} from "./utils/calculations";
 import {
   CONTEXT_MENU_STATE,
   HOLD_ITEM_SCALE_DOWN_DURATION,
@@ -54,7 +54,7 @@ import {
   SPRING_CONFIGURATION,
   WINDOW_HEIGHT,
   WINDOW_WIDTH,
-} from './utils/constants';
+} from "./utils/constants";
 
 export interface HoldItemProps<T> extends TouchableOpacityProps {
   data?: T;
@@ -62,8 +62,8 @@ export interface HoldItemProps<T> extends TouchableOpacityProps {
 
   disableMove?: boolean;
   style?: StyleProp<ViewStyle>;
-  position?: 'top' | 'bottom';
-  activateOn?: 'tap' | 'double-tap' | 'hold';
+  position?: "top" | "bottom";
+  activateOn?: "tap" | "double-tap" | "hold";
   closeOnTap?: boolean;
   longPressMinDurationMs?: number;
 }
@@ -84,7 +84,7 @@ export const HoldItem: HoldItem = memo(
   ({
     data,
     items,
-    position = 'top',
+    position = "top",
     style,
     disableMove,
     activateOn,
@@ -109,15 +109,16 @@ export const HoldItem: HoldItem = memo(
     const transformValue = useSharedValue<number>(0);
 
     const transformOrigin =
-      useSharedValue<TransformOriginAnchorPosition>('top-right');
+      useSharedValue<TransformOriginAnchorPosition>("top-right");
 
     const key = useMemo(() => `hold-item-${nanoid()}`, []);
     const menuHeight = useMemo(() => {
       const itemsWithSeparator = items.filter(item => item.withSeparator);
+
       return calculateMenuHeight(items.length, itemsWithSeparator.length);
     }, [items]);
 
-    const isHold = !activateOn || activateOn === 'hold';
+    const isHold = !activateOn || activateOn === "hold";
 
     const containerRef = useAnimatedRef<Animated.View>();
 
@@ -127,7 +128,7 @@ export const HoldItem: HoldItem = memo(
 
     const prepareAnimationValues = useCallback(
       (ctx: any) => {
-        'worklet';
+        "worklet";
         if (!ctx.didMeasureLayout) {
           const measured = measure(containerRef);
 
@@ -148,8 +149,8 @@ export const HoldItem: HoldItem = memo(
             transformOrigin.value = getTransformOrigin(
               measured.pageX,
               itemRectWidth.value,
-              deviceOrientation === 'portrait' ? WINDOW_WIDTH : WINDOW_HEIGHT,
-              position === 'bottom',
+              deviceOrientation === "portrait" ? WINDOW_WIDTH : WINDOW_HEIGHT,
+              position === "bottom",
             );
           }
         }
@@ -171,12 +172,12 @@ export const HoldItem: HoldItem = memo(
     );
 
     const calculateTransformValue = useCallback(() => {
-      'worklet';
+      "worklet";
 
       const height =
-        deviceOrientation === 'portrait' ? WINDOW_HEIGHT : WINDOW_WIDTH;
+        deviceOrientation === "portrait" ? WINDOW_HEIGHT : WINDOW_WIDTH;
 
-      const isTopMenu = transformOrigin.value.includes('bottom');
+      const isTopMenu = transformOrigin.value.includes("bottom");
 
       let tY = 0;
 
@@ -240,7 +241,7 @@ export const HoldItem: HoldItem = memo(
     ]);
 
     const setMenuProps = useCallback(() => {
-      'worklet';
+      "worklet";
 
       menuProps.value = {
         itemHeight: itemRectHeight.value,
@@ -267,7 +268,7 @@ export const HoldItem: HoldItem = memo(
     ]);
 
     const scaleBack = useCallback(() => {
-      'worklet';
+      "worklet";
       itemScale.value = withTiming(1, {
         duration: HOLD_ITEM_TRANSFORM_DURATION / 2,
       });
@@ -275,8 +276,9 @@ export const HoldItem: HoldItem = memo(
 
     const onCompletion = useCallback(
       (isFinised?: boolean) => {
-        'worklet';
+        "worklet";
         const isListValid = items && items.length > 0;
+
         if (isFinised && isListValid) {
           state.value = CONTEXT_MENU_STATE.ACTIVE;
           isActive.value = true;
@@ -290,7 +292,7 @@ export const HoldItem: HoldItem = memo(
     );
 
     const scaleHold = useCallback(() => {
-      'worklet';
+      "worklet";
       itemScale.value = withTiming(
         HOLD_ITEM_SCALE_DOWN_VALUE,
         { duration: HOLD_ITEM_SCALE_DOWN_DURATION },
@@ -299,7 +301,7 @@ export const HoldItem: HoldItem = memo(
     }, [itemScale, onCompletion]);
 
     const scaleTap = useCallback(() => {
-      'worklet';
+      "worklet";
       isAnimationStarted.value = true;
 
       itemScale.value = withSequence(
@@ -322,9 +324,9 @@ export const HoldItem: HoldItem = memo(
      * To prevent this, it is better to check is animation already started.
      */
     const canCallActivateFunctions = useCallback(() => {
-      'worklet';
+      "worklet";
       const willActivateWithTap =
-        activateOn === 'double-tap' || activateOn === 'tap';
+        activateOn === "double-tap" || activateOn === "tap";
 
       return (
         (willActivateWithTap && !isAnimationStarted.value) ||
@@ -413,7 +415,7 @@ export const HoldItem: HoldItem = memo(
 
       return {
         zIndex: 10,
-        position: 'absolute',
+        position: "absolute",
         top: itemRectY.value,
         left: itemRectX.value,
         width: itemRectWidth.value,
@@ -437,7 +439,7 @@ export const HoldItem: HoldItem = memo(
     );
 
     const animatedPortalProps = useAnimatedProps<ViewProps>(() => ({
-      pointerEvents: isActive.value ? 'auto' : 'none',
+      pointerEvents: isActive.value ? "auto" : "none",
     }));
 
     useAnimatedReaction(
@@ -451,7 +453,7 @@ export const HoldItem: HoldItem = memo(
 
     const GestureHandler = useMemo(() => {
       switch (activateOn) {
-        case 'double-tap':
+        case "double-tap":
           return ({ children: handlerChildren }: GestureHandlerProps) => (
             <TapGestureHandler
               numberOfTaps={2}
@@ -460,7 +462,7 @@ export const HoldItem: HoldItem = memo(
               {handlerChildren}
             </TapGestureHandler>
           );
-        case 'tap':
+        case "tap":
           return ({ children: handlerChildren }: GestureHandlerProps) => (
             <TapGestureHandler
               numberOfTaps={1}
@@ -528,7 +530,7 @@ const styles = StyleSheet.create({
   touchable: { flexShrink: 1 },
   holdItem: {
     zIndex: 10,
-    position: 'absolute',
+    position: "absolute",
   },
   portalOverlay: {
     ...StyleSheet.absoluteFillObject,

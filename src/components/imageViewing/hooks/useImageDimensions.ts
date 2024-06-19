@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Image, ImageURISource } from 'react-native';
+import { useEffect, useState } from "react";
+import { Image, ImageURISource } from "react-native";
 
-import { createCache } from '../utils';
-import { Dimensions } from '../types';
+import { Dimensions } from "../types";
+import { createCache } from "../utils";
 
 const CACHE_SIZE = 50;
 const imageDimensionsCache = createCache(CACHE_SIZE);

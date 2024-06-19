@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   FC,
   memo,
@@ -6,7 +6,7 @@ import {
   useCallback,
   useMemo,
   useRef,
-} from 'react';
+} from "react";
 import {
   Animated,
   BackHandler,
@@ -20,7 +20,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   View,
-} from 'react-native';
+} from "react-native";
 import {
   NativeViewGestureHandler,
   PanGestureHandler,
@@ -28,13 +28,13 @@ import {
   State,
   TapGestureHandler,
   TapGestureHandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
+} from "react-native-gesture-handler";
+import { isIphoneX } from "react-native-iphone-x-helper";
 
-import { ModalProps, TClose, TOpen, TPosition, TStyle } from './types';
-import { getSpringConfig } from './utils/get-spring-config';
-import { invariant } from './utils/invariant';
-import { ModalPortal } from './ModalPortal';
-import { isIphoneX } from 'react-native-iphone-x-helper';
+import { ModalPortal } from "./ModalPortal";
+import { ModalProps, TClose, TOpen, TPosition, TStyle } from "./types";
+import { getSpringConfig } from "./utils/get-spring-config";
+import { invariant } from "./utils/invariant";
 
 const AnimatedKeyboardAvoidingView =
   Animated.createAnimatedComponent(KeyboardAvoidingView);
@@ -76,13 +76,13 @@ export const Modal = memo(
 
         // Options
         withoutPortal,
-        handlePosition = 'outside',
+        handlePosition = "outside",
         avoidKeyboardLikeIOS = Platform.select({
           ios: true,
           android: false,
           default: true,
         }),
-        keyboardAvoidingBehavior = 'padding',
+        keyboardAvoidingBehavior = "padding",
         keyboardAvoidingOffset,
         panGestureEnabled = true,
         childrenPanGestureEnabled = true,
@@ -121,7 +121,7 @@ export const Modal = memo(
       ref: React.Ref<Modal>,
     ) => {
       const { height: screenHeight } = useWindowDimensions();
-      const isHandleOutside = handlePosition === 'outside';
+      const isHandleOutside = handlePosition === "outside";
       const handleHeight = withHandle ? 20 : isHandleOutside ? 35 : 20;
       const fullHeight = screenHeight - modalTopOffset;
       const computedHeight =
@@ -144,7 +144,7 @@ export const Modal = memo(
 
       const [beginScrollYValue, setBeginScrollYValue] = React.useState(0);
       const [modalPosition, setModalPosition] =
-        React.useState<TPosition>('initial');
+        React.useState<TPosition>("initial");
       const [cancelClose, setCancelClose] = React.useState(false);
 
       const cancelTranslateY = React.useRef(new Animated.Value(1)).current; // 1 by default to have the translateY animation running
@@ -203,11 +203,11 @@ export const Modal = memo(
       );
 
       const handleAnimateClose = useCallback(
-        (dest: TClose = 'default', callback?: () => void): void => {
+        (dest: TClose = "default", callback?: () => void): void => {
           const { timing, spring } = closeAnimationConfig;
           const lastSnapValue = snapPoint ? snaps[1] : 80;
           const toInitialAlwaysOpen =
-            dest === 'alwaysOpen' && Boolean(alwaysOpen);
+            dest === "alwaysOpen" && Boolean(alwaysOpen);
           const toValue =
             toInitialAlwaysOpen && alwaysOpen
               ? (modalHeightValue || 0) - alwaysOpen
@@ -256,12 +256,12 @@ export const Modal = memo(
               callback();
             }
 
-            if (alwaysOpen && dest === 'alwaysOpen' && onPositionChange) {
-              onPositionChange('initial');
+            if (alwaysOpen && dest === "alwaysOpen" && onPositionChange) {
+              onPositionChange("initial");
             }
 
-            if (alwaysOpen && dest === 'alwaysOpen') {
-              setModalPosition('initial');
+            if (alwaysOpen && dest === "alwaysOpen") {
+              setModalPosition("initial");
             }
 
             setShowContent(toInitialAlwaysOpen);
@@ -319,7 +319,7 @@ export const Modal = memo(
 
       const handleBackPress = useCallback((): boolean => {
         if (alwaysOpen) {
-          handleClose('alwaysOpen');
+          handleClose("alwaysOpen");
 
           return true;
         }
@@ -336,12 +336,12 @@ export const Modal = memo(
       const handleAnimateOpen = useCallback(
         (
           alwaysOpenValue: number | undefined,
-          dest: TOpen = 'default',
+          dest: TOpen = "default",
         ): void => {
           const { timing, spring } = openAnimationConfig;
 
           backButtonListenerRef.current = BackHandler.addEventListener(
-            'hardwareBackPress',
+            "hardwareBackPress",
             handleBackPress,
           );
 
@@ -349,7 +349,7 @@ export const Modal = memo(
           let toPanValue = 0;
           let newPosition: TPosition;
 
-          if (dest === 'top') {
+          if (dest === "top") {
             toValue = 0;
           } else if (alwaysOpenValue) {
             toValue = (modalHeightValue || 0) - alwaysOpenValue;
@@ -362,7 +362,7 @@ export const Modal = memo(
           } else if (
             panGestureAnimatedValue &&
             !alwaysOpenValue &&
-            (dest === 'top' || dest === 'default')
+            (dest === "top" || dest === "default")
           ) {
             toPanValue = 1;
           }
@@ -371,19 +371,19 @@ export const Modal = memo(
           setShowContent(true);
 
           if (
-            (alwaysOpenValue && dest !== 'top') ||
-            (snapPoint && dest === 'default')
+            (alwaysOpenValue && dest !== "top") ||
+            (snapPoint && dest === "default")
           ) {
-            newPosition = 'initial';
+            newPosition = "initial";
           } else {
-            newPosition = 'top';
+            newPosition = "top";
           }
 
           dragY.setValue(0);
 
           Animated.parallel([
             Animated.timing(overlay, {
-              toValue: alwaysOpenValue && dest === 'default' ? 0 : 1,
+              toValue: alwaysOpenValue && dest === "default" ? 0 : 1,
               duration: timing.duration,
               easing: Easing.ease,
               useNativeDriver: USE_NATIVE_DRIVER,
@@ -440,12 +440,12 @@ export const Modal = memo(
       const handleChildren = useCallback(
         (
           { nativeEvent }: PanGestureHandlerStateChangeEvent,
-          type?: 'component' | 'children',
+          type?: "component" | "children",
         ): void => {
           const { timing } = closeAnimationConfig;
           const { velocityY, translationY } = nativeEvent;
           const negativeReverseScroll =
-            modalPosition === 'top' &&
+            modalPosition === "top" &&
             beginScrollYValue >= (snapPoint ? 0 : SCROLL_THRESHOLD) &&
             translationY < 0;
           const thresholdProps =
@@ -456,7 +456,7 @@ export const Modal = memo(
             : thresholdProps;
 
           // We make sure to reset the value if we are dragging from the children
-          if (type !== 'component' && (cancelTranslateY as any)._value === 0) {
+          if (type !== "component" && (cancelTranslateY as any)._value === 0) {
             componentTranslateY.setValue(0);
           }
 
@@ -498,7 +498,7 @@ export const Modal = memo(
                 // For snapPoint
                 if (distFromSnap < diffPoint && !alwaysOpen) {
                   if (closeSnapPointStraightEnabled) {
-                    if (modalPosition === 'initial' && negativeReverseScroll) {
+                    if (modalPosition === "initial" && negativeReverseScroll) {
                       destSnapPoint = snap;
                       willCloseModalize.current = false;
                     }
@@ -562,11 +562,11 @@ export const Modal = memo(
             }).start();
 
             if (beginScrollYValue <= 0) {
-              const modalPositionValue = destSnapPoint <= 0 ? 'top' : 'initial';
+              const modalPositionValue = destSnapPoint <= 0 ? "top" : "initial";
 
               if (panGestureAnimatedValue) {
                 Animated.timing(panGestureAnimatedValue, {
-                  toValue: Number(modalPositionValue === 'top'),
+                  toValue: Number(modalPositionValue === "top"),
                   duration: PAN_DURATION,
                   easing: Easing.ease,
                   useNativeDriver,
@@ -618,7 +618,7 @@ export const Modal = memo(
             beginScrollY.setValue(0);
           }
 
-          handleChildren({ nativeEvent }, 'component');
+          handleChildren({ nativeEvent }, "component");
         },
         [beginScrollY, componentTranslateY, handleChildren],
       );
@@ -633,7 +633,7 @@ export const Modal = memo(
               onOverlayPress();
             }
 
-            const dest = alwaysOpen ? 'alwaysOpen' : 'default';
+            const dest = alwaysOpen ? "alwaysOpen" : "default";
 
             handleClose(dest);
           }
@@ -654,9 +654,9 @@ export const Modal = memo(
                 const y = translationY <= 0 ? diff : 1 - diff;
                 let v: number;
 
-                if (modalPosition === 'initial' && translationY > 0) {
+                if (modalPosition === "initial" && translationY > 0) {
                   v = 0;
-                } else if (modalPosition === 'top' && translationY <= 0) {
+                } else if (modalPosition === "top" && translationY <= 0) {
                   v = 1;
                 } else {
                   v = y;
@@ -689,7 +689,7 @@ export const Modal = memo(
             top: 0,
           });
           shapeStyles.push({
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
           });
         }
 
@@ -765,9 +765,9 @@ export const Modal = memo(
 
       const renderOverlay = useCallback(() => {
         const pointerEvents =
-          alwaysOpen && (modalPosition === 'initial' || !modalPosition)
-            ? 'box-none'
-            : 'auto';
+          alwaysOpen && (modalPosition === "initial" || !modalPosition)
+            ? "box-none"
+            : "auto";
 
         return (
           <PanGestureHandler
@@ -886,7 +886,7 @@ export const Modal = memo(
                     translateY: value.interpolate({
                       inputRange: [-40, 0, endHeight],
                       outputRange: [0, 0, endHeight],
-                      extrapolate: 'clamp',
+                      extrapolate: "clamp",
                     }),
                   },
                 ],
@@ -915,7 +915,7 @@ export const Modal = memo(
         <Wrap withoutPortal={withoutPortal}>
           <View
             style={_rootStyle}
-            pointerEvents={alwaysOpen || !withOverlay ? 'box-none' : 'auto'}
+            pointerEvents={alwaysOpen || !withOverlay ? "box-none" : "auto"}
           >
             <TapGestureHandler
               ref={tapGestureModalizeRef}
@@ -954,7 +954,7 @@ const Wrap: FC<PropsWithChildren<{ withoutPortal?: boolean }>> = ({
 
 const s = StyleSheet.create({
   root: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     bottom: 0,
@@ -963,13 +963,13 @@ const s = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   children: {
     flexShrink: 1,
   },
   overlayContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     bottom: 0,
@@ -977,16 +977,16 @@ const s = StyleSheet.create({
     zIndex: 0,
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     bottom: 0,
     left: 0,
 
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    backgroundColor: "rgba(0, 0, 0, 0.65)",
   },
   handle: {
-    position: 'absolute',
+    position: "absolute",
     top: -20,
     right: 0,
     left: 0,
@@ -997,7 +997,7 @@ const s = StyleSheet.create({
     height: 20,
   },
   snap: {
-    alignSelf: 'center',
+    alignSelf: "center",
 
     top: 8,
 
@@ -1005,17 +1005,17 @@ const s = StyleSheet.create({
     height: 5,
 
     borderRadius: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   keyboardAvoiding: {
     zIndex: 5,
 
-    marginTop: 'auto',
+    marginTop: "auto",
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
 
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
     shadowRadius: 12,

@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren } from "react";
 import {
   ColorValue,
   StyleProp,
@@ -10,8 +10,8 @@ import {
   View,
   ViewProps,
   ViewStyle,
-} from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+} from "react-native";
+import Svg, { Path } from "react-native-svg";
 
 export interface ModalHeaderProps extends ViewProps {
   label?: string;
@@ -63,16 +63,16 @@ const s = StyleSheet.create({
     padding: 16,
     paddingRight: 0,
     paddingBottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   touchableStyle: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
     padding: 8,
     paddingRight: 16,
   },
   textStyle: {
     fontSize: 18,
-    color: '#fff',
+    color: "#fff",
   },
 });

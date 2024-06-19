@@ -1,8 +1,8 @@
-import { isEqual } from 'lodash';
-import React, { memo } from 'react';
+import { isEqual } from "lodash";
+import React, { memo } from "react";
 
-import { HoldMenuItem } from './HoldMenuItem';
-import { HoldMenuItemProp } from './types';
+import { HoldMenuItem } from "./HoldMenuItem";
+import { HoldMenuItemProp } from "./types";
 
 export const HoldMenuItems = memo(
   ({ items }: { items: HoldMenuItemProp[] }) => {

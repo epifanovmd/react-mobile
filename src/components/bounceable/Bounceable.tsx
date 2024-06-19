@@ -1,17 +1,18 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   forwardRef,
   memo,
   PropsWithChildren,
   useCallback,
   useRef,
-} from 'react';
-import { Animated, Pressable, PressableProps, View } from 'react-native';
-import { FlexProps, useFlexProps } from '../flexView';
+} from "react";
+import { Animated, Pressable, PressableProps, View } from "react-native";
+
+import { FlexProps, useFlexProps } from "../flexView";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-type PressableOmittedProps = Omit<PressableProps, 'style'>;
+type PressableOmittedProps = Omit<PressableProps, "style">;
 
 export interface BounceableProps extends FlexProps, PressableOmittedProps {
   useNativeDriver?: boolean;

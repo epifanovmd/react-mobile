@@ -1,6 +1,6 @@
-import React, { FC, memo, PropsWithChildren, useMemo } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { View, ViewProps, ViewStyle } from 'react-native';
+import React, { FC, memo, PropsWithChildren, useMemo } from "react";
+import { View, ViewProps, ViewStyle } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export interface SafeAreaProps extends ViewProps {
   bottom?: boolean;

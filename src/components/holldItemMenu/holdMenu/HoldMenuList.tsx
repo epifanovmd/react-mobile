@@ -1,7 +1,6 @@
-import { BlurView } from '@react-native-community/blur';
-import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
-
+import { BlurView } from "@react-native-community/blur";
+import React, { memo } from "react";
+import { StyleSheet } from "react-native";
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -10,27 +9,25 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
-import { useHoldItemContext } from '../hooks';
+} from "react-native-reanimated";
 
+import { useHoldItemContext } from "../hooks";
 import {
   calculateMenuHeight,
   menuAnimationAnchor,
-} from '../utils/calculations';
-
+} from "../utils/calculations";
 import {
   CONTEXT_MENU_STATE,
   HOLD_ITEM_TRANSFORM_DURATION,
   IS_IOS,
   MENU_WIDTH,
   SPRING_CONFIGURATION_MENU,
-} from '../utils/constants';
-import { styleGuide } from '../utils/styleGuide';
-import { deepEqual } from '../utils/validations';
-import { leftOrRight } from './calculations';
-
-import { HoldMenuItems } from './HoldMenuItems';
-import { HoldMenuItemProp } from './types';
+} from "../utils/constants";
+import { styleGuide } from "../utils/styleGuide";
+import { deepEqual } from "../utils/validations";
+import { leftOrRight } from "./calculations";
+import { HoldMenuItems } from "./HoldMenuItems";
+import { HoldMenuItemProp } from "./types";
 
 const AnimatedView = Animated.createAnimatedComponent(BlurView);
 
@@ -43,6 +40,7 @@ export const HoldMenuList = memo(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
       item => item.withSeparator,
     );
+
     return calculateMenuHeight(itemList.length, itemsWithSeparator.length);
   }, [menuProps, itemList]);
   const prevList = useSharedValue<HoldMenuItemProp[]>([]);
@@ -92,13 +90,13 @@ export const HoldMenuList = memo(() => {
   const animatedInnerContainerStyle = useAnimatedStyle(() => {
     return {
       backgroundColor:
-        theme.value === 'light'
+        theme.value === "light"
           ? IS_IOS
-            ? 'rgba(255, 255, 255, .75)'
-            : 'rgba(255, 255, 255, .95)'
+            ? "rgba(255, 255, 255, .75)"
+            : "rgba(255, 255, 255, .95)"
           : IS_IOS
-          ? 'rgba(0,0,0,0.5)'
-          : 'rgba(39, 39, 39, .8)',
+          ? "rgba(0,0,0,0.5)"
+          : "rgba(39, 39, 39, .8)",
     };
   }, [theme]);
 
@@ -150,21 +148,21 @@ export const HoldMenuList = memo(() => {
 
 const styles = StyleSheet.create({
   menuContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     width: MENU_WIDTH,
     borderRadius: styleGuide.spacing * 1.5,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    overflow: 'hidden',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    overflow: "hidden",
     zIndex: 15,
   },
   menuInnerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
 });

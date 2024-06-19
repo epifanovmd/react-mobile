@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   Animated,
   FlatListProps,
@@ -18,10 +18,11 @@ import {
   ViewProps,
   ViewStyle,
   VirtualizedList,
-} from 'react-native';
-import { CustomPickerItem } from './CustomPickerItem';
-import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import { mergeRefs } from '../../helpers';
+} from "react-native";
+import RNReactNativeHapticFeedback from "react-native-haptic-feedback";
+
+import { mergeRefs } from "../../helpers";
+import { CustomPickerItem } from "./CustomPickerItem";
 import createAnimatedComponent = Animated.createAnimatedComponent;
 
 const AnimatedList = createAnimatedComponent(VirtualizedList<any>);
@@ -30,33 +31,33 @@ const getItem = (d: any[], i: number) => d[i];
 const getItemCount = (d: any[]) => d?.length;
 
 const triggerHapticFeedback = () => {
-  RNReactNativeHapticFeedback.trigger('effectClick', {
+  RNReactNativeHapticFeedback.trigger("effectClick", {
     enableVibrateFallback: true,
     ignoreAndroidSystemSettings: false,
   });
 };
 
 type OmitKeys =
-  | 'pagingEnabled'
-  | 'initialScrollIndex'
-  | 'showsVerticalScrollIndicator'
-  | 'showsHorizontalScrollIndicator'
-  | 'snapToInterval'
-  | 'snapToOffsets'
-  | 'getItemLayout'
-  | 'horizontal'
-  | 'getItemCount'
-  | 'getItem'
-  | 'onScroll'
-  | 'data'
+  | "pagingEnabled"
+  | "initialScrollIndex"
+  | "showsVerticalScrollIndicator"
+  | "showsHorizontalScrollIndicator"
+  | "snapToInterval"
+  | "snapToOffsets"
+  | "getItemLayout"
+  | "horizontal"
+  | "getItemCount"
+  | "getItem"
+  | "onScroll"
+  | "data"
   // | 'onMomentumScrollEnd'
-  | 'renderItem'
-  | 'onScrollToIndexFailed'
-  | 'ListFooterComponent'
-  | 'ListHeaderComponent'
-  | 'ListEmptyComponent'
-  | 'ListFooterComponentStyle'
-  | 'ListHeaderComponentStyle';
+  | "renderItem"
+  | "onScrollToIndexFailed"
+  | "ListFooterComponent"
+  | "ListHeaderComponent"
+  | "ListEmptyComponent"
+  | "ListFooterComponentStyle"
+  | "ListHeaderComponentStyle";
 
 export type CustomPickerAnimations = {
   rotate?: string[];
@@ -109,7 +110,7 @@ export const CustomPicker: CustomPicker = memo(
       const initialized = useRef(false);
       const [itemSize, setItemSize] = useState(0);
       const scrollAnimatedValue = useRef(new Animated.Value(0));
-      const scrollListener = useRef('0');
+      const scrollListener = useRef("0");
       const active = useRef(0);
       const flatListRef = useRef<VirtualizedList<any>>(null);
       const lastChangeIndex = useRef(0);
@@ -298,8 +299,8 @@ export const CustomPicker: CustomPicker = memo(
       const style = useMemo<StyleProp<ViewStyle>>(
         () => [
           {
-            height: horizontal ? 'auto' : _height,
-            flexDirection: horizontal ? 'column' : 'row',
+            height: horizontal ? "auto" : _height,
+            flexDirection: horizontal ? "column" : "row",
           },
           _style,
         ],
@@ -316,7 +317,7 @@ export const CustomPicker: CustomPicker = memo(
           {!!itemSize && (
             <AnimatedList
               ref={mergeRefs([ref, flatListRef])}
-              decelerationRate={'fast'}
+              decelerationRate={"fast"}
               keyExtractor={keyExtractor}
               {...listProps}
               initialScrollIndex={currentIndex}

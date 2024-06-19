@@ -1,5 +1,5 @@
-import React from 'react';
-import { ColorValue, Text } from 'react-native';
+import React from "react";
+import { ColorValue, Text } from "react-native";
 
 export interface PickerItemProps {
   label: string;
