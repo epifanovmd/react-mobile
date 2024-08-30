@@ -20,7 +20,6 @@ function useDeviceOrientation() {
     }
     const changeEvent = Dimensions.addEventListener("change", updateState);
 
-    // @ts-ignore
     return () => changeEvent.remove();
   }, []);
 

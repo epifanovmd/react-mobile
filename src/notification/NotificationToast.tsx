@@ -59,10 +59,10 @@ export type NotificationToastRef = { hide: () => Promise<void> };
 
 export const NotificationToast = memo(
   forwardRef<NotificationToastRef, NotificationToastProps>((props, ref) => {
-    let {
+    const {
       onDestroy,
       onClose,
-      icon,
+      icon: _icon,
       type = "normal",
       message,
       duration = 5000,
@@ -82,6 +82,8 @@ export const NotificationToast = memo(
       renderToast,
       renderType,
     } = props;
+
+    let icon = _icon;
 
     const containerRef = useRef<View>(null);
 

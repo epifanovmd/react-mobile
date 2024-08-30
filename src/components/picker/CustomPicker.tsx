@@ -81,7 +81,7 @@ export interface CustomPickerProps<T> extends ViewProps {
 }
 
 export interface CustomPicker {
-  <T extends any>(
+  <T>(
     props: CustomPickerProps<T> & { ref?: React.Ref<VirtualizedList<T>> },
   ): React.JSX.Element | null;
 }
@@ -173,7 +173,7 @@ export const CustomPicker: CustomPicker = memo(
 
       // methods
       const scrollToIndex = useCallback(
-        (index: number, animated: boolean = true) => {
+        (index: number, animated = true) => {
           if (index <= _data.length) {
             flatListRef.current?.scrollToOffset({
               animated,

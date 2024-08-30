@@ -32,7 +32,7 @@ export interface CarouselProps<T = any>
   containerProps?: FlexProps & ViewProps;
 }
 
-export interface CarouselFC<P extends any = null> {
+export interface CarouselFC<P = null> {
   <T>(props: CarouselProps<P extends null ? T : P>): ReturnType<FC>;
 }
 

@@ -75,9 +75,7 @@ type GestureHandlerProps = {
 type Context = { didMeasureLayout: boolean };
 
 interface HoldItem {
-  <T extends any>(
-    props: PropsWithChildren<HoldItemProps<T>>,
-  ): React.ReactElement | null;
+  <T>(props: PropsWithChildren<HoldItemProps<T>>): React.ReactElement | null;
 }
 
 export const HoldItem: HoldItem = memo(
@@ -371,7 +369,7 @@ export const HoldItem: HoldItem = memo(
       TapGestureHandlerGestureEvent,
       Context
     >({
-      onActive: _ => {
+      onActive: () => {
         if (closeOnTap) {
           state.value = CONTEXT_MENU_STATE.END;
         }

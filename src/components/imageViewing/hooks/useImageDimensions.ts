@@ -20,7 +20,6 @@ const useImageDimensions = (image: ImageURISource): Dimensions | null => {
         if (imageDimensions) {
           resolve(imageDimensions);
         } else {
-          // @ts-ignore
           Image.getSizeWithHeaders(
             _image.uri,
             _image.headers || {},
@@ -38,7 +37,7 @@ const useImageDimensions = (image: ImageURISource): Dimensions | null => {
       }
     });
 
-  let isImageUnmounted: boolean = false;
+  let isImageUnmounted = false;
 
   useEffect(() => {
     getImageDimensions(image).then(_dimensions => {

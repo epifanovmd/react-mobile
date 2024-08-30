@@ -142,7 +142,7 @@ export const Collapsable = memo(
       );
 
       const transitionToHeight = useCallback(
-        (toValue: number = 0, toCollapsed: boolean) => {
+        (toValue = 0, toCollapsed: boolean) => {
           setAnimating(true);
           collapsed.current = toCollapsed;
 

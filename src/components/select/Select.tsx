@@ -24,13 +24,13 @@ import {
 import { Modal, ModalProps, useModal } from "../modal";
 import { SafeArea } from "../safeArea";
 
-const toArraySelected = <T extends any>(
+const toArraySelected = <T = any,>(
   selected: T,
 ): (T extends Array<infer R> ? R : T)[] => {
   return isArray(selected) ? selected : ([selected] as any);
 };
 
-export interface SelectProps<D extends any = any, M extends boolean = false>
+export interface SelectProps<D = any, M extends boolean = false>
   extends Omit<TouchableOpacityProps, "onPress"> {
   selected?: M extends true ? D[] : D | undefined;
   data: D[];
@@ -59,7 +59,7 @@ export interface SelectProps<D extends any = any, M extends boolean = false>
   }) => JSX.Element | null;
 }
 
-const _Select = <D extends any = any, M extends boolean = false>({
+const _Select = <D, M extends boolean = false>({
   selected: _selected,
   data,
   renderItem: _renderItem,
