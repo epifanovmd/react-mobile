@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@force-dev/react": "^1.1.2",
+    "@gorhom/bottom-sheet": "^5.0.5",
     "@gorhom/portal": "^1.0.14",
     "@react-native-community/blur": "^4.4.0",
     "react-native-iphone-x-helper": "^1.3.1",
