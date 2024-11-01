@@ -1,4 +1,4 @@
-import {
+import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetDraggableView,
   BottomSheetFlashList,
@@ -19,6 +19,7 @@ import {
 } from "@gorhom/bottom-sheet";
 
 export {
+  BottomSheet,
   BottomSheetBackdrop,
   BottomSheetDraggableView,
   BottomSheetFlashList,
