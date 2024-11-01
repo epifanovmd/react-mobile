@@ -1,4 +1,3 @@
-export * from "./CustomPicker";
 export type { PickerProps } from "./Picker";
 export { Picker } from "./Picker";
 export type { PickerColumnProps } from "./PickerColumn";
