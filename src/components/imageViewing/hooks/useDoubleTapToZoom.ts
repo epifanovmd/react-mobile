@@ -11,7 +11,7 @@ const DOUBLE_TAP_DELAY = 300;
 let lastTapTS: number | null = null;
 
 function useDoubleTapToZoom(
-  scrollViewRef: React.RefObject<ScrollView>,
+  scrollViewRef: React.RefObject<ScrollView | null>,
   scaled: boolean,
   screen: Dimensions,
 ) {

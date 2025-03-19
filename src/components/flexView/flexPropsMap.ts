@@ -112,5 +112,4 @@ type LostScreenParamsTypes = Exclude<
   ? true
   : false;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CheckError: LostScreenParamsTypes = true;

@@ -1,4 +1,3 @@
-import { BlurView } from "@react-native-community/blur";
 import React, { memo } from "react";
 import { StyleSheet } from "react-native";
 import Animated, {
@@ -28,8 +27,6 @@ import { deepEqual } from "../utils/validations";
 import { leftOrRight } from "./calculations";
 import { HoldMenuItems } from "./HoldMenuItems";
 import { HoldMenuItemProp } from "./types";
-
-const AnimatedView = Animated.createAnimatedComponent(BlurView);
 
 export const HoldMenuList = memo(() => {
   const { state, theme, menuProps } = useHoldItemContext();
@@ -132,7 +129,7 @@ export const HoldMenuList = memo(() => {
   );
 
   return (
-    <AnimatedView style={[styles.menuContainer, messageStyles]}>
+    <Animated.View style={[styles.menuContainer, messageStyles]}>
       <Animated.View
         style={[
           StyleSheet.absoluteFillObject,
@@ -142,7 +139,7 @@ export const HoldMenuList = memo(() => {
       >
         <HoldMenuItems items={itemList} />
       </Animated.View>
-    </AnimatedView>
+    </Animated.View>
   );
 });
 
