@@ -13,6 +13,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
+  View,
   ViewProps,
   ViewStyle,
 } from "react-native";
@@ -58,6 +59,7 @@ export interface HoldItemProps<T = unknown> extends TouchableOpacityProps {
   style?: StyleProp<ViewStyle>;
   placement?: "top" | "bottom";
   longPressMinDurationMs?: number;
+  disablePresAnimation?: boolean;
 }
 
 const _HoldItem = <T extends any>({
@@ -68,6 +70,7 @@ const _HoldItem = <T extends any>({
   disabled,
   disableMove,
   longPressMinDurationMs = 150,
+  disablePresAnimation,
   children,
   ...rest
 }: PropsWithChildren<HoldItemProps<T>>) => {
@@ -98,7 +101,7 @@ const _HoldItem = <T extends any>({
   const containerRef = useAnimatedRef<Animated.View>();
 
   const hapticResponse = useCallback(() => {
-    trigger(HapticFeedbackTypes.impactHeavy);
+    trigger(HapticFeedbackTypes.impactLight);
   }, []);
 
   const prepareAnimationValues = useCallback(() => {
@@ -237,10 +240,7 @@ const _HoldItem = <T extends any>({
     };
   });
 
-  const containerStyle = React.useMemo(
-    () => [{ flexShrink: 1 }, animatedContainerStyle],
-    [animatedContainerStyle],
-  );
+  const containerStyle = [{ flexShrink: 1 }, animatedContainerStyle];
 
   const animatedPortalStyle = useAnimatedStyle(() => {
     const opacity = isActive.value
@@ -294,7 +294,6 @@ const _HoldItem = <T extends any>({
         .onBegin(() => {
           runOnJS(setShowPortal)(true);
           prepareAnimationValues();
-
           itemScale.value = withTiming(HOLD_ITEM_SCALE_DOWN_VALUE, {
             duration: HOLD_ITEM_SCALE_DOWN_DURATION,
           });
@@ -337,9 +336,13 @@ const _HoldItem = <T extends any>({
         {...rest}
       >
         <GestureDetector gesture={gesture}>
-          <Animated.View ref={containerRef} style={containerStyle}>
-            {children}
-          </Animated.View>
+          {disablePresAnimation ? (
+            <View ref={containerRef}>{children}</View>
+          ) : (
+            <Animated.View ref={containerRef} style={containerStyle}>
+              {children}
+            </Animated.View>
+          )}
         </GestureDetector>
       </TouchableOpacity>
 
