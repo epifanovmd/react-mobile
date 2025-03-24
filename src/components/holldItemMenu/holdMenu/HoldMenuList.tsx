@@ -25,7 +25,7 @@ import {
 import { styleGuide } from "../utils/styleGuide";
 import { deepEqual } from "../utils/validations";
 import { leftOrRight } from "./calculations";
-import { HoldMenuItems } from "./HoldMenuItems";
+import { HoldMenuItem } from "./HoldMenuItem";
 import { HoldMenuItemProp } from "./types";
 
 export const HoldMenuList = memo(() => {
@@ -39,7 +39,8 @@ export const HoldMenuList = memo(() => {
     );
 
     return calculateMenuHeight(itemList.length, itemsWithSeparator.length);
-  }, [menuProps, itemList]);
+  }, [menuProps.value.items, itemList]);
+
   const prevList = useSharedValue<HoldMenuItemProp[]>([]);
 
   const messageStyles = useAnimatedStyle(() => {
@@ -137,7 +138,13 @@ export const HoldMenuList = memo(() => {
           animatedInnerContainerStyle,
         ]}
       >
-        <HoldMenuItems items={itemList} />
+        {itemList.map((item: HoldMenuItemProp, index: number) => (
+          <HoldMenuItem
+            key={index}
+            item={item}
+            isLast={itemList.length === index + 1}
+          />
+        ))}
       </Animated.View>
     </Animated.View>
   );

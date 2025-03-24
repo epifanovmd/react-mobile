@@ -9,9 +9,10 @@ export const Separator = memo(() => {
   const { theme } = useHoldItemContext();
 
   const separatorStyles = useAnimatedStyle(() => {
+    const isDark = theme.value === "dark";
+
     return {
-      backgroundColor:
-        theme.value === "dark" ? BORDER_DARK_COLOR : BORDER_LIGHT_COLOR,
+      backgroundColor: isDark ? BORDER_DARK_COLOR : BORDER_LIGHT_COLOR,
     };
   }, [theme]);
 

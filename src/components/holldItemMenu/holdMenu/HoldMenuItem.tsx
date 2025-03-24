@@ -1,4 +1,3 @@
-import { isEqual } from "lodash";
 import React, { memo, useCallback } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
@@ -67,7 +66,7 @@ export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
       {item.withSeparator && <Separator />}
     </>
   );
-}, isEqual);
+});
 
 const styles = StyleSheet.create({
   menuContainer: {

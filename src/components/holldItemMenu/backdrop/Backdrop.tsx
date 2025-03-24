@@ -4,7 +4,6 @@ import { StyleSheet } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
-  withDelay,
   withTiming,
 } from "react-native-reanimated";
 
@@ -12,7 +11,6 @@ import { useHoldItemContext } from "../hooks";
 import {
   CONTEXT_MENU_STATE,
   HOLD_ITEM_TRANSFORM_DURATION,
-  WINDOW_HEIGHT,
 } from "../utils/constants";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -27,16 +25,6 @@ export const Backdrop = memo(() => {
   });
 
   const animatedContainerStyle = useAnimatedStyle(() => {
-    const topValueAnimation =
-      state.value === CONTEXT_MENU_STATE.ACTIVE
-        ? 0
-        : withDelay(
-            HOLD_ITEM_TRANSFORM_DURATION,
-            withTiming(WINDOW_HEIGHT, {
-              duration: 0,
-            }),
-          );
-
     const opacityValueAnimation = withTiming(
       state.value === CONTEXT_MENU_STATE.ACTIVE ? 1 : 0,
       {
@@ -45,7 +33,6 @@ export const Backdrop = memo(() => {
     );
 
     return {
-      top: topValueAnimation,
       opacity: opacityValueAnimation,
     };
   });

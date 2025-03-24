@@ -27,16 +27,10 @@ export const calculateMenuHeight = (
         separatorCount * styleGuide.spacing;
 };
 
-export type TransformOriginAnchorPosition =
-  | "top-right"
-  | "top-left"
-  | "top-center"
-  | "bottom-right"
-  | "bottom-left"
-  | "bottom-center";
+export type TransformAnchorPosition = "top-right" | "top-left" | "top-center";
 
 export const menuAnimationAnchor = (
-  anchorPoint: TransformOriginAnchorPosition,
+  anchorPoint: TransformAnchorPosition,
   itemWidth: number,
   itemLength: number,
   itemsWithSeparatorLength: number,
@@ -52,7 +46,7 @@ export const menuAnimationAnchor = (
   const TyTop2 = MenuHeight / 2;
 
   const TxLeft1 = (MENU_WIDTH / 2) * -1;
-  const TxLeft2 = (MENU_WIDTH / 2) * 1;
+  const TxLeft2 = MENU_WIDTH / 2;
 
   return {
     beginningTransformations: {
@@ -86,26 +80,23 @@ export const menuAnimationAnchor = (
   };
 };
 
-export const getTransformOrigin = (
-  posX: number,
-  itemWidth: number,
+export const getAnchorPosition = (
+  top: number,
+  width: number,
   windowWidth: number,
-  bottom?: boolean,
-): TransformOriginAnchorPosition => {
+): TransformAnchorPosition => {
   "worklet";
-  const distanceToLeft = Math.round(posX + itemWidth / 2);
+  const distanceToLeft = Math.round(top + width / 2);
   const distanceToRight = Math.round(windowWidth - distanceToLeft);
 
-  let position: TransformOriginAnchorPosition = bottom
-    ? "bottom-right"
-    : "top-right";
+  let position: TransformAnchorPosition = "top-right";
 
   const majority = Math.abs(distanceToLeft - distanceToRight);
 
   if (majority < MENU_TRANSFORM_ORIGIN_TOLERENCE) {
-    position = bottom ? "bottom-center" : "top-center";
+    position = "top-center";
   } else if (distanceToLeft < distanceToRight) {
-    position = bottom ? "bottom-left" : "top-left";
+    position = "top-left";
   }
 
   return position;
