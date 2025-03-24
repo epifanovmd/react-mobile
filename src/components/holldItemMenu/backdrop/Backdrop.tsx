@@ -8,10 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useHoldItemContext } from "../hooks";
-import {
-  CONTEXT_MENU_STATE,
-  HOLD_ITEM_TRANSFORM_DURATION,
-} from "../utils/constants";
+import { CONTEXT_MENU_STATE, HOLD_ITEM_DURATION } from "../utils/constants";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -28,7 +25,7 @@ export const Backdrop = memo(() => {
     const opacityValueAnimation = withTiming(
       state.value === CONTEXT_MENU_STATE.ACTIVE ? 1 : 0,
       {
-        duration: HOLD_ITEM_TRANSFORM_DURATION,
+        duration: HOLD_ITEM_DURATION,
       },
     );
 

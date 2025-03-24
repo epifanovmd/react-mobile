@@ -3,9 +3,8 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 import { useHoldItemContext } from "../hooks";
-import { CONTEXT_MENU_STATE, MENU_WIDTH } from "../utils/constants";
-import { styleGuide } from "../utils/styleGuide";
-import { getColor } from "./calculations";
+import { CONTEXT_MENU_STATE, MENU_WIDTH, styleGuide } from "../utils";
+import { getMenuItemColor } from "./calculations";
 import { BORDER_DARK_COLOR, BORDER_LIGHT_COLOR } from "./constants";
 import { Separator } from "./Separator";
 import { HoldMenuItemProp } from "./types";
@@ -18,11 +17,11 @@ export interface HoldMenuItemProps {
 }
 
 export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
-  const { state, theme, menuProps } = useHoldItemContext();
+  const { state, theme, data } = useHoldItemContext();
 
   const borderStyles = useAnimatedStyle(() => {
     const borderBottomColor =
-      theme.value === "dark" ? BORDER_DARK_COLOR : BORDER_LIGHT_COLOR;
+      theme === "dark" ? BORDER_DARK_COLOR : BORDER_LIGHT_COLOR;
 
     return {
       borderBottomColor,
@@ -31,19 +30,19 @@ export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
   }, [theme, isLast, item]);
 
   const textColor = useAnimatedStyle(() => {
-    return { color: getColor(item.isTitle, item.isDestructive, theme.value) };
+    return { color: getMenuItemColor(item.isTitle, item.isDestructive, theme) };
   }, [theme, item]);
 
   const handleOnPress = useCallback(() => {
     if (!item.isTitle) {
       if (item.onPress) {
-        item.onPress(menuProps.value.data);
+        item.onPress(data);
       }
       if (!item.variants) {
         state.value = CONTEXT_MENU_STATE.END;
       }
     }
-  }, [item, state, menuProps.value.data]);
+  }, [item, state, data]);
 
   return (
     <>

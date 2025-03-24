@@ -11,6 +11,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { HapticFeedbackTypes, trigger } from "react-native-haptic-feedback";
 import Animated, {
   measure,
+  MeasuredDimensions,
   runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
@@ -18,20 +19,19 @@ import Animated, {
   withDelay,
   withTiming,
 } from "react-native-reanimated";
-import type { MeasuredDimensions } from "react-native-reanimated/src/commonTypes";
 
-import { HoldMenuItemProp } from "./holdMenu/types";
+import { HoldMenuItemProp } from "./holdMenu";
 import { useHoldItemContext } from "./hooks";
 import {
   CONTEXT_MENU_STATE,
+  HOLD_ITEM_DURATION,
   HOLD_ITEM_SCALE_DOWN_DURATION,
   HOLD_ITEM_SCALE_DOWN_VALUE,
-  HOLD_ITEM_TRANSFORM_DURATION,
-} from "./utils/constants";
+} from "./utils";
 
 export interface HoldItemProps<T = unknown> extends TouchableOpacityProps {
   data?: T;
-  items: HoldMenuItemProp<T>[];
+  menu?: HoldMenuItemProp<T>[];
 
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
@@ -43,7 +43,7 @@ export interface HoldItemProps<T = unknown> extends TouchableOpacityProps {
 
 const _HoldItem = <T extends any>({
   data,
-  items,
+  menu,
   style,
   disabled,
   longPressMinDurationMs = 150,
@@ -66,14 +66,11 @@ const _HoldItem = <T extends any>({
       flexShrink: 1,
       opacity: isActive.value
         ? 0
-        : withDelay(
-            HOLD_ITEM_TRANSFORM_DURATION - 50,
-            withTiming(1, { duration: 0 }),
-          ),
+        : withDelay(HOLD_ITEM_DURATION - 50, withTiming(1, { duration: 0 })),
       transform: [
         {
           scale: isActive.value
-            ? withTiming(1, { duration: HOLD_ITEM_TRANSFORM_DURATION })
+            ? withTiming(1, { duration: HOLD_ITEM_DURATION })
             : itemScale.value,
         },
       ],
@@ -85,7 +82,7 @@ const _HoldItem = <T extends any>({
       trigger(HapticFeedbackTypes.impactLight);
 
       setValue({
-        menuItems: items,
+        menu,
         measured,
         data,
         content,
@@ -94,7 +91,7 @@ const _HoldItem = <T extends any>({
         },
       });
     },
-    [setValue, items, data, content, isActive],
+    [setValue, menu, data, content, isActive],
   );
 
   const gesture = useMemo(
@@ -110,7 +107,7 @@ const _HoldItem = <T extends any>({
           });
         })
         .onStart(() => {
-          if (items && items.length > 0 && measured.value) {
+          if (measured.value) {
             runOnJS(onActivate)(measured.value);
             isActive.value = true;
           }
@@ -120,7 +117,7 @@ const _HoldItem = <T extends any>({
             state.value = CONTEXT_MENU_STATE.END;
           }
           itemScale.value = withTiming(1, {
-            duration: HOLD_ITEM_TRANSFORM_DURATION / 2,
+            duration: HOLD_ITEM_DURATION / 2,
           });
         }),
     [
@@ -129,7 +126,6 @@ const _HoldItem = <T extends any>({
       disabled,
       isActive,
       itemScale,
-      items,
       longPressMinDurationMs,
       measured,
       onActivate,
@@ -137,10 +133,12 @@ const _HoldItem = <T extends any>({
     ],
   );
 
-  const _style = useMemo(() => [styles.touchable, style], [style]);
-
   return (
-    <TouchableOpacity style={_style} activeOpacity={0.8} {...rest}>
+    <TouchableOpacity
+      style={[styles.touchable, style]}
+      activeOpacity={0.8}
+      {...rest}
+    >
       <GestureDetector gesture={gesture}>
         {disablePresAnimation ? (
           <View ref={containerRef}>{children}</View>

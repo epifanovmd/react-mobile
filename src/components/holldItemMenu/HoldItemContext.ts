@@ -1,15 +1,15 @@
-import React, { createContext } from "react";
+import { createContext } from "react";
 import { SharedValue } from "react-native-reanimated";
 
-import { HoldMenuContext } from "./holdMenu/types";
-import { IHoldItemValue } from "./types";
-import type { CONTEXT_MENU_STATE } from "./utils/constants";
+import { IHoldItemValue, IHoldPosition } from "./types";
+import type { CONTEXT_MENU_STATE } from "./utils";
 
-export interface HoldItemContext<T = any> {
+export interface IHoldItemContext<T = any> {
   state: SharedValue<CONTEXT_MENU_STATE>;
-  theme: SharedValue<"light" | "dark">;
-  menuProps: SharedValue<HoldMenuContext<T>>;
+  theme: "light" | "dark";
   setValue: (menu: IHoldItemValue<T>) => void;
+  position: SharedValue<IHoldPosition>;
+  data?: T;
   safeAreaInsets: {
     top: number;
     right: number;
@@ -18,11 +18,11 @@ export interface HoldItemContext<T = any> {
   };
 }
 
-export const HoldItemContext = createContext<HoldItemContext>({
+export const HoldItemContext = createContext<IHoldItemContext>({
   safeAreaInsets: {
     top: 0,
     right: 0,
     bottom: 0,
     left: 0,
   },
-} as HoldItemContext);
+} as IHoldItemContext);

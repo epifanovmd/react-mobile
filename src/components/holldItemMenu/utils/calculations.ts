@@ -1,8 +1,4 @@
-import {
-  FONT_SCALE,
-  MENU_TRANSFORM_ORIGIN_TOLERENCE,
-  MENU_WIDTH,
-} from "./constants";
+import { FONT_SCALE, MENU_WIDTH } from "./constants";
 import { styleGuide } from "./styleGuide";
 
 export const menuItemHeight = () => {
@@ -27,17 +23,16 @@ export const calculateMenuHeight = (
         separatorCount * styleGuide.spacing;
 };
 
-export type TransformAnchorPosition = "top-right" | "top-left" | "top-center";
+export type TMenuPosition = "left" | "center" | "right";
 
 export const menuAnimationAnchor = (
-  anchorPoint: TransformAnchorPosition,
+  menuPosition: TMenuPosition,
   itemWidth: number,
   itemLength: number,
   itemsWithSeparatorLength: number,
 ) => {
   "worklet";
   const MenuHeight = calculateMenuHeight(itemLength, itemsWithSeparatorLength);
-  const splittetAnchorName: string[] = anchorPoint.split("-");
 
   const Center1 = itemWidth;
   const Center2 = 0;
@@ -51,53 +46,21 @@ export const menuAnimationAnchor = (
   return {
     beginningTransformations: {
       translateX:
-        splittetAnchorName[1] === "right"
+        menuPosition === "right"
           ? -TxLeft1
-          : splittetAnchorName[1] === "left"
+          : menuPosition === "left"
           ? TxLeft1
           : Center1,
-      translateY:
-        splittetAnchorName[0] === "top"
-          ? TyTop1
-          : splittetAnchorName[0] === "bottom"
-          ? TyTop1
-          : Center2,
+      translateY: TyTop1,
     },
     endingTransformations: {
       translateX:
-        splittetAnchorName[1] === "right"
+        menuPosition === "right"
           ? -TxLeft2
-          : splittetAnchorName[1] === "left"
+          : menuPosition === "left"
           ? TxLeft2
           : Center2,
-      translateY:
-        splittetAnchorName[0] === "top"
-          ? TyTop2
-          : splittetAnchorName[0] === "bottom"
-          ? -TyTop2
-          : Center2,
+      translateY: TyTop2,
     },
   };
-};
-
-export const getAnchorPosition = (
-  top: number,
-  width: number,
-  windowWidth: number,
-): TransformAnchorPosition => {
-  "worklet";
-  const distanceToLeft = Math.round(top + width / 2);
-  const distanceToRight = Math.round(windowWidth - distanceToLeft);
-
-  let position: TransformAnchorPosition = "top-right";
-
-  const majority = Math.abs(distanceToLeft - distanceToRight);
-
-  if (majority < MENU_TRANSFORM_ORIGIN_TOLERENCE) {
-    position = "top-center";
-  } else if (distanceToLeft < distanceToRight) {
-    position = "top-left";
-  }
-
-  return position;
 };

@@ -1,6 +1,7 @@
 import React, { memo } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewProps } from "react-native";
 import Animated, {
+  SharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
@@ -9,51 +10,66 @@ import Animated, {
 import { useHoldItemContext } from "../hooks";
 import {
   CONTEXT_MENU_STATE,
-  HOLD_ITEM_TRANSFORM_DURATION,
+  HOLD_ITEM_DURATION,
   SPRING_CONFIGURATION,
-} from "../utils/constants";
+  TMenuPosition,
+} from "../utils";
 import { HoldMenuList } from "./HoldMenuList";
+import { HoldMenuItemProp } from "./types";
 
-export const HoldMenu = memo(() => {
-  const { state, menuProps } = useHoldItemContext();
+export interface IHoldMenuItemProps<T = any> extends ViewProps {
+  data?: T;
+  transformContent: SharedValue<number>;
+  menuPosition?: TMenuPosition;
+  items?: HoldMenuItemProp[];
+}
 
-  const wrapperStyles = useAnimatedStyle(() => {
-    const anchorPositionVertical = menuProps.value.anchorPosition.split("-")[0];
+export const HoldMenu = memo<IHoldMenuItemProps>(
+  ({ transformContent, menuPosition = "center", items = [], ...props }) => {
+    const { state, position } = useHoldItemContext();
 
-    const top =
-      anchorPositionVertical === "top"
-        ? menuProps.value.itemHeight + menuProps.value.itemY + 8
-        : menuProps.value.itemY - 8;
-    const left = menuProps.value.itemX;
-    const width = menuProps.value.itemWidth;
-    const tY = menuProps.value.transformValue;
+    const wrapperStyles = useAnimatedStyle(() => {
+      const isActive = state.value === CONTEXT_MENU_STATE.ACTIVE;
+      const { top, left, width, height } = position.value;
+      const translateY = isActive
+        ? withSpring(transformContent.value, SPRING_CONFIGURATION)
+        : withTiming(0, { duration: HOLD_ITEM_DURATION });
 
-    return {
-      top,
-      left,
-      width,
-      transform: [
-        {
-          translateY:
-            state.value === CONTEXT_MENU_STATE.ACTIVE
-              ? withSpring(tY, SPRING_CONFIGURATION)
-              : withTiming(0, { duration: HOLD_ITEM_TRANSFORM_DURATION }),
-        },
-      ],
-    };
-  }, [menuProps]);
+      const activeTiming = withTiming(isActive ? 1 : 0, {
+        duration: HOLD_ITEM_DURATION,
+      });
 
-  return (
-    <Animated.View style={[styles.menuWrapper, wrapperStyles]}>
-      <HoldMenuList />
-    </Animated.View>
-  );
-});
+      return {
+        opacity: activeTiming,
+        top: height + top + 8,
+        left: left,
+        width: width,
+        transform: [
+          {
+            translateY,
+          },
+          {
+            scale: activeTiming,
+          },
+        ],
+      };
+    });
+
+    return (
+      <Animated.View
+        {...props}
+        style={[styles.menuWrapper, wrapperStyles, props.style]}
+      >
+        <HoldMenuList items={items} menuPosition={menuPosition} />
+      </Animated.View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   menuWrapper: {
     position: "absolute",
-    left: 0,
     zIndex: 10,
+    minHeight: 1,
   },
 });

@@ -1,6 +1,5 @@
-import Animated from "react-native-reanimated";
-
-import { MENU_WIDTH } from "../utils/constants";
+import { IHoldPosition } from "../types";
+import { MENU_WIDTH, TMenuPosition } from "../utils";
 import {
   MENU_TEXT_DARK_COLOR,
   MENU_TEXT_DESTRUCTIVE_COLOR_DARK,
@@ -8,31 +7,25 @@ import {
   MENU_TEXT_LIGHT_COLOR,
   MENU_TITLE_COLOR,
 } from "./constants";
-import type { HoldMenuContext } from "./types";
 
 export const leftOrRight = (
-  menuProps: Animated.SharedValue<HoldMenuContext>,
+  menuPosition: TMenuPosition,
+  position: IHoldPosition,
 ) => {
   "worklet";
 
-  const anchorPositionHorizontal = menuProps.value.anchorPosition.split("-")[1];
-  const itemWidth = menuProps.value.itemWidth;
-
   let leftPosition = 0;
 
-  anchorPositionHorizontal === "right"
-    ? (leftPosition = -MENU_WIDTH + itemWidth)
-    : anchorPositionHorizontal === "left"
+  menuPosition === "right"
+    ? (leftPosition = -MENU_WIDTH + position.width)
+    : menuPosition === "left"
     ? (leftPosition = 0)
-    : (leftPosition =
-        -menuProps.value.itemWidth -
-        MENU_WIDTH / 2 +
-        menuProps.value.itemWidth / 2);
+    : (leftPosition = -position.width - MENU_WIDTH / 2 + position.width / 2);
 
   return leftPosition;
 };
 
-export const getColor = (
+export const getMenuItemColor = (
   isTitle: boolean | undefined,
   isDestructive: boolean | undefined,
   themeValue: "light" | "dark",

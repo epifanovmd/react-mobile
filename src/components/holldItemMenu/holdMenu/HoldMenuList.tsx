@@ -5,7 +5,6 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -13,74 +12,65 @@ import Animated, {
 import { useHoldItemContext } from "../hooks";
 import {
   calculateMenuHeight,
-  menuAnimationAnchor,
-} from "../utils/calculations";
-import {
   CONTEXT_MENU_STATE,
-  HOLD_ITEM_TRANSFORM_DURATION,
+  HOLD_ITEM_DURATION,
   IS_IOS,
   MENU_WIDTH,
+  menuAnimationAnchor,
   SPRING_CONFIGURATION_MENU,
-} from "../utils/constants";
-import { styleGuide } from "../utils/styleGuide";
-import { deepEqual } from "../utils/validations";
+  styleGuide,
+  TMenuPosition,
+} from "../utils";
 import { leftOrRight } from "./calculations";
 import { HoldMenuItem } from "./HoldMenuItem";
 import { HoldMenuItemProp } from "./types";
 
-export const HoldMenuList = memo(() => {
-  const { state, theme, menuProps } = useHoldItemContext();
+export const HoldMenuList = memo<{
+  menuPosition: TMenuPosition;
+  items: HoldMenuItemProp[];
+}>(({ menuPosition, items }) => {
+  const { state, theme, position } = useHoldItemContext();
 
   const [itemList, setItemList] = React.useState<HoldMenuItemProp[]>([]);
 
   const menuHeight = useDerivedValue(() => {
-    const itemsWithSeparator = menuProps.value.items.filter(
-      item => item.withSeparator,
-    );
+    const separators = items.filter(item => item.withSeparator);
 
-    return calculateMenuHeight(itemList.length, itemsWithSeparator.length);
-  }, [menuProps.value.items, itemList]);
+    return calculateMenuHeight(itemList.length, separators.length);
+  }, [items, itemList]);
 
-  const prevList = useSharedValue<HoldMenuItemProp[]>([]);
-
-  const messageStyles = useAnimatedStyle(() => {
-    const itemsWithSeparator = menuProps.value.items.filter(
-      item => item.withSeparator,
-    );
+  const menuStyles = useAnimatedStyle(() => {
+    const separators = items.filter(item => item.withSeparator);
 
     const translate = menuAnimationAnchor(
-      menuProps.value.anchorPosition,
-      menuProps.value.itemWidth,
-      menuProps.value.items.length,
-      itemsWithSeparator.length,
+      menuPosition,
+      position.value.width,
+      items.length,
+      separators.length,
     );
-
-    const _leftPosition = leftOrRight(menuProps);
 
     const menuScaleAnimation = () =>
       state.value === CONTEXT_MENU_STATE.ACTIVE
         ? withSpring(1, SPRING_CONFIGURATION_MENU)
         : withTiming(0, {
-            duration: HOLD_ITEM_TRANSFORM_DURATION,
+            duration: HOLD_ITEM_DURATION,
           });
 
     const opacityAnimation = () =>
       withTiming(state.value === CONTEXT_MENU_STATE.ACTIVE ? 1 : 0, {
-        duration: HOLD_ITEM_TRANSFORM_DURATION,
+        duration: HOLD_ITEM_DURATION,
       });
 
     return {
-      left: _leftPosition,
+      left: leftOrRight(menuPosition, position.value),
       height: withTiming(menuHeight.value, { duration: 150 }),
       opacity: opacityAnimation(),
       transform: [
         { translateX: translate.beginningTransformations.translateX },
-        { translateY: translate.beginningTransformations.translateY },
         {
           scale: menuScaleAnimation(),
         },
         { translateX: translate.endingTransformations.translateX },
-        { translateY: translate.endingTransformations.translateY },
       ],
     };
   });
@@ -88,7 +78,7 @@ export const HoldMenuList = memo(() => {
   const animatedInnerContainerStyle = useAnimatedStyle(() => {
     return {
       backgroundColor:
-        theme.value === "light"
+        theme === "light"
           ? IS_IOS
             ? "rgba(255, 255, 255, .75)"
             : "rgba(255, 255, 255, .95)"
@@ -98,7 +88,7 @@ export const HoldMenuList = memo(() => {
     };
   }, [theme]);
 
-  const setter = (items: HoldMenuItemProp[]) => {
+  const updateItems = (items: HoldMenuItemProp[]) => {
     const newItems = items.map(item =>
       item.isDestructive
         ? {
@@ -108,7 +98,6 @@ export const HoldMenuList = memo(() => {
 
               if (item.variants) {
                 setItemList(item.variants);
-                prevList.value = item.variants;
               }
             },
           }
@@ -116,21 +105,18 @@ export const HoldMenuList = memo(() => {
     );
 
     setItemList(newItems);
-    prevList.value = newItems;
   };
 
   useAnimatedReaction(
-    () => menuProps.value.items,
-    _items => {
-      if (!deepEqual(_items, prevList.value)) {
-        runOnJS(setter)(_items);
-      }
+    () => state.value,
+    () => {
+      runOnJS(updateItems)(items);
     },
-    [menuProps],
+    [state.value],
   );
 
   return (
-    <Animated.View style={[styles.menuContainer, messageStyles]}>
+    <Animated.View style={[styles.menuContainer, menuStyles]}>
       <Animated.View
         style={[
           StyleSheet.absoluteFillObject,
@@ -152,8 +138,6 @@ export const HoldMenuList = memo(() => {
 
 const styles = StyleSheet.create({
   menuContainer: {
-    position: "absolute",
-    top: 0,
     width: MENU_WIDTH,
     borderRadius: styleGuide.spacing * 1.5,
     display: "flex",
@@ -161,7 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     overflow: "hidden",
-    zIndex: 15,
+    zIndex: 10,
   },
   menuInnerContainer: {
     display: "flex",

@@ -22,245 +22,97 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { Backdrop } from "./backdrop";
-import { HoldItemContext } from "./HoldItemContext";
+import { HoldItemContext, IHoldItemContext } from "./HoldItemContext";
 import { HoldMenu } from "./holdMenu";
-import { HoldMenuContext } from "./holdMenu/types";
-import { useDeviceOrientation } from "./hooks";
+import { usePosition, useTransformContent } from "./hooks";
 import { IHoldItemValue } from "./types";
 import {
-  calculateMenuHeight,
-  getAnchorPosition,
-  TransformAnchorPosition,
-} from "./utils/calculations";
-import {
   CONTEXT_MENU_STATE,
-  HOLD_ITEM_TRANSFORM_DURATION,
-  IS_IOS,
+  HOLD_ITEM_DURATION,
   SPRING_CONFIGURATION,
-  WINDOW_HEIGHT,
-  WINDOW_WIDTH,
-} from "./utils/constants";
+  TMenuPosition,
+} from "./utils";
 
 export interface HoldItemProviderProps {
   theme?: "dark" | "light";
-  safeAreaInsets: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-
+  safeAreaInsets: { top: number; right: number; bottom: number; left: number };
+  menuPosition?: TMenuPosition;
   onOpen?: () => void;
   onClose?: () => void;
   disableMove?: boolean;
 }
 
-const menuPropsDefaultValue: HoldMenuContext = {
-  itemHeight: 0,
-  itemWidth: 0,
-  itemX: 0,
-  itemY: 0,
-  items: [],
-  data: undefined,
-  anchorPosition: "top-center",
-  menuHeight: 0,
-  transformValue: 0,
-};
-
 export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
   memo(
     ({
       children,
-      theme: selectedTheme,
-      safeAreaInsets = {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-      },
+      theme = "light",
+      safeAreaInsets,
+      menuPosition,
       onOpen,
       onClose,
       disableMove = false,
     }) => {
-      const deviceOrientation = useDeviceOrientation();
       const [value, setValue] = useState<IHoldItemValue<any> | null>(null);
       const state = useSharedValue<CONTEXT_MENU_STATE>(
         CONTEXT_MENU_STATE.PENDING,
       );
-
-      const transformMenu =
-        useSharedValue<TransformAnchorPosition>("top-right");
-      const transformContent = useSharedValue<number>(0);
-      const theme = useSharedValue<"light" | "dark">(selectedTheme || "light");
-      const menuProps = useSharedValue<HoldMenuContext>(menuPropsDefaultValue);
-
-      const menuHeight = useMemo(() => {
-        const items = value?.menuItems ?? [];
-        const itemsWithSeparator = items.filter(item => item.withSeparator);
-
-        return calculateMenuHeight(items.length, itemsWithSeparator.length);
-      }, [value?.menuItems]);
-
-      const measured = useMemo(() => {
-        const maxHeight =
-          WINDOW_HEIGHT -
-          (IS_IOS ? menuHeight : menuHeight * 2) -
-          safeAreaInsets.top -
-          safeAreaInsets.bottom;
-
-        return {
-          top: value ? value.measured.pageY : 0,
-          left: value ? value.measured.pageX : 0,
-          width: value ? value.measured.width : 0,
-          height: value
-            ? value.measured
-              ? value.measured.height > maxHeight
-                ? maxHeight
-                : value.measured.height
-              : 0
-            : 0,
-          maxHeight,
-        };
-      }, [menuHeight, safeAreaInsets.bottom, safeAreaInsets.top, value]);
-
-      useEffect(() => {
-        theme.value = selectedTheme || "light";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [selectedTheme]);
+      const menuHeight = useSharedValue<number>(0);
+      const position = usePosition(value?.measured, safeAreaInsets, menuHeight);
+      const transformContent = useTransformContent(
+        state,
+        position,
+        safeAreaInsets,
+        menuHeight,
+        disableMove,
+      );
 
       const handleClose = useCallback(() => {
+        if (onClose) {
+          onClose();
+        }
+
         if (value?.onClose) {
           value.onClose();
         }
-      }, [value]);
+      }, [onClose, value]);
 
       useAnimatedReaction(
         () => state.value,
         stateValue => {
-          switch (stateValue) {
-            case CONTEXT_MENU_STATE.ACTIVE: {
-              if (onOpen) {
-                runOnJS(onOpen)();
-              }
-              break;
-            }
-            case CONTEXT_MENU_STATE.END: {
-              if (onClose) {
-                runOnJS(onClose)();
-              }
-
-              runOnJS(handleClose)();
-              transformContent.value = 0;
-              menuProps.value = menuPropsDefaultValue;
-
-              break;
-            }
+          if (stateValue === CONTEXT_MENU_STATE.ACTIVE) {
+            onOpen && runOnJS(onOpen)();
+          }
+          if (stateValue === CONTEXT_MENU_STATE.END) {
+            runOnJS(handleClose)();
           }
         },
-        [state, handleClose, onOpen, onClose],
       );
 
       useEffect(() => {
         if (value) {
           state.value = CONTEXT_MENU_STATE.ACTIVE;
-          transformContent.value = calculateTransformValue();
-          transformMenu.value = getAnchorPosition(
-            measured.left,
-            measured.width,
-            deviceOrientation === "portrait" ? WINDOW_WIDTH : WINDOW_HEIGHT,
-          );
-
-          setTimeout(() => {
-            menuProps.value = {
-              itemHeight: measured.height,
-              itemWidth: measured.width,
-              itemY: measured.top,
-              itemX: measured.left,
-              anchorPosition: transformMenu.value,
-              menuHeight: menuHeight,
-              items: value.menuItems ?? [],
-              transformValue: transformContent.value,
-              data: value.data,
-            };
-          }, 50);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [value]);
 
-      const calculateTransformValue = useCallback(() => {
-        "worklet";
-        const height =
-          deviceOrientation === "portrait" ? WINDOW_HEIGHT : WINDOW_WIDTH;
-        const isTopMenu = transformMenu.value.includes("bottom");
-
-        let transformY = 0;
-
-        if (!disableMove && value) {
-          const topPosition = isTopMenu
-            ? value.measured.pageY - menuHeight
-            : value.measured.pageY;
-          const maxTopPosition = safeAreaInsets.top;
-
-          const bottomPosition = isTopMenu
-            ? measured.top + measured.height
-            : measured.top +
-              measured.height +
-              (IS_IOS ? menuHeight : menuHeight * 2);
-          const maxBottomPosition = height - safeAreaInsets.bottom;
-
-          if (
-            topPosition < maxTopPosition &&
-            bottomPosition > maxBottomPosition
-          ) {
-            transformY = isTopMenu
-              ? maxTopPosition - topPosition
-              : maxBottomPosition - bottomPosition;
-          } else if (topPosition < maxTopPosition) {
-            transformY = maxTopPosition - topPosition;
-            if (!isTopMenu && transformY + bottomPosition > maxBottomPosition) {
-              transformY = maxBottomPosition - bottomPosition;
-            }
-          } else if (bottomPosition > maxBottomPosition) {
-            transformY = maxBottomPosition - bottomPosition;
-            if (isTopMenu && topPosition + transformY < maxTopPosition) {
-              transformY = maxTopPosition - topPosition;
-            }
-          }
-        }
-
-        return transformY;
-      }, [
-        deviceOrientation,
-        disableMove,
-        measured.height,
-        measured.top,
-        menuHeight,
-        safeAreaInsets.bottom,
-        safeAreaInsets.top,
-        transformMenu.value,
-        value,
-      ]);
-
       const animatedPortalStyle = useAnimatedStyle(() => {
-        const opacity =
-          state.value === CONTEXT_MENU_STATE.ACTIVE
-            ? 1
-            : withDelay(
-                HOLD_ITEM_TRANSFORM_DURATION,
-                withTiming(0, { duration: 0 }),
-              );
-
-        const translateY = disableMove
-          ? 0
-          : state.value === CONTEXT_MENU_STATE.ACTIVE
-          ? withSpring(transformContent.value, SPRING_CONFIGURATION)
-          : withTiming(0, { duration: HOLD_ITEM_TRANSFORM_DURATION }, () => {
-              runOnJS(setValue)(null);
-            });
+        const isActive = state.value === CONTEXT_MENU_STATE.ACTIVE;
 
         return {
-          opacity,
-          transform: [{ translateY }],
+          ...position.value,
+          opacity: isActive
+            ? 1
+            : withDelay(HOLD_ITEM_DURATION, withTiming(0, { duration: 0 })),
+          transform: [
+            {
+              translateY: disableMove
+                ? 0
+                : isActive
+                ? withSpring(transformContent.value, SPRING_CONFIGURATION)
+                : withTiming(0, { duration: HOLD_ITEM_DURATION }),
+            },
+          ],
         };
       });
 
@@ -272,15 +124,16 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
         };
       });
 
-      const contextValue = useMemo(
+      const contextValue = useMemo<IHoldItemContext>(
         () => ({
           state,
           theme,
-          menuProps,
+          data: value?.data,
+          position,
           setValue,
           safeAreaInsets,
         }),
-        [state, theme, menuProps, safeAreaInsets],
+        [state, theme, value?.data, position, safeAreaInsets],
       );
 
       return (
@@ -291,14 +144,21 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
               <Backdrop />
               {value?.content && (
                 <Animated.ScrollView
-                  style={[styles.holdItem, animatedPortalStyle, measured]}
+                  style={[styles.holdItem, animatedPortalStyle]}
                   animatedProps={animatedPortalProps}
                 >
                   {value.content}
                 </Animated.ScrollView>
               )}
-
-              <HoldMenu />
+              <HoldMenu
+                data={value?.data}
+                transformContent={transformContent}
+                items={value?.menu}
+                menuPosition={menuPosition}
+                onLayout={event =>
+                  (menuHeight.value = event.nativeEvent.layout.height)
+                }
+              />
             </PortalProvider>
           </HoldItemContext.Provider>
         </GestureHandlerRootView>
@@ -307,16 +167,6 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
   );
 
 const styles = StyleSheet.create({
-  wrap: {
-    flex: 1,
-  },
-  holdItem: {
-    zIndex: 10,
-    position: "absolute",
-  },
-  menuWrapper: {
-    position: "absolute",
-    left: 0,
-    zIndex: 10,
-  },
+  wrap: { flex: 1 },
+  holdItem: { zIndex: 10, position: "absolute", borderRadius: 8 },
 });

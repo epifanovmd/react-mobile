@@ -9,7 +9,7 @@ function getWindowOrientation(): Orientation {
   return height >= width ? "portrait" : "landscape";
 }
 
-function useDeviceOrientation() {
+export const useDeviceOrientation = () => {
   const [deviceOrientation, setDeviceOrientation] = useState<Orientation>(
     getWindowOrientation(),
   );
@@ -24,6 +24,4 @@ function useDeviceOrientation() {
   }, []);
 
   return deviceOrientation;
-}
-
-export default useDeviceOrientation;
+};
