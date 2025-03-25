@@ -8,7 +8,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { LayoutChangeEvent, StyleSheet, ViewProps } from "react-native";
+import { StyleSheet, ViewProps } from "react-native";
+import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -111,6 +112,8 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
 
         return {
           ...position.value,
+          // backgroundColor: "red",
+          // width: "auto",
           opacity: isActive
             ? 1
             : withDelay(HOLD_ITEM_DURATION, withTiming(0, { duration: 0 })),
@@ -124,7 +127,7 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
             },
           ],
         };
-      }, [position]);
+      }, [disableMove]);
 
       const animatedPortalProps = useAnimatedProps<ViewProps>(() => {
         const isActive = state.value === CONTEXT_MENU_STATE.ACTIVE;
@@ -176,5 +179,5 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
 
 const styles = StyleSheet.create({
   wrap: { flex: 1 },
-  holdItem: { zIndex: 10, position: "absolute", borderRadius: 8 },
+  holdItem: { zIndex: 10, position: "absolute" },
 });

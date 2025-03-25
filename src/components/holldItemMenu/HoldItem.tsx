@@ -1,4 +1,4 @@
-import React, { memo, PropsWithChildren, useCallback, useMemo } from "react";
+import React, { memo, PropsWithChildren } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -77,61 +77,44 @@ const _HoldItem = <T extends any>({
     };
   });
 
-  const onActivate = useCallback(
-    (measured: MeasuredDimensions) => {
-      trigger(HapticFeedbackTypes.impactLight);
+  const onActivate = (measured: MeasuredDimensions) => {
+    trigger(HapticFeedbackTypes.impactLight);
 
-      setValue({
-        menu,
-        measured,
-        data,
-        content,
-        onClose: () => {
-          isActive.value = false;
-        },
-      });
-    },
-    [setValue, menu, data, content, isActive],
-  );
-
-  const gesture = useMemo(
-    () =>
-      Gesture.LongPress()
-        .minDuration(longPressMinDurationMs)
-        .enabled(!disabled)
-        .onBegin(() => {
-          measured.value = measure(containerRef);
-
-          itemScale.value = withTiming(HOLD_ITEM_SCALE_DOWN_VALUE, {
-            duration: HOLD_ITEM_SCALE_DOWN_DURATION,
-          });
-        })
-        .onStart(() => {
-          if (measured.value) {
-            runOnJS(onActivate)(measured.value);
-            isActive.value = true;
-          }
-        })
-        .onFinalize((_event, success) => {
-          if (closeOnDown && success) {
-            state.value = CONTEXT_MENU_STATE.END;
-          }
-          itemScale.value = withTiming(1, {
-            duration: HOLD_ITEM_DURATION / 2,
-          });
-        }),
-    [
-      closeOnDown,
-      containerRef,
-      disabled,
-      isActive,
-      itemScale,
-      longPressMinDurationMs,
+    setValue({
+      menu,
       measured,
-      onActivate,
-      state,
-    ],
-  );
+      data,
+      content,
+      onClose: () => {
+        isActive.value = false;
+      },
+    });
+  };
+
+  const gesture = Gesture.LongPress()
+    .minDuration(longPressMinDurationMs)
+    .enabled(!disabled)
+    .onBegin(() => {
+      measured.value = measure(containerRef);
+
+      itemScale.value = withTiming(HOLD_ITEM_SCALE_DOWN_VALUE, {
+        duration: HOLD_ITEM_SCALE_DOWN_DURATION,
+      });
+    })
+    .onStart(() => {
+      if (measured.value) {
+        runOnJS(onActivate)(measured.value);
+        isActive.value = true;
+      }
+    })
+    .onFinalize((_event, success) => {
+      if (closeOnDown && success) {
+        state.value = CONTEXT_MENU_STATE.END;
+      }
+      itemScale.value = withTiming(1, {
+        duration: HOLD_ITEM_DURATION / 2,
+      });
+    });
 
   return (
     <TouchableOpacity
