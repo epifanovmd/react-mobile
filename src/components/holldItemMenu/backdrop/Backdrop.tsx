@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useHoldItemContext } from "../hooks";
-import { CONTEXT_MENU_STATE, HOLD_ITEM_DURATION } from "../utils/constants";
+import { CONTEXT_MENU_STATE, HOLD_ITEM_DURATION } from "../utils";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 

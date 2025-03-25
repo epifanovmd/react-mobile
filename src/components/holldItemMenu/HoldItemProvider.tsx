@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { StyleSheet, ViewProps } from "react-native";
+import { LayoutChangeEvent, StyleSheet, ViewProps } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -20,6 +20,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { EdgeInsets } from "react-native-safe-area-context";
 
 import { Backdrop } from "./backdrop";
 import { HoldItemContext, IHoldItemContext } from "./HoldItemContext";
@@ -35,7 +36,7 @@ import {
 
 export interface HoldItemProviderProps {
   theme?: "dark" | "light";
-  safeAreaInsets: { top: number; right: number; bottom: number; left: number };
+  safeAreaInsets?: EdgeInsets;
   menuPosition?: TMenuPosition;
   onOpen?: () => void;
   onClose?: () => void;
@@ -47,7 +48,12 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
     ({
       children,
       theme = "light",
-      safeAreaInsets,
+      safeAreaInsets = {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
       menuPosition,
       onOpen,
       onClose,
@@ -76,6 +82,10 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
           value.onClose();
         }
       }, [onClose, value]);
+
+      const onChangeMenuHeight = (event: LayoutChangeEvent) => {
+        menuHeight.value = event.nativeEvent.layout.height;
+      };
 
       useAnimatedReaction(
         () => state.value,
@@ -114,7 +124,7 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
             },
           ],
         };
-      });
+      }, [position]);
 
       const animatedPortalProps = useAnimatedProps<ViewProps>(() => {
         const isActive = state.value === CONTEXT_MENU_STATE.ACTIVE;
@@ -155,9 +165,7 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
                 transformContent={transformContent}
                 items={value?.menu}
                 menuPosition={menuPosition}
-                onLayout={event =>
-                  (menuHeight.value = event.nativeEvent.layout.height)
-                }
+                onLayout={onChangeMenuHeight}
               />
             </PortalProvider>
           </HoldItemContext.Provider>
