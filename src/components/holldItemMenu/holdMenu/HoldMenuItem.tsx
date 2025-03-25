@@ -1,15 +1,20 @@
 import React, { memo } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import Animated from "react-native-reanimated";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import { useHoldItemContext } from "../hooks";
-import { CONTEXT_MENU_STATE, MENU_WIDTH, styleGuide } from "../utils";
-import { getMenuItemColor } from "./calculations";
-import { BORDER_DARK_COLOR, BORDER_LIGHT_COLOR } from "./constants";
+import {
+  BORDER_DARK_COLOR,
+  BORDER_LIGHT_COLOR,
+  CONTEXT_MENU_STATE,
+  MENU_TEXT_DARK_COLOR,
+  MENU_TEXT_DESTRUCTIVE_COLOR_DARK,
+  MENU_TEXT_DESTRUCTIVE_COLOR_LIGHT,
+  MENU_TEXT_LIGHT_COLOR,
+  MENU_TITLE_COLOR,
+  styleGuide,
+} from "../utils";
 import { Separator } from "./Separator";
 import { HoldMenuItemProp } from "./types";
-
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export interface HoldMenuItemProps {
   item: HoldMenuItemProp;
@@ -37,17 +42,25 @@ export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
   };
 
   const textColor = {
-    color: getMenuItemColor(item.isTitle, item.isDestructive, theme),
+    color: item.isTitle
+      ? MENU_TITLE_COLOR
+      : item.isDestructive
+      ? theme === "dark"
+        ? MENU_TEXT_DESTRUCTIVE_COLOR_DARK
+        : MENU_TEXT_DESTRUCTIVE_COLOR_LIGHT
+      : theme === "dark"
+      ? MENU_TEXT_DARK_COLOR
+      : MENU_TEXT_LIGHT_COLOR,
   };
 
   return (
     <>
-      <AnimatedTouchable
+      <TouchableOpacity
         onPress={handleOnPress}
         activeOpacity={!item.isTitle ? 0.4 : 1}
         style={[styles.menuItem, borderStyles]}
       >
-        <Animated.Text
+        <Text
           numberOfLines={1}
           style={[
             item.isTitle ? styles.menuItemTitleText : styles.menuItemText,
@@ -55,33 +68,16 @@ export const HoldMenuItem = memo(({ item, isLast }: HoldMenuItemProps) => {
           ]}
         >
           {item.text}
-        </Animated.Text>
+        </Text>
         {!item.isTitle && item.icon && item.icon()}
-      </AnimatedTouchable>
+      </TouchableOpacity>
       {item.withSeparator && <Separator />}
     </>
   );
 });
 
 const styles = StyleSheet.create({
-  menuContainer: {
-    position: "absolute",
-    top: 0,
-    width: MENU_WIDTH,
-    borderRadius: styleGuide.spacing * 1.5,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    overflow: "hidden",
-    zIndex: 15,
-  },
   menuItem: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     paddingHorizontal: styleGuide.spacing * 2,
     paddingVertical: styleGuide.spacing * 1.25,
   },
@@ -90,13 +86,10 @@ const styles = StyleSheet.create({
     lineHeight: styleGuide.typography.callout.lineHeight,
     textAlign: "left",
     width: "100%",
-    flex: 1,
   },
   menuItemTitleText: {
     fontSize: styleGuide.typography.callout2.fontSize,
     lineHeight: styleGuide.typography.callout2.lineHeight,
     textAlign: "center",
-    width: "100%",
-    flex: 1,
   },
 });

@@ -1,11 +1,16 @@
-import React, { memo } from "react";
-import { StyleSheet } from "react-native";
+import React, { memo, useCallback } from "react";
+import {
+  LayoutChangeEvent,
+  StyleSheet,
+  useWindowDimensions,
+  ViewStyle,
+} from "react-native";
 import Animated, {
   runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
-  withSpring,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
@@ -13,146 +18,124 @@ import { useHoldItemContext } from "../hooks";
 import {
   calculateMenuHeight,
   CONTEXT_MENU_STATE,
-  HOLD_ITEM_DURATION,
   IS_IOS,
-  MENU_WIDTH,
-  menuAnimationAnchor,
-  SPRING_CONFIGURATION_MENU,
   styleGuide,
-  TMenuPosition,
 } from "../utils";
-import { leftOrRight } from "./calculations";
 import { HoldMenuItem } from "./HoldMenuItem";
 import { HoldMenuItemProp } from "./types";
 
 export interface IHoldMenuListProps {
-  menuPosition: TMenuPosition;
   items: HoldMenuItemProp[];
 }
 
-export const HoldMenuList = memo<IHoldMenuListProps>(
-  ({ menuPosition, items }) => {
-    const { state, theme, position } = useHoldItemContext();
+export const HoldMenuList = memo<IHoldMenuListProps>(({ items }) => {
+  const { state, theme, position, duration } = useHoldItemContext();
+  const { width } = useWindowDimensions();
 
-    const [itemList, setItemList] = React.useState<HoldMenuItemProp[]>([]);
+  const [itemList, setItemList] = React.useState<HoldMenuItemProp[]>([]);
 
-    const menuHeight = useDerivedValue(() => {
-      const separators = items.filter(item => item.withSeparator);
+  const layoutX = useSharedValue(0);
+  const layoutWidth = useSharedValue(0);
 
-      return calculateMenuHeight(itemList.length, separators.length);
-    }, [items, itemList]);
+  const translateX = useDerivedValue(() => {
+    const calcLayout = position.value.left + layoutX.value + layoutWidth.value;
 
-    const menuStyles = useAnimatedStyle(() => {
-      const separators = items.filter(item => item.withSeparator);
+    if (calcLayout > width) {
+      return -(calcLayout - width + 8);
+    } else if (
+      layoutX.value < 0 &&
+      Math.abs(layoutX.value) > position.value.left
+    ) {
+      return Math.abs(position.value.left + layoutX.value) + 8;
+    }
 
-      const translate = menuAnimationAnchor(
-        menuPosition,
-        position.value.width,
-        items.length,
-        separators.length,
-      );
+    return 0;
+  });
 
-      const menuScaleAnimation = () =>
-        state.value === CONTEXT_MENU_STATE.ACTIVE
-          ? withSpring(1, SPRING_CONFIGURATION_MENU)
-          : withTiming(0, {
-              duration: HOLD_ITEM_DURATION,
-            });
+  const menuHeight = useDerivedValue(() => {
+    const separators = items.filter(item => item.withSeparator);
 
-      const opacityAnimation = () =>
-        withTiming(state.value === CONTEXT_MENU_STATE.ACTIVE ? 1 : 0, {
-          duration: HOLD_ITEM_DURATION,
-        });
+    return calculateMenuHeight(itemList.length, separators.length);
+  }, [items, itemList]);
 
-      return {
-        left: leftOrRight(menuPosition, position.value),
-        height: withTiming(menuHeight.value, { duration: 150 }),
-        opacity: opacityAnimation(),
-        transform: [
-          { translateX: translate.beginningTransformations.translateX },
-          {
-            scale: menuScaleAnimation(),
-          },
-          { translateX: translate.endingTransformations.translateX },
-        ],
-      };
-    });
-
-    const updateItems = (items: HoldMenuItemProp[]) => {
-      const newItems = items.map(item =>
-        item.isDestructive
-          ? {
-              ...item,
-              onPress: (data: any) => {
-                item.onPress?.(data);
-
-                if (item.variants) {
-                  setItemList(item.variants);
-                }
-              },
-            }
-          : item,
-      );
-
-      setItemList(newItems);
+  const menuStyles = useAnimatedStyle(() => {
+    return {
+      height: withTiming(menuHeight.value, { duration }),
+      opacity: withTiming(state.value === CONTEXT_MENU_STATE.ACTIVE ? 1 : 0, {
+        duration,
+      }),
+      transform: [{ translateX: translateX.value }],
     };
+  });
 
-    useAnimatedReaction(
-      () => state.value,
-      () => {
-        runOnJS(updateItems)(items);
-      },
-      [state.value],
+  const updateItems = (items: HoldMenuItemProp[]) => {
+    const newItems = items.map(item =>
+      item.isDestructive
+        ? {
+            ...item,
+            onPress: (data: any) => {
+              item.onPress?.(data);
+
+              if (item.variants) {
+                setItemList(item.variants);
+              }
+            },
+          }
+        : item,
     );
 
-    const animatedInnerContainerStyle = {
-      backgroundColor:
-        theme === "light"
-          ? IS_IOS
-            ? "rgba(255, 255, 255, .75)"
-            : "rgba(255, 255, 255, .95)"
-          : IS_IOS
-          ? "rgba(0,0,0,0.5)"
-          : "rgba(39, 39, 39, .8)",
-    };
+    setItemList(newItems);
+  };
 
-    return (
-      <Animated.View style={[styles.menuContainer, menuStyles]}>
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFillObject,
-            styles.menuInnerContainer,
-            animatedInnerContainerStyle,
-          ]}
-        >
-          {itemList.map((item: HoldMenuItemProp, index: number) => (
-            <HoldMenuItem
-              key={index}
-              item={item}
-              isLast={itemList.length === index + 1}
-            />
-          ))}
-        </Animated.View>
-      </Animated.View>
-    );
-  },
-);
+  useAnimatedReaction(
+    () => state.value,
+    () => {
+      runOnJS(updateItems)(items);
+    },
+    [state.value],
+  );
+
+  const style: ViewStyle = {
+    backgroundColor:
+      theme === "light"
+        ? IS_IOS
+          ? "rgba(255, 255, 255, .75)"
+          : "rgba(255, 255, 255, .95)"
+        : IS_IOS
+        ? "rgba(0,0,0,0.5)"
+        : "rgba(39, 39, 39, .8)",
+    minWidth: width * 0.4,
+    maxWidth: width * 0.7,
+  };
+
+  const onLayout = useCallback(
+    ({ nativeEvent: { layout } }: LayoutChangeEvent) => {
+      layoutX.value = layout.x;
+      layoutWidth.value = layout.width;
+    },
+    [layoutX, layoutWidth],
+  );
+
+  return (
+    <Animated.View
+      style={[styles.menuContainer, menuStyles, style]}
+      onLayout={onLayout}
+    >
+      {itemList.map((item: HoldMenuItemProp, index: number) => (
+        <HoldMenuItem
+          key={index}
+          item={item}
+          isLast={itemList.length === index + 1}
+        />
+      ))}
+    </Animated.View>
+  );
+});
 
 const styles = StyleSheet.create({
   menuContainer: {
-    width: MENU_WIDTH,
     borderRadius: styleGuide.spacing * 1.5,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
     overflow: "hidden",
     zIndex: 10,
-  },
-  menuInnerContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "center",
   },
 });

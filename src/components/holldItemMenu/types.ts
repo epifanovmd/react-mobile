@@ -8,6 +8,8 @@ export interface IHoldItemValue<T> {
   content: React.ReactNode;
   menu?: HoldMenuItemProp<T>[];
   measured: MeasuredDimensions;
+  targetPositions?: IHoldPosition;
+  duration?: number;
   onClose: () => void;
 }
 

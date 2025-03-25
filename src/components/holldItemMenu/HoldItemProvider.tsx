@@ -8,8 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { StyleSheet, ViewProps } from "react-native";
-import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
+import { LayoutChangeEvent, StyleSheet, ViewProps } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -26,7 +25,12 @@ import { EdgeInsets } from "react-native-safe-area-context";
 import { Backdrop } from "./backdrop";
 import { HoldItemContext, IHoldItemContext } from "./HoldItemContext";
 import { HoldMenu } from "./holdMenu";
-import { usePosition, useTransformContent } from "./hooks";
+import {
+  useDeviceOrientation,
+  usePosition,
+  useTransformContent,
+} from "./hooks";
+import { useProcessedMeasured } from "./hooks/useProcessedMeasured";
 import { IHoldItemValue } from "./types";
 import {
   CONTEXT_MENU_STATE,
@@ -42,6 +46,7 @@ export interface HoldItemProviderProps {
   onOpen?: () => void;
   onClose?: () => void;
   disableMove?: boolean;
+  duration?: number;
 }
 
 export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
@@ -59,13 +64,25 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
       onOpen,
       onClose,
       disableMove = false,
+      duration = HOLD_ITEM_DURATION,
     }) => {
+      const orientation = useDeviceOrientation();
       const [value, setValue] = useState<IHoldItemValue<any> | null>(null);
       const state = useSharedValue<CONTEXT_MENU_STATE>(
         CONTEXT_MENU_STATE.PENDING,
       );
       const menuHeight = useSharedValue<number>(0);
-      const position = usePosition(value?.measured, safeAreaInsets, menuHeight);
+      const processedPosition = useProcessedMeasured(
+        value?.measured,
+        menuHeight,
+        safeAreaInsets,
+      );
+      const position = usePosition(
+        state,
+        processedPosition,
+        duration,
+        value?.targetPositions,
+      );
       const transformContent = useTransformContent(
         state,
         position,
@@ -85,7 +102,9 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
       }, [onClose, value]);
 
       const onChangeMenuHeight = (event: LayoutChangeEvent) => {
-        menuHeight.value = event.nativeEvent.layout.height;
+        if (!value?.targetPositions) {
+          menuHeight.value = event.nativeEvent.layout.height;
+        }
       };
 
       useAnimatedReaction(
@@ -107,23 +126,26 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [value]);
 
+      useEffect(() => {
+        state.value = CONTEXT_MENU_STATE.END;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [orientation]);
+
       const animatedPortalStyle = useAnimatedStyle(() => {
         const isActive = state.value === CONTEXT_MENU_STATE.ACTIVE;
 
         return {
           ...position.value,
-          // backgroundColor: "red",
-          // width: "auto",
           opacity: isActive
             ? 1
-            : withDelay(HOLD_ITEM_DURATION, withTiming(0, { duration: 0 })),
+            : withDelay(duration, withTiming(0, { duration: 0 })),
           transform: [
             {
               translateY: disableMove
                 ? 0
                 : isActive
                 ? withSpring(transformContent.value, SPRING_CONFIGURATION)
-                : withTiming(0, { duration: HOLD_ITEM_DURATION }),
+                : withTiming(0, { duration }),
             },
           ],
         };
@@ -145,8 +167,17 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
           position,
           setValue,
           safeAreaInsets,
+          duration: value?.duration ?? duration,
         }),
-        [state, theme, value?.data, position, safeAreaInsets],
+        [
+          state,
+          theme,
+          value?.data,
+          position,
+          safeAreaInsets,
+          value?.duration,
+          duration,
+        ],
       );
 
       return (
@@ -155,21 +186,22 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
             <PortalProvider>
               {children}
               <Backdrop />
-              {value?.content && (
-                <Animated.ScrollView
-                  style={[styles.holdItem, animatedPortalStyle]}
-                  animatedProps={animatedPortalProps}
-                >
-                  {value.content}
-                </Animated.ScrollView>
+              <Animated.ScrollView
+                style={[styles.holdItem, animatedPortalStyle]}
+                animatedProps={animatedPortalProps}
+                bounces={false}
+                contentContainerStyle={styles.content}
+              >
+                {value?.content}
+              </Animated.ScrollView>
+              {value?.menu && (
+                <HoldMenu
+                  items={value.menu}
+                  transformContent={transformContent}
+                  menuPosition={menuPosition}
+                  onLayout={onChangeMenuHeight}
+                />
               )}
-              <HoldMenu
-                data={value?.data}
-                transformContent={transformContent}
-                items={value?.menu}
-                menuPosition={menuPosition}
-                onLayout={onChangeMenuHeight}
-              />
             </PortalProvider>
           </HoldItemContext.Provider>
         </GestureHandlerRootView>
@@ -179,5 +211,13 @@ export const HoldItemProvider: FC<PropsWithChildren<HoldItemProviderProps>> =
 
 const styles = StyleSheet.create({
   wrap: { flex: 1 },
-  holdItem: { zIndex: 10, position: "absolute" },
+  holdItem: {
+    flex: 1,
+    zIndex: 10,
+    position: "absolute",
+    borderRadius: 8,
+  },
+  content: {
+    flexGrow: 1,
+  },
 });

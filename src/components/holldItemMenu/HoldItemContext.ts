@@ -10,6 +10,7 @@ export interface IHoldItemContext<T = any> {
   setValue: (menu: IHoldItemValue<T>) => void;
   position: SharedValue<IHoldPosition>;
   data?: T;
+  duration: number;
   safeAreaInsets: {
     top: number;
     right: number;
@@ -18,11 +19,6 @@ export interface IHoldItemContext<T = any> {
   };
 }
 
-export const HoldItemContext = createContext<IHoldItemContext>({
-  safeAreaInsets: {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-} as IHoldItemContext);
+export const HoldItemContext = createContext<IHoldItemContext>(
+  undefined as unknown as IHoldItemContext,
+);

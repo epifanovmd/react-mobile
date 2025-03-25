@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { StyleSheet, ViewProps } from "react-native";
+import { StyleSheet, ViewProps, ViewStyle } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -10,33 +10,31 @@ import Animated, {
 import { useHoldItemContext } from "../hooks";
 import {
   CONTEXT_MENU_STATE,
-  HOLD_ITEM_DURATION,
   SPRING_CONFIGURATION,
   TMenuPosition,
 } from "../utils";
 import { HoldMenuList } from "./HoldMenuList";
 import { HoldMenuItemProp } from "./types";
 
-export interface IHoldMenuItemProps<T = any> extends ViewProps {
-  data?: T;
-  transformContent: SharedValue<number>;
+export interface IHoldMenuItemProps extends ViewProps {
+  items: HoldMenuItemProp[];
   menuPosition?: TMenuPosition;
-  items?: HoldMenuItemProp[];
+  transformContent: SharedValue<number>;
 }
 
 export const HoldMenu = memo<IHoldMenuItemProps>(
-  ({ transformContent, menuPosition = "center", items = [], ...props }) => {
-    const { state, position } = useHoldItemContext();
+  ({ items, menuPosition = "center", transformContent, ...props }) => {
+    const { state, position, duration } = useHoldItemContext();
 
     const wrapperStyles = useAnimatedStyle(() => {
       const isActive = state.value === CONTEXT_MENU_STATE.ACTIVE;
       const { top, left, width, height } = position.value;
       const translateY = isActive
         ? withSpring(transformContent.value, SPRING_CONFIGURATION)
-        : withTiming(0, { duration: HOLD_ITEM_DURATION });
+        : withTiming(0, { duration });
 
       const activeTiming = withTiming(isActive ? 1 : 0, {
-        duration: HOLD_ITEM_DURATION,
+        duration,
       });
 
       return {
@@ -55,21 +53,32 @@ export const HoldMenu = memo<IHoldMenuItemProps>(
       };
     });
 
+    const positionStyle: ViewStyle = {
+      justifyContent:
+        menuPosition === "left"
+          ? "flex-start"
+          : menuPosition === "right"
+          ? "flex-end"
+          : "center",
+    };
+
     return (
       <Animated.View
         {...props}
-        style={[styles.menuWrapper, wrapperStyles, props.style]}
+        style={[ss.wrap, wrapperStyles, positionStyle, props.style]}
       >
-        <HoldMenuList items={items} menuPosition={menuPosition} />
+        <HoldMenuList items={items} />
       </Animated.View>
     );
   },
 );
 
-const styles = StyleSheet.create({
-  menuWrapper: {
+const ss = StyleSheet.create({
+  wrap: {
     position: "absolute",
     zIndex: 10,
     minHeight: 1,
+    display: "flex",
+    flexDirection: "row",
   },
 });

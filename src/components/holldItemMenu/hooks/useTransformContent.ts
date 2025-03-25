@@ -1,13 +1,9 @@
+import { useWindowDimensions } from "react-native";
 import { SharedValue, useDerivedValue } from "react-native-reanimated";
 import { EdgeInsets } from "react-native-safe-area-context";
 
 import { IHoldPosition } from "../types";
-import {
-  CONTEXT_MENU_STATE,
-  IS_IOS,
-  WINDOW_HEIGHT,
-  WINDOW_WIDTH,
-} from "../utils";
+import { CONTEXT_MENU_STATE, IS_IOS } from "../utils";
 import { useDeviceOrientation } from "./useDeviceOrientation";
 
 export const useTransformContent = (
@@ -18,6 +14,7 @@ export const useTransformContent = (
   disableMove: boolean,
 ) => {
   const deviceOrientation = useDeviceOrientation();
+  const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = useWindowDimensions();
 
   return useDerivedValue(() => {
     if (state.value !== CONTEXT_MENU_STATE.ACTIVE) return 0;
@@ -43,5 +40,5 @@ export const useTransformContent = (
     }
 
     return transformY;
-  });
+  }, [safeAreaInsets, disableMove, WINDOW_HEIGHT, WINDOW_WIDTH]);
 };

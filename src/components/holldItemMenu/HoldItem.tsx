@@ -22,6 +22,7 @@ import Animated, {
 
 import { HoldMenuItemProp } from "./holdMenu";
 import { useHoldItemContext } from "./hooks";
+import { IHoldPosition } from "./types";
 import {
   CONTEXT_MENU_STATE,
   HOLD_ITEM_DURATION,
@@ -39,6 +40,9 @@ export interface HoldItemProps<T = unknown> extends TouchableOpacityProps {
   disablePresAnimation?: boolean;
   closeOnDown?: boolean;
   content?: React.ReactNode;
+  targetPositions?: IHoldPosition;
+  animationDuration?: number;
+  scaleDuration?: number;
 }
 
 const _HoldItem = <T extends any>({
@@ -46,32 +50,36 @@ const _HoldItem = <T extends any>({
   menu,
   style,
   disabled,
-  longPressMinDurationMs = 150,
+  longPressMinDurationMs = HOLD_ITEM_SCALE_DOWN_DURATION,
   disablePresAnimation,
   closeOnDown,
   children,
   content = children,
+  targetPositions,
+  animationDuration,
+  scaleDuration = HOLD_ITEM_SCALE_DOWN_DURATION,
   ...rest
 }: PropsWithChildren<HoldItemProps<T>>) => {
-  const { state, setValue } = useHoldItemContext();
+  const { state, setValue, duration: _duration } = useHoldItemContext();
 
   const isActive = useSharedValue<boolean>(false);
   const itemScale = useSharedValue<number>(1);
   const measured = useSharedValue<MeasuredDimensions | null>(null);
 
   const containerRef = useAnimatedRef<Animated.View>();
+  const duration = animationDuration ?? _duration;
 
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
       flexShrink: 1,
       opacity: isActive.value
         ? 0
-        : withDelay(HOLD_ITEM_DURATION - 50, withTiming(1, { duration: 0 })),
+        : withDelay(duration - 100, withTiming(1, { duration: 0 })),
       transform: [
         {
-          scale: isActive.value
-            ? withTiming(1, { duration: HOLD_ITEM_DURATION })
-            : itemScale.value,
+          scale: withTiming(itemScale.value, {
+            duration: scaleDuration,
+          }),
         },
       ],
     };
@@ -85,6 +93,8 @@ const _HoldItem = <T extends any>({
       measured,
       data,
       content,
+      targetPositions,
+      duration,
       onClose: () => {
         isActive.value = false;
       },
@@ -96,14 +106,12 @@ const _HoldItem = <T extends any>({
     .enabled(!disabled)
     .onBegin(() => {
       measured.value = measure(containerRef);
-
-      itemScale.value = withTiming(HOLD_ITEM_SCALE_DOWN_VALUE, {
-        duration: HOLD_ITEM_SCALE_DOWN_DURATION,
-      });
+      itemScale.value = HOLD_ITEM_SCALE_DOWN_VALUE;
     })
     .onStart(() => {
       if (measured.value) {
         runOnJS(onActivate)(measured.value);
+        itemScale.value = 1;
         isActive.value = true;
       }
     })
@@ -111,9 +119,7 @@ const _HoldItem = <T extends any>({
       if (closeOnDown && success) {
         state.value = CONTEXT_MENU_STATE.END;
       }
-      itemScale.value = withTiming(1, {
-        duration: HOLD_ITEM_DURATION / 2,
-      });
+      itemScale.value = 1;
     });
 
   return (
