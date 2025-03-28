@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import { LayoutChangeEvent } from "react-native/Libraries/Types/CoreEventTypes";
 
-import { RenderConditional } from "../renderer";
 import AnimatedProps = Animated.AnimatedProps;
 
 export interface CollapsableProps extends ViewProps {
@@ -253,7 +252,7 @@ export const Collapsable = memo(
           }
           {...rest}
         >
-          <RenderConditional if={!!collapsedContent}>
+          {!!collapsedContent && (
             <Animated.View
               ref={insteadRef}
               onLayout={onLayoutInsteadOf}
@@ -261,7 +260,8 @@ export const Collapsable = memo(
             >
               {collapsedContent}
             </Animated.View>
-          </RenderConditional>
+          )}
+
           <Animated.View ref={contentRef} style={contentStyle}>
             {children}
           </Animated.View>

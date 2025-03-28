@@ -24,11 +24,11 @@ import { ModalBackdrop } from "./ModalBackdrop";
 import { BottomSheetModalProps } from "./types";
 
 export type IModalProps<T = any> = BottomSheetModalProps<T>;
-
+export type ModalRef<T = any> = BottomSheetModal<T>;
 export interface IModal {
   <T>(
     props: IModalProps<T> & {
-      ref?: React.ForwardedRef<BottomSheetModal<T>>;
+      ref?: React.ForwardedRef<ModalRef<T>>;
     },
   ): ReturnType<typeof BottomSheetModal<T>>;
 

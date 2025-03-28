@@ -13,10 +13,10 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 
-import { Modal } from "./Modal";
+import { Modal, ModalRef } from "./Modal";
 
 export const useModalRef = () => {
-  return useRef<Modal>(null);
+  return useRef<ModalRef>(null);
 };
 
 export {
