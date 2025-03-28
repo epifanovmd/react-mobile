@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import {
   SafeAreaView,
+  StyleProp,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -35,11 +36,10 @@ export interface NotificationActions {
 }
 
 export interface NotificationProps extends NotificationToastOptions {
+  containerStyle?: StyleProp<ViewStyle>;
   renderType?: {
     [type: string]: (toast: NotificationToastProps) => React.JSX.Element;
   };
-  offset?: number;
-  offsetTop?: number;
   swipeEnabled?: boolean;
   safeArea?: boolean;
 
@@ -48,12 +48,7 @@ export interface NotificationProps extends NotificationToastOptions {
 
 export const Notification = memo(
   forwardRef<NotificationActions, NotificationProps>((props, ref) => {
-    const {
-      offset = 0,
-      offsetTop,
-      swipeEnabled = true,
-      safeArea = false,
-    } = props;
+    const { swipeEnabled = true, safeArea = false, containerStyle } = props;
     const toastRef = useRef<NotificationToastRef | null>(null);
     const [toast, setToast] = useState<NotificationToastProps | null>(null);
     const { width } = useWindowDimensions();
@@ -124,32 +119,14 @@ export const Notification = memo(
       [safeArea],
     );
 
-    const style: ViewStyle = useMemo(
-      () => ({
-        top: offsetTop || offset,
-        width: width,
-        justifyContent: "flex-start",
-        flexDirection: "column-reverse",
-      }),
-      [offset, offsetTop, width],
-    );
-
-    const notificationStyle = useCallback(
-      (t: NotificationToastProps) => [
-        t.style,
-        safeArea ? undefined : { paddingTop: top },
-      ],
-      [safeArea, top],
-    );
-
     return (
-      <View style={[styles.container, style]}>
+      <View style={[styles.container, { width }, containerStyle]}>
         <SafeAreOrView>
           {!!toast && (
             <NotificationToast
               ref={toastRef}
               {...toast}
-              style={notificationStyle(toast)}
+              style={[toast.style, safeArea ? undefined : { paddingTop: top }]}
             />
           )}
         </SafeAreOrView>
@@ -166,8 +143,7 @@ const styles = StyleSheet.create({
     zIndex: 999999,
     elevation: 999999,
     alignSelf: "center",
-  },
-  message: {
-    color: "#333",
+    justifyContent: "flex-start",
+    flexDirection: "column-reverse",
   },
 });

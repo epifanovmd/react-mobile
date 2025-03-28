@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  memo,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import React, { forwardRef, memo, useEffect, useImperativeHandle } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -20,7 +14,6 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
@@ -40,6 +33,7 @@ export interface NotificationToastOptions {
   normalColor?: string;
   data?: any;
   swipeEnabled?: boolean;
+  closeOnPres?: boolean;
   onPress?: () => void;
   onClose?: () => void;
 }
@@ -55,6 +49,21 @@ export interface NotificationToastProps extends NotificationToastOptions {
 }
 
 export type NotificationToastRef = { hide: () => Promise<void> };
+
+let timerId: any = null;
+
+const startTimer = (func: () => void, duration: number) => {
+  timerId = setInterval(() => {
+    func();
+  }, duration);
+};
+
+const clearTimer = () => {
+  if (timerId) {
+    clearTimeout(timerId);
+    timerId = null;
+  }
+};
 
 export const NotificationToast = memo(
   forwardRef<unknown, NotificationToastProps>((props, ref) => {
@@ -76,6 +85,7 @@ export const NotificationToast = memo(
       warningColor,
       normalColor,
       swipeEnabled = true,
+      closeOnPres = true,
       onPress,
       renderToast,
       renderType,
@@ -84,31 +94,24 @@ export const NotificationToast = memo(
     const opacity = useSharedValue(0);
     const translateY = useSharedValue(-20);
     const { height } = useWindowDimensions();
-    const closeTimeoutRef = useRef<any>(null);
 
     useEffect(() => {
       opacity.value = withTiming(1, { duration: animationDuration });
       translateY.value = withTiming(0, { duration: animationDuration });
 
       if (duration !== 0) {
-        closeTimeoutRef.current = setTimeout(() => {
-          runOnJS(handleClose)();
-        }, duration);
+        startTimer(handleClose, duration);
       }
 
       return () => {
-        if (closeTimeoutRef.current) {
-          clearTimeout(closeTimeoutRef.current);
-        }
+        clearTimer();
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
 
     const handleClose = () => {
       return new Promise<void>(resolve => {
-        if (closeTimeoutRef.current) {
-          clearTimeout(closeTimeoutRef.current);
-        }
+        clearTimer();
         onClose?.();
         opacity.value = withTiming(0, { duration: animationDuration });
         translateY.value = withTiming(
@@ -122,12 +125,19 @@ export const NotificationToast = memo(
       });
     };
 
-    useImperativeHandle(ref, () => ({
-      hide: handleClose,
-    }));
+    const handlePress = () => {
+      if (closeOnPres) {
+        handleClose().then();
+      } else {
+        onClose?.();
+      }
+    };
 
     const panGesture = Gesture.Pan()
       .enabled(swipeEnabled)
+      .onBegin(() => {
+        runOnJS(clearTimer)();
+      })
       .onUpdate(event => {
         if (event.translationY < 0) {
           translateY.value = event.translationY;
@@ -144,7 +154,9 @@ export const NotificationToast = memo(
             },
           );
         } else {
-          translateY.value = withSpring(0);
+          translateY.value = withTiming(0);
+
+          runOnJS(startTimer)(handleClose, duration);
         }
       });
 
@@ -183,6 +195,10 @@ export const NotificationToast = memo(
         break;
     }
 
+    useImperativeHandle(ref, () => ({
+      hide: handleClose,
+    }));
+
     return (
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.container, animatedStyle]}>
@@ -191,7 +207,10 @@ export const NotificationToast = memo(
           ) : renderToast ? (
             renderToast(props)
           ) : (
-            <TouchableWithoutFeedback disabled={!onPress} onPress={onPress}>
+            <TouchableWithoutFeedback
+              disabled={!onPress && !closeOnPres}
+              onPress={handlePress}
+            >
               <View style={[styles.toastContainer, { backgroundColor }, style]}>
                 {icon ? <View style={styles.iconContainer}>{icon}</View> : null}
                 {React.isValidElement(message) ? (
@@ -209,7 +228,7 @@ export const NotificationToast = memo(
 );
 
 const styles = StyleSheet.create({
-  container: { width: "100%", alignItems: "center" },
+  container: { flex: 1 },
   toastContainer: {
     paddingHorizontal: 12,
     paddingVertical: 12,
