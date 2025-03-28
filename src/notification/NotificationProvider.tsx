@@ -12,7 +12,7 @@ type PropsWithChildren = NotificationProps & {
 };
 
 export const NotificationContext = React.createContext(
-  {} as NotificationActions,
+  undefined as unknown as NotificationActions,
 );
 
 export const NotificationProvider: FC<PropsWithChildren> = memo(

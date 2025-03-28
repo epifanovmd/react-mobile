@@ -7,5 +7,4 @@ export * from "./holldItemMenu";
 export * from "./imageViewing";
 export * from "./modal";
 export * from "./picker";
-export * from "./renderer";
 export * from "./safeArea";
