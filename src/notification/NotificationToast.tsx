@@ -126,6 +126,7 @@ export const NotificationToast = memo(
     };
 
     const handlePress = () => {
+      onPress?.();
       if (closeOnPres) {
         handleClose().then();
       } else {
