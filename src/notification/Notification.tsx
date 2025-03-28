@@ -126,7 +126,7 @@ export const Notification = memo(
             <NotificationToast
               ref={toastRef}
               {...toast}
-              style={[toast.style, safeArea ? undefined : { paddingTop: top }]}
+              style={[safeArea ? undefined : { paddingTop: top }, toast.style]}
             />
           )}
         </SafeAreOrView>
