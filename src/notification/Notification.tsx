@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  memo,
   useCallback,
   useMemo,
   useRef,
@@ -45,8 +46,8 @@ export interface NotificationProps extends NotificationToastOptions {
   renderToast?(toast: NotificationToastProps): React.JSX.Element;
 }
 
-export const Notification = forwardRef<NotificationActions, NotificationProps>(
-  (props, ref) => {
+export const Notification = memo(
+  forwardRef<NotificationActions, NotificationProps>((props, ref) => {
     const {
       offset = 0,
       offsetTop,
@@ -154,7 +155,7 @@ export const Notification = forwardRef<NotificationActions, NotificationProps>(
         </SafeAreOrView>
       </View>
     );
-  },
+  }),
 );
 
 const styles = StyleSheet.create({

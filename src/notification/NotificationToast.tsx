@@ -1,17 +1,11 @@
 import React, {
   forwardRef,
   memo,
-  useCallback,
   useEffect,
-  useMemo,
+  useImperativeHandle,
   useRef,
-  useState,
 } from "react";
 import {
-  Animated,
-  PanResponder,
-  PanResponderGestureState,
-  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -21,6 +15,14 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 
 export interface NotificationToastOptions {
   icon?: React.JSX.Element;
@@ -29,7 +31,6 @@ export interface NotificationToastOptions {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   animationDuration?: number;
-  animationType?: "slide-in" | "zoom-in";
   successIcon?: React.JSX.Element;
   dangerIcon?: React.JSX.Element;
   warningIcon?: React.JSX.Element;
@@ -39,7 +40,6 @@ export interface NotificationToastOptions {
   normalColor?: string;
   data?: any;
   swipeEnabled?: boolean;
-
   onPress?: () => void;
   onClose?: () => void;
 }
@@ -49,7 +49,6 @@ export interface NotificationToastProps extends NotificationToastOptions {
   renderType?: {
     [type: string]: (toast: NotificationToastProps) => React.JSX.Element;
   };
-
   onDestroy: () => void;
   renderToast?: (toast: NotificationToastProps) => React.JSX.Element;
   hide: () => void;
@@ -58,18 +57,17 @@ export interface NotificationToastProps extends NotificationToastOptions {
 export type NotificationToastRef = { hide: () => Promise<void> };
 
 export const NotificationToast = memo(
-  forwardRef<NotificationToastRef, NotificationToastProps>((props, ref) => {
+  forwardRef<unknown, NotificationToastProps>((props, ref) => {
     const {
       onDestroy,
       onClose,
-      icon: _icon,
+      icon,
       type = "normal",
       message,
       duration = 5000,
       style,
       textStyle,
       animationDuration = 250,
-      animationType = "slide-in",
       successIcon,
       dangerIcon,
       warningIcon,
@@ -77,120 +75,97 @@ export const NotificationToast = memo(
       dangerColor,
       warningColor,
       normalColor,
-      swipeEnabled,
+      swipeEnabled = true,
       onPress,
       renderToast,
       renderType,
     } = props;
 
-    let icon = _icon;
-
-    const containerRef = useRef<View>(null);
-
-    const [animation] = useState(new Animated.Value(0));
-    const [panResponderAnimation] = useState<Animated.ValueXY>(
-      new Animated.ValueXY({ x: 0, y: 0 }),
-    );
-    const closeTimeoutRef = useRef<any>(null);
+    const opacity = useSharedValue(0);
+    const translateY = useSharedValue(-20);
     const { height } = useWindowDimensions();
+    const closeTimeoutRef = useRef<any>(null);
 
     useEffect(() => {
-      Animated.timing(animation, {
-        toValue: 1,
-        useNativeDriver: Platform.OS !== "web",
-        duration: animationDuration,
-      }).start();
+      opacity.value = withTiming(1, { duration: animationDuration });
+      translateY.value = withTiming(0, { duration: animationDuration });
+
       if (duration !== 0) {
         closeTimeoutRef.current = setTimeout(() => {
-          handleClose().then();
+          runOnJS(handleClose)();
         }, duration);
       }
 
       return () => {
-        closeTimeoutRef.current && clearTimeout(closeTimeoutRef.current);
+        if (closeTimeoutRef.current) {
+          clearTimeout(closeTimeoutRef.current);
+        }
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [duration]);
+    }, [props]);
 
-    const handleClose = useCallback(() => {
+    const handleClose = () => {
       return new Promise<void>(resolve => {
-        closeTimeoutRef.current && clearTimeout(closeTimeoutRef.current);
+        if (closeTimeoutRef.current) {
+          clearTimeout(closeTimeoutRef.current);
+        }
         onClose?.();
-
-        Animated.timing(animation, {
-          toValue: 0,
-          useNativeDriver: true,
-          duration: animationDuration,
-        }).start(() => {
-          onDestroy();
-          resolve();
-        });
+        opacity.value = withTiming(0, { duration: animationDuration });
+        translateY.value = withTiming(
+          -20,
+          { duration: animationDuration },
+          () => {
+            runOnJS(onDestroy)();
+            runOnJS(resolve)();
+          },
+        );
       });
-    }, [animation, animationDuration, onClose, onDestroy]);
+    };
 
-    const panReleaseToTop = useCallback(
-      (gestureState: PanResponderGestureState) => {
-        onClose?.();
+    useImperativeHandle(ref, () => ({
+      hide: handleClose,
+    }));
 
-        Animated.timing(panResponderAnimation, {
-          toValue: { x: gestureState.dx, y: (-height / 10) * 9 },
-          useNativeDriver: true,
-          duration: 250,
-        }).start(() => onDestroy());
-      },
-      [onClose, panResponderAnimation, height, onDestroy],
-    );
-
-    const getPanResponder = useMemo(() => {
-      const swipeThreshold = Platform.OS === "android" ? 10 : 0;
-
-      return PanResponder.create({
-        onMoveShouldSetPanResponder: (_, gestureState) => {
-          return (
-            Math.abs(gestureState.dx) > swipeThreshold ||
-            Math.abs(gestureState.dy) > swipeThreshold
+    const panGesture = Gesture.Pan()
+      .enabled(swipeEnabled)
+      .onUpdate(event => {
+        if (event.translationY < 0) {
+          translateY.value = event.translationY;
+        }
+      })
+      .onEnd(event => {
+        if (event.translationY < -30) {
+          opacity.value = withTiming(0, { duration: animationDuration });
+          translateY.value = withTiming(
+            -height,
+            { duration: animationDuration },
+            () => {
+              runOnJS(onDestroy)();
+            },
           );
-        },
-        onPanResponderMove: (_, gestureState) => {
-          panResponderAnimation.setValue({
-            x: gestureState.dx,
-            y: gestureState.dy > 0 ? 0 : gestureState.dy,
-          });
-        },
-        onPanResponderRelease: (_, gestureState) => {
-          if (gestureState.dy < -30) {
-            panReleaseToTop(gestureState);
-          } else {
-            Animated.spring(panResponderAnimation, {
-              toValue: { x: 0, y: 0 },
-              useNativeDriver: Platform.OS !== "web",
-            }).start();
-          }
-        },
+        } else {
+          translateY.value = withSpring(0);
+        }
       });
-    }, [panResponderAnimation, panReleaseToTop]);
 
-    if (icon === undefined) {
+    const animatedStyle = useAnimatedStyle(() => ({
+      opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
+    }));
+
+    let selectedIcon = icon;
+
+    if (!selectedIcon) {
       switch (type) {
-        case "success": {
-          if (successIcon) {
-            icon = successIcon;
-          }
+        case "success":
+          selectedIcon = successIcon;
           break;
-        }
-
-        case "danger": {
-          if (dangerIcon) {
-            icon = dangerIcon;
-          }
+        case "danger":
+          selectedIcon = dangerIcon;
           break;
-        }
-        case "warning": {
-          if (warningIcon) {
-            icon = warningIcon;
-          }
+        case "warning":
+          selectedIcon = warningIcon;
           break;
-        }
       }
     }
 
@@ -206,64 +181,29 @@ export const NotificationToast = memo(
       case "warning":
         backgroundColor = warningColor || "rgb(237, 108, 2)";
         break;
-      default:
-        break;
     }
 
-    const animationStyle: Animated.WithAnimatedObject<ViewStyle> = useMemo(
-      () => ({
-        opacity: animation,
-        transform: [
-          ...(swipeEnabled
-            ? [panResponderAnimation.getTranslateTransform()[1]]
-            : []),
-          ...(animationType === "zoom-in"
-            ? [
-                {
-                  scale: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.7, 1],
-                  }),
-                },
-              ]
-            : []),
-          {
-            translateY: animation.interpolate({
-              inputRange: [0, 1],
-              outputRange: [-20, 0],
-            }),
-          },
-        ],
-      }),
-      [animation, animationType, panResponderAnimation, swipeEnabled],
-    );
-
-    React.useImperativeHandle(ref, () => ({ hide: handleClose }));
-
     return (
-      <Animated.View
-        pointerEvents={"box-none"}
-        ref={containerRef}
-        {...(swipeEnabled ? getPanResponder.panHandlers : null)}
-        style={[styles.container, animationStyle]}
-      >
-        {renderType && renderType[type] ? (
-          renderType[type](props)
-        ) : renderToast ? (
-          renderToast(props)
-        ) : (
-          <TouchableWithoutFeedback disabled={!onPress} onPress={onPress}>
-            <View style={[styles.toastContainer, { backgroundColor }, style]}>
-              {icon ? <View style={styles.iconContainer}>{icon}</View> : null}
-              {React.isValidElement(message) ? (
-                message
-              ) : (
-                <Text style={[styles.message, textStyle]}>{message}</Text>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
-        )}
-      </Animated.View>
+      <GestureDetector gesture={panGesture}>
+        <Animated.View style={[styles.container, animatedStyle]}>
+          {renderType?.[type] ? (
+            renderType[type](props)
+          ) : renderToast ? (
+            renderToast(props)
+          ) : (
+            <TouchableWithoutFeedback disabled={!onPress} onPress={onPress}>
+              <View style={[styles.toastContainer, { backgroundColor }, style]}>
+                {icon ? <View style={styles.iconContainer}>{icon}</View> : null}
+                {React.isValidElement(message) ? (
+                  message
+                ) : (
+                  <Text style={[styles.message, textStyle]}>{message}</Text>
+                )}
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+        </Animated.View>
+      </GestureDetector>
     );
   }),
 );
