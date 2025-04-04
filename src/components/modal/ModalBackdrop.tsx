@@ -1,4 +1,3 @@
-import { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { memo, useMemo } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -7,11 +6,27 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { useBottomSheetGestureHandlers, useBottomSheetInternal } from "./hooks";
+import {
+  useBottomSheet,
+  useBottomSheetGestureHandlers,
+  useBottomSheetInternal,
+} from "./hooks";
+import { BottomSheetBackdropProps } from "./types";
+
+export interface IModalBackdrop extends BottomSheetBackdropProps {
+  enableTapToClose?: boolean;
+  enablePanToClose?: boolean;
+}
 
 export const ModalBackdrop = memo(
-  ({ animatedIndex, style }: BottomSheetBackdropProps) => {
+  ({
+    animatedIndex,
+    style,
+    enableTapToClose = true,
+    enablePanToClose = true,
+  }: IModalBackdrop) => {
     const { handlePanGestureHandler } = useBottomSheetGestureHandlers();
+    const { close } = useBottomSheet();
 
     const {
       activeOffsetX,
@@ -22,11 +37,11 @@ export const ModalBackdrop = memo(
       simultaneousHandlers,
     } = useBottomSheetInternal();
 
+    // Пан-жест (свайп)
     const panGesture = useMemo(() => {
       let gesture = Gesture.Pan()
-        .enabled(true)
+        .enabled(enablePanToClose)
         .shouldCancelWhenOutside(false)
-        .runOnJS(false)
         .onStart(handlePanGestureHandler.handleOnStart)
         .onChange(handlePanGestureHandler.handleOnChange)
         .onEnd(handlePanGestureHandler.handleOnEnd)
@@ -60,19 +75,35 @@ export const ModalBackdrop = memo(
 
       return gesture;
     }, [
+      enablePanToClose,
+      handlePanGestureHandler.handleOnStart,
+      handlePanGestureHandler.handleOnChange,
+      handlePanGestureHandler.handleOnEnd,
+      handlePanGestureHandler.handleOnFinalize,
+      waitFor,
+      simultaneousHandlers,
       activeOffsetX,
       activeOffsetY,
       failOffsetX,
       failOffsetY,
-      simultaneousHandlers,
-      waitFor,
-      handlePanGestureHandler.handleOnChange,
-      handlePanGestureHandler.handleOnEnd,
-      handlePanGestureHandler.handleOnFinalize,
-      handlePanGestureHandler.handleOnStart,
     ]);
 
-    // animated variables
+    // Тап-жест (для закрытия)
+    const tapGesture = useMemo(() => {
+      return Gesture.Tap()
+        .enabled(enableTapToClose)
+        .runOnJS(true)
+        .onEnd(() => {
+          close(); // закрываем модалку
+        });
+    }, [close, enableTapToClose]);
+
+    // Объединённый жест: если был свайп — пускай свайп, если тап — закрываем
+    const combinedGesture = useMemo(() => {
+      return Gesture.Race(panGesture, tapGesture);
+    }, [panGesture, tapGesture]);
+
+    // Анимация прозрачности
     const containerAnimatedStyle = useAnimatedStyle(() => ({
       opacity: interpolate(
         animatedIndex.value,
@@ -82,20 +113,20 @@ export const ModalBackdrop = memo(
       ),
     }));
 
-    // styles
+    // Стили
     const containerStyle = useMemo(
       () => [
-        style,
         {
           backgroundColor: "#000",
         },
         containerAnimatedStyle,
+        style,
       ],
       [style, containerAnimatedStyle],
     );
 
     return (
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={combinedGesture}>
         <Animated.View style={containerStyle} />
       </GestureDetector>
     );
